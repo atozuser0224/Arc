@@ -3,12 +3,16 @@ package dev.arc.api.ops
 import dev.arc.api.ops.async.ArcAsync
 import dev.arc.api.ops.crash.CrashAnalyzer
 import dev.arc.api.ops.entity.EntityAiOptimizer
+import dev.arc.api.ops.entity.EntityDensityGuard
 import dev.arc.api.ops.lagspike.LagSpikeMonitor
+import dev.arc.api.ops.memory.MemoryGuard
 import dev.arc.api.ops.metrics.SnapshotService
 import dev.arc.api.ops.metrics.TickSampler
 import dev.arc.api.ops.plugincost.PluginCostTracker
+import dev.arc.api.ops.pregen.ChunkPregenerator
 import dev.arc.api.ops.scheduler.ArcScheduler
 import dev.arc.api.ops.status.StatusHttpServer
+import dev.arc.api.ops.watchdog.StallWatchdog
 import org.bukkit.plugin.Plugin
 import java.io.File
 
@@ -32,9 +36,17 @@ object LeafOps {
     private var monitor: LagSpikeMonitor? = null
     private var optimizer: EntityAiOptimizer? = null
     private var statusServer: StatusHttpServer? = null
+    private var densityGuard: EntityDensityGuard? = null
+    private var memoryGuard: MemoryGuard? = null
+    private var stallWatchdog: StallWatchdog? = null
+
+    /** Always available once installed; one server-wide pregeneration job at a time. */
+    val pregenerator: ChunkPregenerator by lazy { ChunkPregenerator(plugin) }
 
     val lagSpikeMonitor: LagSpikeMonitor? get() = monitor
     val aiOptimizer: EntityAiOptimizer? get() = optimizer
+    val densityOptimizer: EntityDensityGuard? get() = densityGuard
+    val memory: MemoryGuard? get() = memoryGuard
 
     @Synchronized
     fun install(plugin: Plugin, dataDir: File = File("leaf-ops")) {
@@ -89,6 +101,30 @@ object LeafOps {
             optimizer?.stop()
             optimizer = null
         }
+        // Entity density guard
+        if (config.densityEnabled) {
+            if (densityGuard == null) densityGuard = EntityDensityGuard(plugin, config).also { it.start() }
+        } else {
+            densityGuard?.stop()
+            densityGuard = null
+        }
+        // Memory guard
+        if (config.memoryGuardEnabled) {
+            if (memoryGuard == null) memoryGuard = MemoryGuard(plugin, config).also { it.start() }
+        } else {
+            memoryGuard?.stop()
+            memoryGuard = null
+        }
+        // Stall watchdog — recreated so threshold/dump changes apply on reload.
+        stallWatchdog?.stop()
+        stallWatchdog = if (config.stallWatchdogEnabled) {
+            StallWatchdog(
+                config.stallThresholdMs, config.stallFullThreadDump,
+                File(dataDir, "stalls"), plugin.logger,
+            ).also { it.start() }
+        } else {
+            null
+        }
         // Status HTTP server
         if (config.statusEnabled) {
             if (statusServer == null) {
@@ -110,7 +146,12 @@ object LeafOps {
         if (!installed) return
         monitor?.stop()
         optimizer?.stop()
+        densityGuard?.stop()
+        memoryGuard?.stop()
+        stallWatchdog?.stop()
         statusServer?.stop()
+        dev.arc.api.ops.profiler.MainThreadProfiler.stop()
+        pregenerator.cancel()
         SnapshotService.stop()
         TickSampler.stop()
         ArcAsync.shutdown()

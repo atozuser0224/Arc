@@ -34,6 +34,13 @@ object TickSampler {
     @Volatile var lastTickGcCount: Long = 0; private set
     @Volatile var tickCounter: Long = 0; private set
 
+    /**
+     * Wall-clock nanoTime of the most recent main-thread tick. An off-thread
+     * watchdog can compare this against [System.nanoTime] to detect a stalled
+     * main thread (the value stops advancing while the server is frozen).
+     */
+    fun heartbeatNanos(): Long = lastTickNanos
+
     private var task: BukkitTask? = null
 
     fun start(plugin: Plugin) {

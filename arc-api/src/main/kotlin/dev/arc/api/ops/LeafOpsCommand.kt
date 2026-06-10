@@ -7,6 +7,8 @@ import dev.arc.api.ops.configcheck.ConfigValidator
 import dev.arc.api.ops.configcheck.Severity
 import dev.arc.api.ops.doctor.ServerDoctor
 import dev.arc.api.ops.plugincost.PluginCostTracker
+import dev.arc.api.ops.profiler.MainThreadProfiler
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 import java.io.File
@@ -31,22 +33,29 @@ object LeafOpsCommand {
         command("leaf", plugin.name) {
             description = "Leaf operations & diagnostics"
             permission = "leaf.admin"
-            usage = "/leaf <doctor|lagspike|plugin-cost|config|chunks|entity|status|reload>"
+            usage = "/leaf <doctor|lagspike|plugin-cost|config|chunks|entity|profiler|pregen|memory|ping|status|reload>"
 
             executes { sender, args -> dispatch(plugin, sender, args); true }
 
             completes { _, args ->
                 when (args.size) {
-                    1 -> listOf("doctor", "lagspike", "plugin-cost", "config", "chunks", "entity", "status", "reload")
+                    1 -> listOf("doctor", "lagspike", "plugin-cost", "config", "chunks", "entity",
+                        "profiler", "pregen", "memory", "ping", "status", "reload")
                     2 -> when (args[0].lowercase()) {
                         "lagspike" -> listOf("list", "last")
                         "plugin-cost" -> listOf("top")
                         "config" -> listOf("check", "explain")
                         "chunks" -> listOf("report", "tickets", "backlog")
                         "entity" -> listOf("stats")
+                        "profiler" -> listOf("start", "stop", "report")
+                        "pregen" -> listOf("start", "status", "cancel")
                         else -> emptyList()
                     }
-                    3 -> if (args[0].equals("config", true) && args[1].equals("explain", true)) ConfigValidator.knownPaths() else emptyList()
+                    3 -> when {
+                        args[0].equals("config", true) && args[1].equals("explain", true) -> ConfigValidator.knownPaths()
+                        args[0].equals("pregen", true) && args[1].equals("start", true) -> Bukkit.getWorlds().map { it.name }
+                        else -> emptyList()
+                    }
                     else -> emptyList()
                 }
             }
@@ -61,6 +70,10 @@ object LeafOpsCommand {
             "config" -> config(sender, args)
             "chunks" -> chunks(sender, args)
             "entity" -> entity(sender)
+            "profiler" -> profiler(sender, args)
+            "pregen" -> pregen(sender, args)
+            "memory" -> memory(sender)
+            "ping" -> ping(sender)
             "status" -> status(sender)
             "reload" -> {
                 runCatching { LeafOps.reload() }.fold(
@@ -164,15 +177,79 @@ object LeafOpsCommand {
 
     private fun entity(sender: CommandSender) {
         val opt = LeafOps.aiOptimizer
-        if (opt == null) {
-            sender.sendMessage("[Leaf] entity AI optimizer is OFF (enable entity-optimization in leaf-ops.yml)")
-            return
+        if (opt != null) {
+            val s = opt.stats
+            sender.sendMessage("[Leaf] entity AI optimizer:")
+            sender.sendMessage("  awake=${s.awake} throttled=${s.throttled} protected(targeting)=${s.protectedTargeting}")
+            val total = s.awake + s.throttled
+            if (total > 0) sender.sendMessage("  throttle ratio: ${"%.0f".format(s.throttled.toDouble() / total * 100)}%")
+        } else {
+            sender.sendMessage("[Leaf] AI optimizer OFF (enable entity-optimization in leaf-ops.yml)")
         }
-        val s = opt.stats
-        sender.sendMessage("[Leaf] entity AI optimizer:")
-        sender.sendMessage("  awake=${s.awake} throttled=${s.throttled} protected(targeting)=${s.protectedTargeting}")
-        val total = s.awake + s.throttled
-        if (total > 0) sender.sendMessage("  throttle ratio: ${"%.0f".format(s.throttled.toDouble() / total * 100)}%")
+        val guard = LeafOps.densityOptimizer
+        if (guard != null) {
+            val g = guard.stats
+            sender.sendMessage("[Leaf] density guard: active=${g.lastActive} culled(lastRun)=${g.culledThisRun} culled(total)=${g.culledTotal}")
+        } else {
+            sender.sendMessage("[Leaf] density guard OFF (enable entity-density-guard in leaf-ops.yml)")
+        }
+    }
+
+    private fun profiler(sender: CommandSender, args: Array<out String>) {
+        when (args.getOrNull(1)?.lowercase()) {
+            "start" -> {
+                val interval = args.getOrNull(2)?.toLongOrNull() ?: 10L
+                if (MainThreadProfiler.start(interval)) sender.sendMessage("[Leaf] profiler started (interval=${interval}ms). Stop with /leaf profiler stop")
+                else sender.sendMessage("[Leaf] profiler already running")
+            }
+            "stop" -> { MainThreadProfiler.stop(); sender.sendMessage("[Leaf] profiler stopped. /leaf profiler report") }
+            else -> MainThreadProfiler.report(25).lineSequence().forEach { sender.sendMessage(it) }
+        }
+    }
+
+    private fun pregen(sender: CommandSender, args: Array<out String>) {
+        val pre = LeafOps.pregenerator
+        when (args.getOrNull(1)?.lowercase()) {
+            "cancel" -> sender.sendMessage(if (pre.cancel()) "[Leaf] pregen cancelled" else "[Leaf] no pregen running")
+            "status" -> {
+                val p = pre.progress()
+                if (p == null) sender.sendMessage("[Leaf] no pregen running")
+                else sender.sendMessage("[Leaf] pregen ${p.third}: ${p.first}/${p.second} chunks (${"%.1f".format(p.first.toDouble() / p.second * 100)}%)")
+            }
+            "start" -> {
+                val world = args.getOrNull(2)?.let { Bukkit.getWorld(it) }
+                val radius = args.getOrNull(3)?.toIntOrNull()
+                if (world == null || radius == null) { sender.sendMessage("usage: /leaf pregen start <world> <radiusChunks> [cx cz]"); return }
+                val cx = args.getOrNull(4)?.toIntOrNull() ?: world.spawnLocation.blockX
+                val cz = args.getOrNull(5)?.toIntOrNull() ?: world.spawnLocation.blockZ
+                val started = pre.start(
+                    world, radius, cx, cz,
+                    onProgress = { done, total -> sender.sendMessage("[Leaf] pregen ${world.name}: $done/$total") },
+                    onComplete = { sender.sendMessage("[Leaf] pregen ${world.name} complete") },
+                )
+                sender.sendMessage(if (started) "[Leaf] pregen started: ${world.name} radius=$radius (${(2 * radius + 1) * (2 * radius + 1)} chunks)"
+                else "[Leaf] a pregen job is already running")
+            }
+            else -> sender.sendMessage("/leaf pregen <start <world> <radius> [cx cz]|status|cancel>")
+        }
+    }
+
+    private fun memory(sender: CommandSender) {
+        val g = LeafOps.memory
+        val rt = Runtime.getRuntime()
+        val used = (rt.totalMemory() - rt.freeMemory()) / (1024 * 1024)
+        val max = rt.maxMemory() / (1024 * 1024)
+        sender.sendMessage("[Leaf] heap: $used / $max MB (${"%.0f".format(used.toDouble() / max * 100)}%)")
+        if (g != null) sender.sendMessage("  guard state: ${g.lastState} (warn>=${"%.0f".format(LeafOps.config.memoryWarnFraction * 100)}% crit>=${"%.0f".format(LeafOps.config.memoryCriticalFraction * 100)}%)")
+        else sender.sendMessage("  memory guard: OFF")
+    }
+
+    private fun ping(sender: CommandSender) {
+        val players = Bukkit.getOnlinePlayers().sortedByDescending { it.ping }
+        if (players.isEmpty()) { sender.sendMessage("[Leaf] no players online"); return }
+        val avg = players.map { it.ping }.average()
+        sender.sendMessage("[Leaf] ping — avg ${"%.0f".format(avg)}ms, ${players.size} player(s):")
+        players.take(10).forEach { sender.sendMessage("  ${it.name}: ${it.ping}ms") }
     }
 
     private fun status(sender: CommandSender) {

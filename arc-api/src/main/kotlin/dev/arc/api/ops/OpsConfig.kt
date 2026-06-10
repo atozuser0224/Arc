@@ -41,6 +41,26 @@ class OpsConfig internal constructor(private val file: File) {
     @Volatile var statusPort: Int = 9595
     @Volatile var statusSnapshotIntervalTicks: Int = 20
 
+    // ---- entity density guard (AGGRESSIVE -> default OFF) ------------------
+    @Volatile var densityEnabled: Boolean = false
+    @Volatile var densityMaxMobsPerChunk: Int = 24
+    @Volatile var densityActivationTps: Double = 18.0
+    @Volatile var densityCheckIntervalTicks: Int = 100
+    @Volatile var densityWorlds: List<String> = emptyList()
+
+    // ---- memory guard ------------------------------------------------------
+    @Volatile var memoryGuardEnabled: Boolean = true
+    @Volatile var memoryWarnFraction: Double = 0.85
+    @Volatile var memoryCriticalFraction: Double = 0.95
+    @Volatile var memoryCheckIntervalTicks: Int = 100
+    @Volatile var memoryActionCooldownSeconds: Int = 30
+    @Volatile var memoryAllowForcedGc: Boolean = false
+
+    // ---- stall watchdog ----------------------------------------------------
+    @Volatile var stallWatchdogEnabled: Boolean = true
+    @Volatile var stallThresholdMs: Long = 5000
+    @Volatile var stallFullThreadDump: Boolean = false
+
     // ---- crash diagnostics -------------------------------------------------
     @Volatile var crashAnalyzeOnBoot: Boolean = true
 
@@ -71,6 +91,23 @@ class OpsConfig internal constructor(private val file: File) {
         statusBindAddress = yml.getString("status.bind-address", statusBindAddress) ?: statusBindAddress
         statusPort = yml.getInt("status.port", statusPort)
         statusSnapshotIntervalTicks = yml.getInt("status.snapshot-interval-ticks", statusSnapshotIntervalTicks)
+
+        densityEnabled = yml.getBoolean("entity-density-guard.enabled", densityEnabled)
+        densityMaxMobsPerChunk = yml.getInt("entity-density-guard.max-mobs-per-chunk", densityMaxMobsPerChunk)
+        densityActivationTps = yml.getDouble("entity-density-guard.activation-tps", densityActivationTps)
+        densityCheckIntervalTicks = yml.getInt("entity-density-guard.check-interval-ticks", densityCheckIntervalTicks)
+        densityWorlds = yml.getStringList("entity-density-guard.worlds")
+
+        memoryGuardEnabled = yml.getBoolean("memory-guard.enabled", memoryGuardEnabled)
+        memoryWarnFraction = yml.getDouble("memory-guard.warn-fraction", memoryWarnFraction)
+        memoryCriticalFraction = yml.getDouble("memory-guard.critical-fraction", memoryCriticalFraction)
+        memoryCheckIntervalTicks = yml.getInt("memory-guard.check-interval-ticks", memoryCheckIntervalTicks)
+        memoryActionCooldownSeconds = yml.getInt("memory-guard.action-cooldown-seconds", memoryActionCooldownSeconds)
+        memoryAllowForcedGc = yml.getBoolean("memory-guard.allow-forced-gc", memoryAllowForcedGc)
+
+        stallWatchdogEnabled = yml.getBoolean("stall-watchdog.enabled", stallWatchdogEnabled)
+        stallThresholdMs = yml.getLong("stall-watchdog.threshold-ms", stallThresholdMs)
+        stallFullThreadDump = yml.getBoolean("stall-watchdog.full-thread-dump", stallFullThreadDump)
 
         crashAnalyzeOnBoot = yml.getBoolean("crash.analyze-on-boot", crashAnalyzeOnBoot)
     }
@@ -105,6 +142,23 @@ class OpsConfig internal constructor(private val file: File) {
         yml.set("status.bind-address", statusBindAddress)
         yml.set("status.port", statusPort)
         yml.set("status.snapshot-interval-ticks", statusSnapshotIntervalTicks)
+
+        yml.set("entity-density-guard.enabled", densityEnabled)
+        yml.set("entity-density-guard.max-mobs-per-chunk", densityMaxMobsPerChunk)
+        yml.set("entity-density-guard.activation-tps", densityActivationTps)
+        yml.set("entity-density-guard.check-interval-ticks", densityCheckIntervalTicks)
+        yml.set("entity-density-guard.worlds", densityWorlds)
+
+        yml.set("memory-guard.enabled", memoryGuardEnabled)
+        yml.set("memory-guard.warn-fraction", memoryWarnFraction)
+        yml.set("memory-guard.critical-fraction", memoryCriticalFraction)
+        yml.set("memory-guard.check-interval-ticks", memoryCheckIntervalTicks)
+        yml.set("memory-guard.action-cooldown-seconds", memoryActionCooldownSeconds)
+        yml.set("memory-guard.allow-forced-gc", memoryAllowForcedGc)
+
+        yml.set("stall-watchdog.enabled", stallWatchdogEnabled)
+        yml.set("stall-watchdog.threshold-ms", stallThresholdMs)
+        yml.set("stall-watchdog.full-thread-dump", stallFullThreadDump)
 
         yml.set("crash.analyze-on-boot", crashAnalyzeOnBoot)
 

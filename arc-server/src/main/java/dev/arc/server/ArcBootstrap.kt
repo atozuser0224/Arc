@@ -25,6 +25,12 @@ object ArcBootstrap {
     @JvmStatic
     fun install() {
         if (!installed.compareAndSet(false, true)) return
+        // Load config first so settings/features are applied before the bridge activates.
+        runCatching {
+            Arc.config.reload()
+        }.onFailure { e ->
+            java.util.logging.Logger.getLogger("Arc").warning("[Arc] Config load failed: ${e.message}")
+        }
         // Wrap the reflective bridge so every NMS group obeys its feature flag.
         try {
             val provider = ReflectiveArcNms()

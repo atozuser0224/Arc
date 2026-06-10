@@ -1,9 +1,11 @@
 package dev.arc.api
 
+import dev.arc.api.control.ArcConfig
 import dev.arc.api.control.ArcFeatures
 import dev.arc.api.control.ArcSettings
 import dev.arc.api.nms.ArcNms
 import dev.arc.api.scheduling.ArcThreadScheduler
+import java.io.File
 
 /**
  * Central control hub for Arc.
@@ -29,6 +31,10 @@ object Arc {
     /** Runtime feature-flag registry. */
     @JvmField
     val features: ArcFeatures = ArcFeatures()
+
+    /** File-backed YAML config. Loaded from `arc-config.yml` in the server working dir. */
+    @JvmField
+    val config: ArcConfig = ArcConfig(File("arc-config.yml"))
 
     @Volatile
     private var nmsProvider: ArcNms? = null

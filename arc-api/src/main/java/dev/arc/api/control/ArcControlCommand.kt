@@ -58,13 +58,27 @@ object ArcControlCommand {
                         sender.sendMessage(" - nmsThreadPolicy = ${Arc.settings.nmsThreadPolicy}")
                     }
 
+                    "reload" -> {
+                        runCatching { Arc.config.reload() }.fold(
+                            onSuccess = { sender.sendMessage("Arc config reloaded.") },
+                            onFailure = { sender.sendMessage("Reload failed: ${it.message}") },
+                        )
+                    }
+
+                    "save" -> {
+                        runCatching { Arc.config.save() }.fold(
+                            onSuccess = { sender.sendMessage("Arc config saved.") },
+                            onFailure = { sender.sendMessage("Save failed: ${it.message}") },
+                        )
+                    }
+
                     "nms" -> nms(sender, args.getOrNull(1))
                     "enable" -> toggle(sender, args.getOrNull(1), true)
                     "disable" -> toggle(sender, args.getOrNull(1), false)
                     "set" -> set(sender, args.getOrNull(1), args.getOrNull(2))
 
                     else -> sender.sendMessage(
-                        "/arc <features|settings|nms [clear-cache]|enable|disable|set>"
+                        "/arc <features|settings|nms [clear-cache]|enable|disable|reload|save|set>"
                     )
                 }
                 true
@@ -72,7 +86,7 @@ object ArcControlCommand {
 
             completes { _, args ->
                 when (args.size) {
-                    1 -> listOf("features", "settings", "nms", "enable", "disable", "set")
+                    1 -> listOf("features", "settings", "nms", "enable", "disable", "set", "reload", "save")
                     2 -> when (args[0].lowercase()) {
                         "enable", "disable" -> Arc.features.all().map { it.id }
                         "set" -> SETTING_KEYS

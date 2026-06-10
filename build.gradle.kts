@@ -1,17 +1,26 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `maven-publish`
+    kotlin("jvm") version "2.0.21"
     id("io.papermc.paperweight.patcher") version "2.0.0-beta.14"
 }
 
 val paperMavenPublicUrl = "https://repo.papermc.io/repository/maven-public/"
 val leafMavenPublicUrl = "https://maven.leafmc.one/snapshots/"
 
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
 
     extensions.configure<JavaPluginExtension> {
         toolchain {
@@ -23,6 +32,24 @@ subprojects {
         mavenCentral()
         maven(paperMavenPublicUrl)
         maven(leafMavenPublicUrl)
+    }
+
+    sourceSets {
+        main {
+            kotlin { srcDirs("src/main/java") }
+        }
+    }
+
+    tasks.withType<KotlinCompile>().configureEach {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_21
+            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
+            languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
+            freeCompilerArgs.addAll(
+                "-Xjsr305=strict",
+                "-Xjvm-default=all",
+            )
+        }
     }
 
     tasks.withType<AbstractArchiveTask>().configureEach {

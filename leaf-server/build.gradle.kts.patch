@@ -68,12 +68,13 @@
      }
  }
  
-@@ -147,10 +_,20 @@
+@@ -147,10 +_,21 @@
  }
  
  dependencies {
 -    implementation(project(":gale-api")) // Gale - project setup - Depend on own API
 +    implementation(project(":leaf-api")) // Gale - project setup - Depend on own API // Leaf - project setup
++    implementation(project(":arc-server")) // Arc - NMS bridge and async runtime
 +
 +    // Leaf start - Libraries
 +    implementation("com.github.thatsmusic99:ConfigurationMaster-API:v2.0.0-rc.3") { // Leaf config
@@ -203,3 +204,9 @@
              "Build-Number" to (build ?: ""),
              "Build-Time" to buildTime.toString(),
              "Git-Branch" to gitBranch,
+@@ -420,5 +_,4 @@
+             zip(rootDir, zipFile)
+         } finally {
+-            @OptIn(kotlin.io.path.ExperimentalPathApi::class)
+             rootDir.toFile().deleteRecursively()
+         }

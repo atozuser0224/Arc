@@ -6,6 +6,7 @@
 
 dependencies {
     api(project(":arc-api"))
+    compileOnly("io.netty:netty-transport:4.1.115.Final")
     testImplementation(kotlin("test-junit5"))
 }
 

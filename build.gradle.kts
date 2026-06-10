@@ -36,7 +36,7 @@ subprojects {
 
     sourceSets {
         main {
-            kotlin { srcDirs("src/main/java") }
+            kotlin { srcDirs("src/main/java", "src/main/kotlin") }
         }
     }
 

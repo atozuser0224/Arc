@@ -24,7 +24,7 @@ object ServerDoctor {
         val sb = StringBuilder()
         fun line(s: String) = sb.appendLine(s)
 
-        line("===== Leaf Doctor =====")
+        line("===== Arc Doctor =====")
 
         // ---- runtime / JVM ----
         line("[Java]")

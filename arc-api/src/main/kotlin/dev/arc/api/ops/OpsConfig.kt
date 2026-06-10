@@ -4,7 +4,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 /**
- * File-backed config for the Leaf Operations Suite (`leaf-ops.yml`).
+ * File-backed config for the Arc Operations Suite (`arc-ops.yml`).
  *
  * Design rule: **safety first**. Anything that changes Paper plugin-visible
  * behaviour (entity AI throttling, view-distance changes) defaults to OFF.
@@ -116,9 +116,9 @@ class OpsConfig internal constructor(private val file: File) {
         val yml = YamlConfiguration()
         yml.options().setHeader(
             listOf(
-                "Leaf Operations Suite configuration.",
+                "Arc Operations Suite configuration.",
                 "Diagnostics default ON (read-only). Aggressive optimizations default OFF.",
-                "Reload at runtime with: /leaf reload",
+                "Reload at runtime with: /arc reload",
             ),
         )
 

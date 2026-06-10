@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.LongAdder
  *    is instrumented, its time cost is reported as 0 and the heuristic falls
  *    back to task/listener counts.
  *
- * So `/leaf plugin-cost top` ranks by measured time where available, then by a
+ * So `/arc plugin-cost top` ranks by measured time where available, then by a
  * count-based heuristic — and labels which is which.
  */
 object PluginCostTracker {

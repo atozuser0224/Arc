@@ -18,9 +18,9 @@ import java.util.logging.Logger
  * to expose without risking the main-thread invariants.
  *
  * Endpoints:
- *  - GET /leaf/status       -> JSON: players, tps, mspt, memory
- *  - GET /leaf/worlds       -> JSON: per-world chunk/entity counts
- *  - GET /leaf/performance  -> JSON: tps/mspt/gc/plugin cost
+ *  - GET /arc/status       -> JSON: players, tps, mspt, memory
+ *  - GET /arc/worlds       -> JSON: per-world chunk/entity counts
+ *  - GET /arc/performance  -> JSON: tps/mspt/gc/plugin cost
  *  - GET /metrics           -> Prometheus text exposition
  */
 class StatusHttpServer(
@@ -33,14 +33,14 @@ class StatusHttpServer(
     fun start() {
         if (server != null) return
         val s = HttpServer.create(InetSocketAddress(bindAddress, port), 0)
-        s.createContext("/leaf/status") { ex -> respond(ex, "application/json", statusJson(SnapshotService.latest)) }
-        s.createContext("/leaf/worlds") { ex -> respond(ex, "application/json", worldsJson(SnapshotService.latest)) }
-        s.createContext("/leaf/performance") { ex -> respond(ex, "application/json", performanceJson(SnapshotService.latest)) }
+        s.createContext("/arc/status") { ex -> respond(ex, "application/json", statusJson(SnapshotService.latest)) }
+        s.createContext("/arc/worlds") { ex -> respond(ex, "application/json", worldsJson(SnapshotService.latest)) }
+        s.createContext("/arc/performance") { ex -> respond(ex, "application/json", performanceJson(SnapshotService.latest)) }
         s.createContext("/metrics") { ex -> respond(ex, "text/plain; version=0.0.4", prometheus(SnapshotService.latest)) }
         s.executor = null // default executor (a small internal pool)
         s.start()
         server = s
-        log.info("[Leaf] Status server listening on http://$bindAddress:$port (/leaf/status, /metrics)")
+        log.info("[Arc] Status server listening on http://$bindAddress:$port (/arc/status, /metrics)")
     }
 
     fun stop() {
@@ -81,25 +81,25 @@ class StatusHttpServer(
     }
 
     private fun prometheus(s: ServerSnapshot): String = buildString {
-        appendLine("# HELP leaf_mspt_average Average milliseconds per tick (Paper).")
-        appendLine("# TYPE leaf_mspt_average gauge")
-        appendLine("leaf_mspt_average ${f(s.paperMspt)}")
-        appendLine("# TYPE leaf_tps gauge")
-        appendLine("leaf_tps{window=\"1m\"} ${f(s.tps1m)}")
-        appendLine("leaf_tps{window=\"5m\"} ${f(s.tps5m)}")
-        appendLine("leaf_tps{window=\"15m\"} ${f(s.tps15m)}")
-        appendLine("# TYPE leaf_players gauge")
-        appendLine("leaf_players ${s.onlinePlayers}")
-        appendLine("# TYPE leaf_memory_used_bytes gauge")
-        appendLine("leaf_memory_used_bytes ${s.usedMemoryMb * 1024 * 1024}")
-        appendLine("# TYPE leaf_gc_collections gauge")
-        appendLine("leaf_gc_collections ${s.gcInWindow}")
-        appendLine("# TYPE leaf_loaded_chunks gauge")
-        for (w in s.worlds) appendLine("leaf_loaded_chunks{world=${q(w.name)}} ${w.loadedChunks}")
-        appendLine("# TYPE leaf_entities gauge")
-        for (w in s.worlds) appendLine("leaf_entities{world=${q(w.name)}} ${w.entities}")
-        appendLine("# TYPE leaf_plugin_task_cost gauge")
-        for ((plugin, ms) in s.pluginTaskCost) appendLine("leaf_plugin_task_cost{plugin=${q(plugin)}} ${f(ms)}")
+        appendLine("# HELP arc_mspt_average Average milliseconds per tick (Paper).")
+        appendLine("# TYPE arc_mspt_average gauge")
+        appendLine("arc_mspt_average ${f(s.paperMspt)}")
+        appendLine("# TYPE arc_tps gauge")
+        appendLine("arc_tps{window=\"1m\"} ${f(s.tps1m)}")
+        appendLine("arc_tps{window=\"5m\"} ${f(s.tps5m)}")
+        appendLine("arc_tps{window=\"15m\"} ${f(s.tps15m)}")
+        appendLine("# TYPE arc_players gauge")
+        appendLine("arc_players ${s.onlinePlayers}")
+        appendLine("# TYPE arc_memory_used_bytes gauge")
+        appendLine("arc_memory_used_bytes ${s.usedMemoryMb * 1024 * 1024}")
+        appendLine("# TYPE arc_gc_collections gauge")
+        appendLine("arc_gc_collections ${s.gcInWindow}")
+        appendLine("# TYPE arc_loaded_chunks gauge")
+        for (w in s.worlds) appendLine("arc_loaded_chunks{world=${q(w.name)}} ${w.loadedChunks}")
+        appendLine("# TYPE arc_entities gauge")
+        for (w in s.worlds) appendLine("arc_entities{world=${q(w.name)}} ${w.entities}")
+        appendLine("# TYPE arc_plugin_task_cost gauge")
+        for ((plugin, ms) in s.pluginTaskCost) appendLine("arc_plugin_task_cost{plugin=${q(plugin)}} ${f(ms)}")
     }
 
     private fun f(v: Double): String = "%.2f".format(v)

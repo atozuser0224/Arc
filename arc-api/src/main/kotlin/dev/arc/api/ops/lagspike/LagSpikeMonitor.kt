@@ -136,7 +136,7 @@ class LagSpikeMonitor(
             while (recent.size > config.lagSpikeMaxReports) recent.removeLast()
         }
 
-        log.warning("[Leaf] Lag spike captured: ${"%.1f".format(report.msptAtTrigger)}ms, worst world=${report.worstWorld}")
+        log.warning("[Arc] Lag spike captured: ${"%.1f".format(report.msptAtTrigger)}ms, worst world=${report.worstWorld}")
 
         if (config.lagSpikeSaveReport) saveReport(report)
     }
@@ -150,6 +150,6 @@ class LagSpikeMonitor(
             val files = reportDir.listFiles { f -> f.name.startsWith("lagspike-") }?.sortedBy { it.name } ?: return@runCatching
             val excess = files.size - config.lagSpikeMaxReports
             if (excess > 0) files.take(excess).forEach { it.delete() }
-        }.onFailure { log.warning("[Leaf] Failed to save lag spike report: ${it.message}") }
+        }.onFailure { log.warning("[Arc] Failed to save lag spike report: ${it.message}") }
     }
 }

@@ -2,6 +2,8 @@ package dev.arc.api.control
 
 import dev.arc.api.Arc
 import dev.arc.api.command.command
+import dev.arc.api.ops.ArcOps
+import dev.arc.api.ops.ArcOpsCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 
@@ -37,7 +39,8 @@ object ArcControlCommand {
         command("arc", fallbackPrefix) {
             description = "Inspect and control Arc features and settings"
             permission = "arc.admin"
-            usage = "/arc <features|settings|nms|enable|disable|set>"
+            usage = "/arc <features|settings|nms|enable|disable|set|reload|save|" +
+                "doctor|lagspike|plugin-cost|config|chunks|entity|profiler|pregen|memory|ping|status>"
 
             executes { sender, args ->
                 when (args.getOrNull(0)?.lowercase()) {
@@ -63,6 +66,12 @@ object ArcControlCommand {
                             onSuccess = { sender.sendMessage("Arc config reloaded.") },
                             onFailure = { sender.sendMessage("Reload failed: ${it.message}") },
                         )
+                        if (ArcOps.installed) {
+                            runCatching { ArcOps.reload() }.fold(
+                                onSuccess = { sender.sendMessage("Arc ops config reloaded.") },
+                                onFailure = { sender.sendMessage("Ops reload failed: ${it.message}") },
+                            )
+                        }
                     }
 
                     "save" -> {
@@ -77,28 +86,32 @@ object ArcControlCommand {
                     "disable" -> toggle(sender, args.getOrNull(1), false)
                     "set" -> set(sender, args.getOrNull(1), args.getOrNull(2))
 
-                    else -> sender.sendMessage(
-                        "/arc <features|settings|nms [clear-cache]|enable|disable|reload|save|set>"
-                    )
+                    else -> if (!ArcOpsCommand.dispatch(sender, args)) {
+                        sender.sendMessage(
+                            "/arc <features|settings|nms|enable|disable|reload|save|set|" +
+                                "doctor|lagspike|plugin-cost|config|chunks|entity|profiler|pregen|memory|ping|status>",
+                        )
+                    }
                 }
                 true
             }
 
             completes { _, args ->
                 when (args.size) {
-                    1 -> listOf("features", "settings", "nms", "enable", "disable", "set", "reload", "save")
+                    1 -> listOf("features", "settings", "nms", "enable", "disable", "set", "reload", "save") +
+                        ArcOpsCommand.roots
                     2 -> when (args[0].lowercase()) {
                         "enable", "disable" -> Arc.features.all().map { it.id }
                         "set" -> SETTING_KEYS
                         "nms" -> listOf("capabilities", "clear-cache")
-                        else -> emptyList()
+                        else -> ArcOpsCommand.complete(args)
                     }
                     3 -> if (args[0].equals("set", ignoreCase = true) &&
                         args[1].equals("nmsThreadPolicy", ignoreCase = true)
                     ) {
                         NmsThreadPolicy.entries.map { it.name.lowercase() }
                     } else {
-                        emptyList()
+                        ArcOpsCommand.complete(args)
                     }
                     else -> emptyList()
                 }

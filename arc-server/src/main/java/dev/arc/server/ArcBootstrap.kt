@@ -3,7 +3,7 @@ package dev.arc.server
 import dev.arc.api.Arc
 import dev.arc.api.control.ArcControlCommand
 import dev.arc.api.nms.GatedArcNms
-import dev.arc.api.ops.LeafOps
+import dev.arc.api.ops.ArcOps
 import dev.arc.server.nms.ReflectiveArcNms
 import dev.arc.server.scheduling.LeafParallelWorldScheduler
 import org.bukkit.plugin.Plugin
@@ -64,10 +64,10 @@ object ArcBootstrap {
                 throw error
             }
         }
-        // Boot the Leaf Operations Suite (diagnostics, lag-spike capture, status
-        // server, /leaf command). Needs a plugin to own its repeating tasks.
-        runCatching { LeafOps.install(plugin) }.onFailure { e ->
-            plugin.logger.warning("[Arc] LeafOps install failed: ${e.message}")
+        // Boot the Arc Operations Suite (diagnostics, lag-spike capture, status
+        // server, /arc ops subcommands). Needs a plugin to own its repeating tasks.
+        runCatching { ArcOps.install(plugin) }.onFailure { e ->
+            plugin.logger.warning("[Arc] ArcOps install failed: ${e.message}")
         }
     }
 }

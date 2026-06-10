@@ -21,7 +21,7 @@ import org.bukkit.Bukkit
 object ChunkDiagnostics {
 
     fun report(worldFilter: String? = null): String = buildString {
-        appendLine("===== Leaf Chunks: report =====")
+        appendLine("===== Arc Chunks: report =====")
         val worlds = Bukkit.getWorlds().filter { worldFilter == null || it.name.equals(worldFilter, true) }
         for (w in worlds) {
             val loaded = w.loadedChunks.size
@@ -32,11 +32,11 @@ object ChunkDiagnostics {
             appendLine("  force-loaded       : $forced")
             appendLine("  plugin-ticket chunks: $tickets")
         }
-        append("save-backlog / generation-queue: needs server-internal probe (see /leaf chunks backlog)")
+        append("save-backlog / generation-queue: needs server-internal probe (see /arc chunks backlog)")
     }
 
     fun tickets(worldFilter: String? = null): String = buildString {
-        appendLine("===== Leaf Chunks: tickets =====")
+        appendLine("===== Arc Chunks: tickets =====")
         val worlds = Bukkit.getWorlds().filter { worldFilter == null || it.name.equals(worldFilter, true) }
         for (w in worlds) {
             appendLine("[${w.name}] plugin-held chunk tickets:")
@@ -63,11 +63,11 @@ object ChunkDiagnostics {
     }
 
     fun backlog(): String = buildString {
-        appendLine("===== Leaf Chunks: backlog =====")
+        appendLine("===== Arc Chunks: backlog =====")
         appendLine("Chunk save backlog and generation-queue depth are not available through")
         appendLine("the public Bukkit API. To surface them, the arc-server reflective bridge")
         appendLine("must read the server chunk system (ChunkHolderManager / unloadQueue).")
-        appendLine("Until then, use loaded-chunk trend (/leaf chunks report) + tickets as a proxy:")
+        appendLine("Until then, use loaded-chunk trend (/arc chunks report) + tickets as a proxy:")
         appendLine("a steadily climbing loaded-chunk count with stable players usually means a")
         append("leaked ticket rather than save backlog.")
     }

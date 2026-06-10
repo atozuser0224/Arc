@@ -14,7 +14,7 @@ data class Finding(
     val recommended: String,
 )
 
-/** Documentation entry for `/leaf config explain`. */
+/** Documentation entry for `/arc config explain`. */
 data class SettingDoc(
     val path: String,
     val meaning: String,
@@ -77,7 +77,7 @@ object ConfigValidator {
                 findings += Finding(
                     Severity.WARN, "world.${world.name}.loaded-chunks", loaded.toString(),
                     "Very high loaded-chunk count — check for leaking chunk tickets / force-loaded regions.",
-                    "investigate with /leaf chunks tickets",
+                    "investigate with /arc chunks tickets",
                 )
             }
             val forced = runCatching { world.forceLoadedChunks.size }.getOrDefault(0)

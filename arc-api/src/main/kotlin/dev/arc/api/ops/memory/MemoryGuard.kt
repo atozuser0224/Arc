@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitTask
  * Watches heap pressure and reacts gracefully before the JVM hits OutOfMemory.
  *
  * Two thresholds (fraction of max heap):
- *  - warn     -> log a warning + notify ops with `leaf.admin`
+ *  - warn     -> log a warning + notify ops with `arc.admin`
  *  - critical -> additionally flush worlds to disk (`save-all`) so a subsequent
  *                OOM/crash loses as little as possible
  *
@@ -59,13 +59,13 @@ class MemoryGuard(
                 lastActionMillis = now
                 val usedMb = used / (1024 * 1024)
                 val maxMb = max / (1024 * 1024)
-                val msg = "[Leaf] CRITICAL heap ${pct(frac)} (${usedMb}/${maxMb} MB) — flushing worlds"
+                val msg = "[Arc] CRITICAL heap ${pct(frac)} (${usedMb}/${maxMb} MB) — flushing worlds"
                 plugin.logger.severe(msg)
                 notifyOps(msg)
                 runCatching { plugin.server.savePlayers() }
                 for (w in plugin.server.worlds) runCatching { w.save() }
                 if (config.memoryAllowForcedGc) {
-                    plugin.logger.warning("[Leaf] memory-guard: requesting GC (opt-in)")
+                    plugin.logger.warning("[Arc] memory-guard: requesting GC (opt-in)")
                     System.gc()
                 }
             }
@@ -73,7 +73,7 @@ class MemoryGuard(
                 lastState = "warn"
                 if (now - lastActionMillis < cooldownMs) return
                 lastActionMillis = now
-                val msg = "[Leaf] High heap ${pct(frac)} — watch for GC lag"
+                val msg = "[Arc] High heap ${pct(frac)} — watch for GC lag"
                 plugin.logger.warning(msg)
                 notifyOps(msg)
             }
@@ -83,7 +83,7 @@ class MemoryGuard(
 
     private fun notifyOps(message: String) {
         for (p in plugin.server.onlinePlayers) {
-            if (p.hasPermission("leaf.admin")) p.sendMessage(message)
+            if (p.hasPermission("arc.admin")) p.sendMessage(message)
         }
     }
 

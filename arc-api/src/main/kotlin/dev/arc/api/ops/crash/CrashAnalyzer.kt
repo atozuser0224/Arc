@@ -16,7 +16,7 @@ data class CrashAnalysis(
     val isEmpty: Boolean get() = exceptionType == null && suspectPlugins.isEmpty() && headLines.isEmpty()
 
     fun render(): String = buildString {
-        appendLine("===== Leaf Crash Analyze =====")
+        appendLine("===== Arc Crash Analyze =====")
         appendLine("source     : $source")
         appendLine("occurred   : ${occurredAt ?: "unknown"}")
         appendLine("exception  : ${exceptionType ?: "none found"}")
@@ -33,7 +33,7 @@ data class CrashAnalysis(
 }
 
 /**
- * Post-mortem analyzer. On boot (and on `/leaf crash analyze`) it inspects the
+ * Post-mortem analyzer. On boot (and on `/arc crash analyze`) it inspects the
  * most recent crash report and `logs/latest.log`, then surfaces likely culprits
  * by scanning the stack trace for plugin packages and the surrounding text for
  * world / entity / tick-phase markers.

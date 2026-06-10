@@ -17,7 +17,7 @@ import org.bukkit.plugin.Plugin
 import java.io.File
 
 /**
- * Entry point for the Leaf Operations Suite. Call [install] once at start-up
+ * Entry point for the Arc Operations Suite. Call [install] once at start-up
  * with a [Plugin] that owns the repeating sampler tasks.
  *
  * Lifecycle: starts the always-on read-only subsystems (tick sampler, snapshot
@@ -25,7 +25,7 @@ import java.io.File
  * (entity AI optimizer, status HTTP server) only if enabled in config. A
  * [reload] re-reads config and starts/stops the opt-in pieces accordingly.
  */
-object LeafOps {
+object ArcOps {
 
     @Volatile var installed = false; private set
 
@@ -49,13 +49,13 @@ object LeafOps {
     val memory: MemoryGuard? get() = memoryGuard
 
     @Synchronized
-    fun install(plugin: Plugin, dataDir: File = File("leaf-ops")) {
+    fun install(plugin: Plugin, dataDir: File = File("arc-ops")) {
         if (installed) return
         this.plugin = plugin
         this.dataDir = dataDir
         dataDir.mkdirs()
 
-        config = OpsConfig(File(dataDir, "leaf-ops.yml")).also { it.reload() }
+        config = OpsConfig(File(dataDir, "arc-ops.yml")).also { it.reload() }
 
         ArcAsync.init(plugin)
         ArcScheduler.init(plugin)
@@ -74,15 +74,16 @@ object LeafOps {
         if (config.crashAnalyzeOnBoot) {
             plugin.server.scheduler.runTaskLater(plugin, Runnable {
                 runCatching { CrashAnalyzer.analyzeLatest() }.getOrNull()?.takeIf { !it.isEmpty }?.let {
-                    plugin.logger.warning("[Leaf] Previous-boot crash detected. /leaf crash analyze for details.")
+                    plugin.logger.warning("[Arc] Previous-boot crash detected. /arc crash analyze for details.")
                     plugin.logger.warning(it.render())
                 }
             }, 100L)
         }
 
-        LeafOpsCommand.register(plugin)
+        // The `/arc` ops subcommands are registered by ArcControlCommand, which
+        // delegates to ArcOpsCommand.dispatch — so nothing to register here.
         installed = true
-        plugin.logger.info("[Leaf] Operations Suite installed (lag-spike=${config.lagSpikeEnabled}, entity-opt=${config.entityOptEnabled}, status=${config.statusEnabled})")
+        plugin.logger.info("[Arc] Operations Suite installed (lag-spike=${config.lagSpikeEnabled}, entity-opt=${config.entityOptEnabled}, status=${config.statusEnabled})")
     }
 
     @Synchronized
@@ -131,7 +132,7 @@ object LeafOps {
                 statusServer = runCatching {
                     StatusHttpServer(config.statusBindAddress, config.statusPort, plugin.logger).also { it.start() }
                 }.getOrElse {
-                    plugin.logger.warning("[Leaf] Status server failed to start: ${it.message}")
+                    plugin.logger.warning("[Arc] Status server failed to start: ${it.message}")
                     null
                 }
             }

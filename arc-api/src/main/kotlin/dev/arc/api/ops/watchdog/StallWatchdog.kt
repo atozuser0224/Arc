@@ -50,7 +50,7 @@ class StallWatchdog(
                 if (armed) {
                     armed = false
                     runCatching { capture(sinceHeartbeatMs) }
-                        .onFailure { log.warning("[Leaf] stall dump failed: ${it.message}") }
+                        .onFailure { log.warning("[Arc] stall dump failed: ${it.message}") }
                 }
             } else if (sinceHeartbeatMs < thresholdMs / 2) {
                 armed = true // recovered; re-arm for the next stall
@@ -68,7 +68,7 @@ class StallWatchdog(
         val now = Instant.now()
         val stamp = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").withZone(ZoneId.systemDefault()).format(now)
         val text = buildString {
-            appendLine("===== Leaf Stall Watchdog =====")
+            appendLine("===== Arc Stall Watchdog =====")
             appendLine("captured : ${DateTimeFormatter.ISO_INSTANT.format(now)}")
             appendLine("stalled  : ~${stalledMs}ms with no tick heartbeat")
             appendLine()
@@ -106,6 +106,6 @@ class StallWatchdog(
         dumpDir.mkdirs()
         val file = File(dumpDir, "stall-$stamp.txt")
         file.writeText(text)
-        log.warning("[Leaf] Main thread stalled ~${stalledMs}ms — dump written to ${file.path}")
+        log.warning("[Arc] Main thread stalled ~${stalledMs}ms — dump written to ${file.path}")
     }
 }

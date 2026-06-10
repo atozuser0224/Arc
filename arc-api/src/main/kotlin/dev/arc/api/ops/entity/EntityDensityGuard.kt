@@ -91,7 +91,7 @@ class EntityDensityGuard(
         stats.culledTotal += culled
         stats.lastRunMillis = System.currentTimeMillis()
         if (culled > 0) {
-            plugin.logger.fine("[Leaf] density guard culled $culled mob(s) (tps=${"%.1f".format(tps)})")
+            plugin.logger.fine("[Arc] density guard culled $culled mob(s) (tps=${"%.1f".format(tps)})")
         }
     }
 

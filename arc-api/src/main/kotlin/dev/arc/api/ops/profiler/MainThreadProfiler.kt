@@ -83,12 +83,12 @@ object MainThreadProfiler {
     fun report(limit: Int = 20): String {
         val total = totalSamples.get()
         return buildString {
-            appendLine("===== Leaf Profiler (main thread, self-time) =====")
+            appendLine("===== Arc Profiler (main thread, self-time) =====")
             appendLine("state    : ${if (running) "RUNNING" else "stopped"}  interval=${intervalMs}ms")
             appendLine("duration : ${(System.currentTimeMillis() - startedAt) / 1000}s")
             appendLine("samples  : $total (missed=${missedSamples.get()})")
             if (total == 0L) {
-                append("no samples yet — start with /leaf profiler start"); return@buildString
+                append("no samples yet — start with /arc profiler start"); return@buildString
             }
             appendLine("top frames:")
             selfCounts.entries

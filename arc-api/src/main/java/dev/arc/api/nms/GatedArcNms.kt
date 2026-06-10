@@ -32,6 +32,9 @@ class GatedArcNms(private val delegate: ArcNms) : ArcNms {
     override val server: ArcServerNms
         get() = if (on(ArcFeatures.NMS_SERVER)) delegate.server else NoOpServerNms
 
+    override val fake: ArcFakeNms
+        get() = if (on(ArcFeatures.NMS_FAKE)) delegate.fake else NoOpFakeNms
+
     override fun handle(bukkit: Any): Any? =
         if (Arc.features.isEnabled(ArcFeatures.NMS)) delegate.handle(bukkit) else null
 }

@@ -2,12 +2,14 @@ package dev.arc.server.nms
 
 import dev.arc.api.nms.ArcBlockNms
 import dev.arc.api.nms.ArcEntityNms
+import dev.arc.api.nms.ArcFakeNms
 import dev.arc.api.nms.ArcItemNms
 import dev.arc.api.nms.ArcNms
 import dev.arc.api.nms.ArcPlayerNms
 import dev.arc.api.nms.ArcServerNms
 import dev.arc.api.nms.NmsCapabilities
 import dev.arc.api.nms.NmsDiagnostics
+import dev.arc.server.fake.ReflectiveFakeNms
 import dev.arc.api.scheduling.callAsync
 import dev.arc.api.scheduling.callEntity
 import dev.arc.api.scheduling.callRegion
@@ -35,6 +37,7 @@ class ReflectiveArcNms : ArcNms {
     override val blocks: ArcBlockNms = ReflectiveBlockNms
     override val players: ArcPlayerNms = ReflectivePlayerNms
     override val server: ArcServerNms = ReflectiveServerNms
+    override val fake: ArcFakeNms = ReflectiveFakeNms
 
     override fun handle(bukkit: Any): Any? {
         val owned = when (bukkit) {

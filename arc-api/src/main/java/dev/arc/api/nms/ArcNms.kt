@@ -21,6 +21,7 @@ interface ArcNms {
     val blocks: ArcBlockNms
     val players: ArcPlayerNms
     val server: ArcServerNms
+    val fake: ArcFakeNms
 
     /**
      * Generic escape hatch — the raw NMS / CraftBukkit handle behind any Bukkit

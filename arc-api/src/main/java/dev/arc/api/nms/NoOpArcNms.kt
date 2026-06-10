@@ -1,10 +1,15 @@
 package dev.arc.api.nms
 
+import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.block.Block
+import org.bukkit.block.BlockFace
 import org.bukkit.block.data.BlockData
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -55,4 +60,17 @@ internal object NoOpServerNms : ArcServerNms {
     override fun diagnostics(): NmsDiagnostics = NmsDiagnostics("disabled")
     override fun probeCapabilities(): NmsCapabilities =
         NmsCapabilities(emptySet(), setOf("nms-disabled"))
+}
+
+internal object NoOpFakeNms : ArcFakeNms {
+    override fun spawnFakePlayer(world: World, name: String, location: Location): Player =
+        error("[Arc] ArcFakeNms is disabled — enable '${ArcFeatures.NMS_FAKE}' first")
+    override fun removeFakePlayer(player: Player) {}
+    override fun isFakePlayer(entity: Entity): Boolean = false
+    override fun performAttack(attacker: LivingEntity, target: LivingEntity, weapon: ItemStack?): Boolean = false
+    override fun applyDamage(target: LivingEntity, amount: Double, source: Entity?, cause: DamageCause): Double = 0.0
+    override fun launchProjectile(shooter: LivingEntity, target: LivingEntity, entityClass: String): Entity? = null
+    override fun performBlockInteract(actor: Player, block: Block, face: BlockFace, hand: EquipmentSlot) {}
+    override fun performEntityInteract(actor: Player, target: Entity, hand: EquipmentSlot) {}
+    override fun simulateMove(player: Player, to: Location): Boolean = false
 }

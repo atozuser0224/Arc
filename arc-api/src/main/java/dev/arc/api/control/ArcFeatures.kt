@@ -66,11 +66,17 @@ class ArcFeatures internal constructor() {
         const val NMS_PLAYERS = "arc:nms.players"
         const val NMS_SERVER = "arc:nms.server"
 
+        /**
+         * Fake-server simulation: spawning NMS ServerPlayer entities with no-op
+         * connections and running full-pipeline combat / interaction events.
+         */
+        const val NMS_FAKE = "arc:nms.fake"
+
         /** All built-in feature ids, registered on by default. */
         @JvmField
         val BUILTINS: List<String> = listOf(
             MENUS, TICK_DISPATCHER, COROUTINES,
-            NMS, NMS_ENTITIES, NMS_ITEMS, NMS_BLOCKS, NMS_PLAYERS, NMS_SERVER,
+            NMS, NMS_ENTITIES, NMS_ITEMS, NMS_BLOCKS, NMS_PLAYERS, NMS_SERVER, NMS_FAKE,
         )
     }
 }

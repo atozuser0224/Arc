@@ -2,20 +2,26 @@ package dev.arc.api.fake
 
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Mob
 
 /**
- * Scoped context managing a group of [FakePlayer]s for the duration of a
- * simulation block. All spawned fakes are automatically [remove]d when the
- * session ends — even if the block throws.
+ * Scoped context managing a group of fake entities for the duration of a simulation
+ * block. All spawned entities are automatically [remove]d when the session ends —
+ * even if the block throws.
  *
  * Obtain via [FakeServer.session].
  *
  * ```kotlin
- * FakeServer.session(world, center) {
- *     val a = spawn("Attacker")
- *     val b = spawn("Defender", center.clone().add(2.0, 0.0, 0.0))
- *     repeat(5) { a.attack(b.player) }
- *     println("defender hp: ${b.health}")
+ * FakeServer.session(world, arenaCenter) {
+ *     val player = spawnPlayer("Bot")
+ *     val zombie = spawnMob<Zombie>()
+ *     val skeleton = spawnMob(EntityType.SKELETON, arenaCenter.clone().add(3.0, 0.0, 0.0))
+ *
+ *     player.attack(zombie.entity)
+ *     zombie.setTarget(player.entity)
+ *
+ *     println("zombie hp after hit: ${zombie.health}")
  * }
  * ```
  */
@@ -23,18 +29,38 @@ class FakeSession internal constructor(
     private val world: World,
     private val defaultLocation: Location,
 ) {
-    private val players = mutableListOf<FakePlayer>()
+    private val fakes = mutableListOf<FakeEntity>()
 
-    /** Spawn a new fake player at [location] (defaults to the session's base location). */
-    fun spawn(name: String, location: Location = defaultLocation): FakePlayer =
-        FakeServer.spawn(world, name, location).also { players += it }
+    // ── Spawn helpers ─────────────────────────────────────────────────────────
 
-    /** Remove all fake players created in this session. Called automatically by [FakeServer.session]. */
+    /** Spawn a fake player at [location] (defaults to the session's anchor). */
+    fun spawnPlayer(name: String, location: Location = defaultLocation): FakePlayer =
+        FakeServer.spawn(world, name, location).also { fakes += it }
+
+    /** Spawn a fake mob of [type] at [location] with optional [configure] block. */
+    fun spawnMob(
+        type: EntityType,
+        location: Location = defaultLocation,
+        configure: FakeMob.() -> Unit = {},
+    ): FakeMob = FakeServer.spawnMob(world, type, location, configure).also { fakes += it }
+
+    /** Spawn a fake mob of type [T] at [location] with optional [configure] block. */
+    inline fun <reified T : Mob> spawnMob(
+        location: Location = defaultLocation,
+        noinline configure: FakeMob.() -> Unit = {},
+    ): FakeMob = FakeServer.spawnMob<T>(world, location, configure).also { fakes += it }
+
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+    /** Remove all entities created in this session. Called automatically by [FakeServer.session]. */
     fun cleanup() {
-        players.forEach(FakePlayer::remove)
-        players.clear()
+        fakes.forEach(FakeEntity::remove)
+        fakes.clear()
     }
 
-    /** Snapshot of all fake players currently in this session. */
-    val all: List<FakePlayer> get() = players.toList()
+    // ── Queries ───────────────────────────────────────────────────────────────
+
+    val all: List<FakeEntity>   get() = fakes.toList()
+    val players: List<FakePlayer> get() = fakes.filterIsInstance<FakePlayer>()
+    val mobs: List<FakeMob>     get() = fakes.filterIsInstance<FakeMob>()
 }

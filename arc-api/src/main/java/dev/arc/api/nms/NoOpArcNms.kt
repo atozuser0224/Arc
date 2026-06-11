@@ -6,7 +6,9 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.BlockData
 import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
@@ -67,10 +69,17 @@ internal object NoOpFakeNms : ArcFakeNms {
         error("[Arc] ArcFakeNms is disabled — enable '${ArcFeatures.NMS_FAKE}' first")
     override fun removeFakePlayer(player: Player) {}
     override fun isFakePlayer(entity: Entity): Boolean = false
+    override fun spawnFakeMob(world: World, entityType: EntityType, location: Location): LivingEntity =
+        error("[Arc] ArcFakeNms is disabled — enable '${ArcFeatures.NMS_FAKE}' first")
+    override fun removeFakeMob(entity: LivingEntity) {}
+    override fun isFakeMob(entity: Entity): Boolean = false
     override fun performAttack(attacker: LivingEntity, target: LivingEntity, weapon: ItemStack?): Boolean = false
     override fun applyDamage(target: LivingEntity, amount: Double, source: Entity?, cause: DamageCause): Double = 0.0
     override fun launchProjectile(shooter: LivingEntity, target: LivingEntity, entityClass: String): Entity? = null
     override fun performBlockInteract(actor: Player, block: Block, face: BlockFace, hand: EquipmentSlot) {}
     override fun performEntityInteract(actor: Player, target: Entity, hand: EquipmentSlot) {}
     override fun simulateMove(player: Player, to: Location): Boolean = false
+    override fun simulateMobMove(mob: Mob, to: Location): Boolean = false
+    override fun pathfindMobTo(mob: Mob, location: Location, speed: Double) {}
+    override fun pathfindMobToEntity(mob: Mob, target: LivingEntity, speed: Double) {}
 }

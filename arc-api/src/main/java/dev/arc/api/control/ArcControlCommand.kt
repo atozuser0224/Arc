@@ -40,24 +40,25 @@ object ArcControlCommand {
     /** Register from a server-integrated module without requiring a plugin instance. */
     fun register(fallbackPrefix: String = "arc") {
         command("arc", fallbackPrefix) {
-            description = "Inspect and control Arc features and settings"
-            permission = "arc.admin"
-            usage = "/arc <help|version|features|settings|nms|enable|disable|set|reload|save|" +
+            description("Inspect and control Arc features and settings")
+            permission("arc.admin")
+            usage("/arc <help|version|features|settings|nms|enable|disable|set|reload|save|" +
                 "doctor|lagspike|plugin-cost|config|chunks|entity|profiler|pregen|memory|ping|status|" +
-                "plugin|command|permission|world|logs|paste|safe-mode|maintenance>"
+                "plugin|command|permission|world|logs|paste|safe-mode|maintenance>")
 
-            executes { sender, args ->
+            execute { ctx ->
+                val sender = ctx.sender
+                val args = ctx.args
                 when (args.getOrNull(0)?.lowercase()) {
-                    "help" -> { showHelp(sender) }
-                    "version" -> { showVersion(sender) }
-                    "restart" -> { doRestart(sender, args) }
+                    "help"    -> showHelp(sender)
+                    "version" -> showVersion(sender)
+                    "restart" -> doRestart(sender, args)
                     "features" -> {
                         sender.sendMessage("Arc features:")
                         Arc.features.all().sortedBy { it.id }.forEach {
                             sender.sendMessage(" - ${it.id} = ${it.isEnabled}")
                         }
                     }
-
                     "settings" -> {
                         sender.sendMessage("Arc settings:")
                         sender.sendMessage(" - tickBudgetMillis = ${Arc.settings.tickBudgetMillis}")
@@ -67,18 +68,14 @@ object ArcControlCommand {
                         sender.sendMessage(" - dispatcherMaxPending = ${Arc.settings.dispatcherMaxPending}")
                         sender.sendMessage(" - nmsThreadPolicy = ${Arc.settings.nmsThreadPolicy}")
                     }
-
                     "confirm" -> {
                         val token = args.getOrNull(1)
                         if (token == null) {
                             sender.sendMessage("usage: /arc confirm <token>")
-                        } else if (ConfirmManager.confirm(sender, token)) {
-                            // action already executed inside confirm()
-                        } else {
+                        } else if (!ConfirmManager.confirm(sender, token)) {
                             sender.sendMessage("[Arc] unknown or expired token: $token")
                         }
                     }
-
                     "reload" -> {
                         runCatching { Arc.config.reload() }.fold(
                             onSuccess = { sender.sendMessage("Arc config reloaded.") },
@@ -91,42 +88,39 @@ object ArcControlCommand {
                             )
                         }
                     }
-
                     "save" -> {
                         runCatching { Arc.config.save() }.fold(
                             onSuccess = { sender.sendMessage("Arc config saved.") },
                             onFailure = { sender.sendMessage("Save failed: ${it.message}") },
                         )
                     }
-
-                    "nms" -> nms(sender, args.getOrNull(1))
-                    "enable" -> toggle(sender, args.getOrNull(1), true)
+                    "nms"     -> nms(sender, args.getOrNull(1))
+                    "enable"  -> toggle(sender, args.getOrNull(1), true)
                     "disable" -> toggle(sender, args.getOrNull(1), false)
-                    "set" -> set(sender, args.getOrNull(1), args.getOrNull(2))
-
-                    else -> if (!ArcOpsCommand.dispatch(sender, args)) {
+                    "set"     -> set(sender, args.getOrNull(1), args.getOrNull(2))
+                    else      -> if (!ArcOpsCommand.dispatch(sender, args.toTypedArray())) {
                         sender.sendMessage("/arc help — see all commands")
                     }
                 }
-                true
             }
 
-            completes { _, args ->
+            complete { ctx ->
+                val args = ctx.args
                 when (args.size) {
-                    1 -> listOf("help", "version", "restart", "confirm", "features", "settings", "nms", "enable", "disable", "set", "reload", "save") +
-                        ArcOpsCommand.roots
+                    1 -> listOf("help", "version", "restart", "confirm", "features", "settings",
+                        "nms", "enable", "disable", "set", "reload", "save") + ArcOpsCommand.roots
                     2 -> when (args[0].lowercase()) {
                         "enable", "disable" -> Arc.features.all().map { it.id }
-                        "set" -> SETTING_KEYS
-                        "nms" -> listOf("capabilities", "clear-cache")
-                        else -> ArcOpsCommand.complete(args)
+                        "set"               -> SETTING_KEYS
+                        "nms"               -> listOf("capabilities", "clear-cache")
+                        else                -> ArcOpsCommand.complete(args.toTypedArray())
                     }
                     3 -> if (args[0].equals("set", ignoreCase = true) &&
                         args[1].equals("nmsThreadPolicy", ignoreCase = true)
                     ) {
                         NmsThreadPolicy.entries.map { it.name.lowercase() }
                     } else {
-                        ArcOpsCommand.complete(args)
+                        ArcOpsCommand.complete(args.toTypedArray())
                     }
                     else -> emptyList()
                 }
@@ -246,7 +240,7 @@ object ArcControlCommand {
         sender.sendMessage("§7All commands require §farc.admin §7permission")
     }
 
-    private fun doRestart(sender: CommandSender, args: Array<out String>) {
+    private fun doRestart(sender: CommandSender, args: List<String>) {
         val token = ConfirmManager.stage(sender, "restart the server") {
             AuditLog.log(sender, "restart", "server restart")
             sender.sendMessage("[Arc] §cServer restarting...")

@@ -177,3 +177,71 @@ public fun Plugin.command(name: String, block: CommandBuilder.() -> Unit) {
         .javaClass.getMethod("getCommandMap").invoke(Bukkit.getServer()) as CommandMap
     commandMap.register(this.name.lowercase(), cmd)
 }
+
+/**
+ * Register a command without a [Plugin] instance — useful for server-integrated modules.
+ * [prefix] is used as the CommandMap namespace (e.g. `"arc"`).
+ */
+public fun command(name: String, prefix: String, block: CommandBuilder.() -> Unit) {
+    val builder = CommandBuilder(name).apply(block)
+
+    val cmd = object : Command(
+        name,
+        builder.description,
+        builder.usage.ifEmpty { "/$name" },
+        emptyList(),
+    ) {
+        init { builder.permission?.let { permission = it } }
+
+        override fun execute(sender: CommandSender, label: String, args: Array<String>): Boolean {
+            val perm = builder.permission
+            if (perm != null && !sender.hasPermission(perm)) {
+                sender.sendMessage("§cYou don't have permission to use this command.")
+                return true
+            }
+            if (builder.isPlayerOnly && sender !is Player) {
+                sender.sendMessage("§cOnly players can use this command.")
+                return true
+            }
+            val subName = args.getOrNull(0)?.lowercase()
+            val sub = subName?.let { builder.subs[it] }
+            if (sub != null) {
+                val subPerm = sub.permission
+                if (subPerm != null && !sender.hasPermission(subPerm)) {
+                    sender.sendMessage("§cYou don't have permission.")
+                    return true
+                }
+                if (sub.isPlayerOnly && sender !is Player) {
+                    sender.sendMessage("§cOnly players can use this command.")
+                    return true
+                }
+                sub.onExecute?.invoke(CommandContext(sender, label, args.drop(1)))
+                    ?: sender.sendMessage("§cNo handler for this subcommand.")
+            } else {
+                val ctx = CommandContext(sender, label, args.toList())
+                builder.onExecute?.invoke(ctx) ?: run {
+                    if (builder.subs.isNotEmpty()) {
+                        sender.sendMessage("§eSubcommands: ${builder.subs.keys.joinToString("§7, §e") { "§e$it" }}")
+                    }
+                }
+            }
+            return true
+        }
+
+        override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): List<String> {
+            val typed = args.getOrNull(0)?.lowercase() ?: ""
+            if (args.size <= 1) {
+                val subMatches = builder.subs.keys.filter { it.startsWith(typed) }
+                val extra = builder.onComplete?.invoke(CommandContext(sender, alias, args.toList())) ?: emptyList()
+                return (subMatches + extra).distinct()
+            }
+            val sub = builder.subs[args[0].lowercase()] ?: return emptyList()
+            return (sub.onComplete?.invoke(CommandContext(sender, alias, args.drop(1))) ?: emptyList())
+                .filter { it.startsWith(args.last(), ignoreCase = true) }
+        }
+    }
+
+    val commandMap = Bukkit.getServer()
+        .javaClass.getMethod("getCommandMap").invoke(Bukkit.getServer()) as CommandMap
+    commandMap.register(prefix.lowercase(), cmd)
+}

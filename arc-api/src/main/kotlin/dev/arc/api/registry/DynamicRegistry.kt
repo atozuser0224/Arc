@@ -123,7 +123,6 @@ public object ArcRegistries {
 // Edit scope DSL
 // ---------------------------------------------------------------------------
 
-@DslMarker public annotation class RegistryDsl
 
 /**
  * Scope available inside [ArcRegistries.edit] blocks.

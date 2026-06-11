@@ -4,6 +4,8 @@ import dev.arc.api.Arc
 import dev.arc.api.control.ArcControlCommand
 import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
+import dev.arc.api.registry.ArcRegistries
+import dev.arc.server.nms.NmsRegistryBackend
 import dev.arc.server.nms.ReflectiveArcNms
 import dev.arc.server.scheduling.LeafParallelWorldScheduler
 import org.bukkit.plugin.Plugin
@@ -38,6 +40,7 @@ object ArcBootstrap {
             provider.server.probeCapabilities()
             Arc.registerNms(GatedArcNms(provider))
             Arc.registerThreadScheduler(LeafParallelWorldScheduler)
+            ArcRegistries.backend = NmsRegistryBackend
             if (standaloneCommandInstalled.compareAndSet(false, true)) {
                 try {
                     ArcControlCommand.register()

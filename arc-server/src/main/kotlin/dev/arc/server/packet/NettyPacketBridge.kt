@@ -45,10 +45,15 @@ public class NettyPacketBridge : PacketBridge {
 
     // ServerPlayer.connection (ServerGamePacketListenerImpl) -> .connection (Connection) -> .channel (Channel)
     private fun channelOf(player: Player): Channel? {
-        val serverPlayer = Reflect.handle(player) ?: return null
-        val listener = Reflect.field(serverPlayer, "connection") ?: return null
-        val connection = Reflect.field(listener, "connection") ?: return null
-        return Reflect.field(connection, "channel") as? Channel
+        val serverPlayer = Reflect.handleOf(player) ?: return null
+        val listener = fieldValue(serverPlayer, "connection") ?: return null
+        val connection = fieldValue(listener, "connection") ?: return null
+        return fieldValue(connection, "channel") as? Channel
+    }
+
+    private fun fieldValue(target: Any, name: String): Any? {
+        val field = Reflect.field(target.javaClass, name) ?: return null
+        return Reflect.fieldValue(field, target)
     }
 }
 

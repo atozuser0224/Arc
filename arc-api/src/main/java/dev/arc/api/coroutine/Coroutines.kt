@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.bukkit.Bukkit
@@ -103,6 +104,23 @@ val Plugin.scope: CoroutineScope
  * ```
  */
 fun Plugin.launchMain(block: suspend CoroutineScope.() -> Unit): Job = scope.launch(block = block)
+
+/** Alias for [launchMain] — launch a coroutine on the main thread. */
+fun Plugin.launch(block: suspend CoroutineScope.() -> Unit): Job = launchMain(block)
+
+/**
+ * Launch a coroutine on the main thread that repeats [block] every [periodTicks] ticks until cancelled.
+ * The first execution happens immediately; delays occur after each invocation.
+ */
+fun Plugin.launchEveryTicks(periodTicks: Long, block: suspend CoroutineScope.() -> Unit): Job {
+    val plugin = this
+    return scope.launch {
+        while (isActive) {
+            block()
+            plugin.delayTicks(periodTicks)
+        }
+    }
+}
 
 /**
  * Suspend for exactly [ticks] scheduler ticks. Unlike a millisecond delay this

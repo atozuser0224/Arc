@@ -10,6 +10,7 @@ import org.bukkit.entity.BlockDisplay
 import org.bukkit.entity.Display
 import org.bukkit.entity.Display.Billboard
 import org.bukkit.entity.Display.Brightness
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.TextDisplay
 import org.bukkit.inventory.ItemStack
@@ -17,7 +18,7 @@ import org.bukkit.util.Transformation
 
 /** Spawn a [TextDisplay] at [location] and configure it via [block]. */
 public fun World.spawnText(location: Location, text: Component, block: TextDisplay.() -> Unit = {}): TextDisplay =
-    spawnEntity(location, TextDisplay::class.java).also {
+    (spawnEntity(location, EntityType.TEXT_DISPLAY) as TextDisplay).also {
         it.text(text)
         it.billboard = Billboard.CENTER
         it.isSeeThrough = false
@@ -29,7 +30,7 @@ public fun World.spawnBlockDisplay(
     location: Location,
     material: org.bukkit.Material,
     block: BlockDisplay.() -> Unit = {},
-): BlockDisplay = spawnEntity(location, BlockDisplay::class.java).also {
+): BlockDisplay = (spawnEntity(location, EntityType.BLOCK_DISPLAY) as BlockDisplay).also {
     it.block = material.createBlockData()
     block(it)
 }
@@ -39,8 +40,8 @@ public fun World.spawnItemDisplay(
     location: Location,
     item: ItemStack,
     block: ItemDisplay.() -> Unit = {},
-): ItemDisplay = spawnEntity(location, ItemDisplay::class.java).also {
-    it.itemStack = item
+): ItemDisplay = (spawnEntity(location, EntityType.ITEM_DISPLAY) as ItemDisplay).also {
+    it.setItemStack(item)
     it.itemDisplayTransform = ItemDisplay.ItemDisplayTransform.GROUND
     block(it)
 }

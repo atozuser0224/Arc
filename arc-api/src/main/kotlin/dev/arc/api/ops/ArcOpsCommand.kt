@@ -1,12 +1,31 @@
 package dev.arc.api.ops
 
 import dev.arc.api.ops.async.ArcAsync
+import dev.arc.api.ops.audit.AuditLog
+import dev.arc.api.ops.bundle.IssueBundle
 import dev.arc.api.ops.chunk.ChunkDiagnostics
+import dev.arc.api.ops.commands.CommandSearch
+import dev.arc.api.ops.config.ConfigChangeHistory
+import dev.arc.api.ops.config.ConfigCommands
+import dev.arc.api.ops.config.PluginOverrides
 import dev.arc.api.ops.configcheck.ConfigValidator
 import dev.arc.api.ops.configcheck.Severity
 import dev.arc.api.ops.doctor.ServerDoctor
+import dev.arc.api.ops.logs.LogCommands
+import dev.arc.api.ops.paste.PasteCommands
+import dev.arc.api.ops.permissions.PermissionSearch
+import dev.arc.api.ops.plugin.PluginCommands
+import dev.arc.api.ops.plugin.PluginSandboxCheck
+import dev.arc.api.ops.plugin.ReloadPolicy
 import dev.arc.api.ops.plugincost.PluginCostTracker
 import dev.arc.api.ops.profiler.MainThreadProfiler
+import dev.arc.api.ops.proxy.ProxySetupChecker
+import dev.arc.api.ops.safe.SafeModeCommands
+import dev.arc.api.ops.security.SecurityAudit
+import dev.arc.api.ops.snapshot.SnapshotCommands
+import dev.arc.api.ops.startup.StartupProfile
+import dev.arc.api.ops.worlds.WorldCommands
+import dev.arc.api.ops.network.ArcNetworkCommands
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import java.io.File
@@ -35,7 +54,11 @@ object ArcOpsCommand {
     val roots: List<String> = listOf(
         "doctor", "lagspike", "plugin-cost", "config", "chunks", "entity",
         "profiler", "pregen", "memory", "ping", "status",
-    )
+        "command", "permission", "world", "logs", "paste", "safe-mode", "maintenance",
+        "sandbox", "reload-policy", "plugin-overrides", "audit",
+        "config-history", "proxy-check", "security-audit", "startup-profile", "issue-bundle",
+        "network",
+    ) + PluginCommands.roots() // "plugin", "plugins"
 
     private val rootSet: Set<String> = (roots + listOf("lagspikes", "plugincost")).toHashSet()
 
@@ -44,19 +67,65 @@ object ArcOpsCommand {
         2 -> when (args[0].lowercase()) {
             "lagspike" -> listOf("list", "last")
             "plugin-cost" -> listOf("top")
-            "config" -> listOf("check", "explain")
+            "config" -> ConfigCommands.complete(args)
             "chunks" -> listOf("report", "tickets", "backlog")
             "entity" -> listOf("stats")
             "profiler" -> listOf("start", "stop", "report")
             "pregen" -> listOf("start", "status", "cancel")
+            "plugin", "plugins" -> PluginCommands.complete(args)
+            "command" -> CommandSearch.complete(args)
+            "permission" -> PermissionSearch.complete(args)
+            "world" -> WorldCommands.complete(args)
+            "logs" -> LogCommands.complete(args)
+            "paste" -> PasteCommands.complete(args)
+            "safe-mode", "maintenance" -> SafeModeCommands.complete(args)
+            "sandbox" -> PluginSandboxCheck.complete(args)
+            "reload-policy" -> ReloadPolicy.complete(args)
+            "plugin-overrides" -> PluginOverrides.complete(args)
+            "audit" -> AuditLog.complete(args)
+            "config-history" -> ConfigChangeHistory.complete(args)
+            "proxy-check" -> emptyList()
+            "security-audit" -> emptyList()
+            "startup-profile" -> listOf("detail")
+            "issue-bundle" -> emptyList()
+            "network" -> ArcNetworkCommands.complete(args)
             else -> emptyList()
         }
         3 -> when {
-            args[0].equals("config", true) && args[1].equals("explain", true) -> ConfigValidator.knownPaths()
-            args[0].equals("pregen", true) && args[1].equals("start", true) -> Bukkit.getWorlds().map { it.name }
+            args[0] in listOf("plugin", "plugins") -> PluginCommands.complete(args)
+            args[0] == "config" -> ConfigCommands.complete(args)
+            args[0] == "command" -> CommandSearch.complete(args)
+            args[0] == "permission" -> PermissionSearch.complete(args)
+            args[0] == "world" -> WorldCommands.complete(args)
+            args[0] == "logs" -> LogCommands.complete(args)
+            args[0] == "paste" -> PasteCommands.complete(args)
+            args[0] in listOf("safe-mode", "maintenance") -> SafeModeCommands.complete(args)
+            args[0] == "sandbox" -> PluginSandboxCheck.complete(args)
+            args[0] == "reload-policy" -> ReloadPolicy.complete(args)
+            args[0] == "plugin-overrides" -> PluginOverrides.complete(args)
+            args[0] == "audit" -> AuditLog.complete(args)
+            args[0] == "config-history" -> ConfigChangeHistory.complete(args)
+            args[0] == "network" -> ArcNetworkCommands.complete(args)
+            args[0] == "startup-profile" && args[1] == "detail" -> Bukkit.getPluginManager().plugins.map { it.name }
+            args[0] == "pregen" && args[1] == "start" -> Bukkit.getWorlds().map { it.name }
             else -> emptyList()
         }
-        else -> emptyList()
+        else -> when (args.getOrNull(0)?.lowercase()) {
+            "config" -> ConfigCommands.complete(args)
+            "plugin", "plugins" -> PluginCommands.complete(args)
+            "command" -> CommandSearch.complete(args)
+            "permission" -> PermissionSearch.complete(args)
+            "world" -> WorldCommands.complete(args)
+            "logs" -> LogCommands.complete(args)
+            "paste" -> PasteCommands.complete(args)
+            "safe-mode", "maintenance" -> SafeModeCommands.complete(args)
+            "sandbox" -> PluginSandboxCheck.complete(args)
+            "reload-policy" -> ReloadPolicy.complete(args)
+            "plugin-overrides" -> PluginOverrides.complete(args)
+            "audit" -> AuditLog.complete(args)
+            "config-history" -> ConfigChangeHistory.complete(args)
+            else -> emptyList()
+        }
     }
 
     /**
@@ -66,6 +135,29 @@ object ArcOpsCommand {
     fun dispatch(sender: CommandSender, args: Array<out String>): Boolean {
         val sub = args.getOrNull(0)?.lowercase() ?: return false
         if (sub !in rootSet) return false
+
+        // These work even without the full ops suite installed
+        when (sub) {
+            "plugin", "plugins" -> return PluginCommands.dispatch(sender, args)
+            "command" -> return CommandSearch.dispatch(sender, args)
+            "permission" -> return PermissionSearch.dispatch(sender, args)
+            "world" -> return WorldCommands.dispatch(sender, args)
+            "logs" -> return LogCommands.dispatch(sender, args)
+            "paste" -> return PasteCommands.dispatch(sender, args)
+            "safe-mode", "maintenance" -> return SafeModeCommands.dispatch(sender, args)
+            "config" -> return ConfigCommands.dispatch(sender, args)
+            "sandbox" -> return PluginSandboxCheck.dispatch(sender, args)
+            "reload-policy" -> return ReloadPolicy.dispatch(sender, args)
+            "plugin-overrides" -> return PluginOverrides.dispatch(sender, args)
+            "audit" -> return AuditLog.dispatch(sender, args)
+            "config-history" -> return ConfigChangeHistory.dispatch(sender, args)
+            "proxy-check" -> return ProxySetupChecker.dispatch(sender)
+            "security-audit" -> return SecurityAudit.dispatch(sender)
+            "startup-profile" -> return StartupProfile.dispatch(sender, args)
+            "issue-bundle" -> return IssueBundle.dispatch(sender, args, ArcOps.lagSpikeMonitor)
+            "network" -> return ArcNetworkCommands.dispatch(sender, args)
+        }
+
         if (!ArcOps.installed) {
             sender.sendMessage("[Arc] operations suite is not installed")
             return true
@@ -74,7 +166,6 @@ object ArcOpsCommand {
             "doctor" -> doctor(sender, args)
             "lagspike", "lagspikes" -> lagspike(sender, args)
             "plugin-cost", "plugincost" -> pluginCost(sender, args)
-            "config" -> config(sender, args)
             "chunks" -> chunks(sender, args)
             "entity" -> entity(sender)
             "profiler" -> profiler(sender, args)

@@ -26,19 +26,21 @@ public fun Cuboid.removeEffect(type: PotionEffectType) {
 
 /** Play a [sound] to all players inside this region. */
 public fun Cuboid.playSound(sound: Sound, volume: Float = 1f, pitch: Float = 1f) {
-    val loc = center()
+    val loc = center
     playersInside().forEach { it.playSound(loc, sound, volume, pitch) }
 }
 
 /** Fill this region with particle outlines each tick (call from a timer). */
 public fun Cuboid.outlineParticles(particle: Particle, density: Double = 0.5) {
     val w = world
+    val minLoc = org.bukkit.Location(w, minX.toDouble(), minY.toDouble(), minZ.toDouble())
+    val maxLoc = org.bukkit.Location(w, maxX.toDouble(), maxY.toDouble(), maxZ.toDouble())
     // edges of the bounding box
     val corners = listOf(
-        min, org.bukkit.Location(w, max.x, min.y, min.z),
-        org.bukkit.Location(w, min.x, min.y, max.z), org.bukkit.Location(w, max.x, min.y, max.z),
-        org.bukkit.Location(w, min.x, max.y, min.z), org.bukkit.Location(w, max.x, max.y, min.z),
-        org.bukkit.Location(w, min.x, max.y, max.z), max,
+        minLoc, org.bukkit.Location(w, maxLoc.x, minLoc.y, minLoc.z),
+        org.bukkit.Location(w, minLoc.x, minLoc.y, maxLoc.z), org.bukkit.Location(w, maxLoc.x, minLoc.y, maxLoc.z),
+        org.bukkit.Location(w, minLoc.x, maxLoc.y, minLoc.z), org.bukkit.Location(w, maxLoc.x, maxLoc.y, minLoc.z),
+        org.bukkit.Location(w, minLoc.x, maxLoc.y, maxLoc.z), maxLoc,
     )
     // 12 edges
     val edges = listOf(

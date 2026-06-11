@@ -1,5 +1,6 @@
 package dev.arc.api.control
 
+import dev.arc.api.Arc
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.util.logging.Logger

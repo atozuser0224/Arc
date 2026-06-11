@@ -47,5 +47,5 @@ public fun Player.stopSound(sound: Sound, category: SoundCategory = SoundCategor
 
 /** Stop ALL sounds for this player. */
 public fun Player.stopAllSounds() {
-    SoundCategory.entries.forEach { cat -> Sound.entries.forEach { s -> stopSound(s, cat) } }
+    SoundCategory.values().forEach { cat -> Sound.values().forEach { s -> stopSound(s, cat) } }
 }

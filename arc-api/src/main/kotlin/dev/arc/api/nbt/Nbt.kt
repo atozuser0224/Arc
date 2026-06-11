@@ -24,7 +24,7 @@ public class NbtMap internal constructor(
     public val container: PersistentDataContainer,
     private val plugin: String = "arc",
 ) {
-    private fun key(name: String): NamespacedKey {
+    @PublishedApi internal fun key(name: String): NamespacedKey {
         return if (':' in name) NamespacedKey.fromString(name)!!
         else NamespacedKey(plugin, name)
     }

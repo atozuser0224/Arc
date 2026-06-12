@@ -1,0 +1,5 @@
+name: ArcTestPlugin
+version: 1.0.0
+main: dev.arc.test.TestPlugin
+api-version: "1.21"
+description: Internal plugin stub used by the arc-test framework

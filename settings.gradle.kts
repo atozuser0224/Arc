@@ -13,7 +13,7 @@ plugins {
 
 rootProject.name = "leaf"
 
-for (name in listOf("leaf-api", "leaf-server", "arc-api", "arc-server")) {
+for (name in listOf("leaf-api", "leaf-server", "arc-api", "arc-server", "arc-test")) {
     val projName = name.lowercase(Locale.ENGLISH)
     include(projName)
     findProject(":$projName")!!.projectDir = file(name)

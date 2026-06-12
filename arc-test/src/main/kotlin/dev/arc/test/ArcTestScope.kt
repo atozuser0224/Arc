@@ -13,6 +13,7 @@ import dev.arc.test.extra.BenchmarkScope
 import dev.arc.test.extra.FuzzScope
 import dev.arc.test.extra.PermissionAudit
 import dev.arc.test.extra.WorldSnapshot
+import dev.arc.test.virtual.VirtualConsole
 import dev.arc.test.virtual.VirtualNetwork
 import dev.arc.test.virtual.VirtualPlayer
 import dev.arc.test.virtual.virtualNetwork
@@ -41,6 +42,9 @@ class ArcTestScope internal constructor(
 
     /** Lazy in-memory database — created on first access. */
     val db: ArcDatabase by lazy { TestDatabase.create() }
+
+    /** Console sender — run admin commands or assert console output. */
+    val console: VirtualConsole by lazy { VirtualConsole(server) }
 
     // ---- Player factory ----
 

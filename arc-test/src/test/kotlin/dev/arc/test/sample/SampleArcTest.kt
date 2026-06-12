@@ -3,6 +3,7 @@ package dev.arc.test.sample
 import dev.arc.test.ArcTestScope
 import dev.arc.test.annotation.ArcTest
 import dev.arc.test.arcTest
+import dev.arc.test.assert.assertPdc
 import dev.arc.test.db.TestDatabase
 import dev.arc.test.extra.BenchmarkScope
 import dev.arc.test.extra.arbInt
@@ -10,6 +11,9 @@ import dev.arc.test.extra.arbString
 import dev.arc.test.extra.forAll
 import dev.arc.test.extra.ms
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -128,5 +132,51 @@ class SampleArcTest {
         // In a real plugin test, assert issues.none { it.contains("[ERROR]") }
         // Here we just verify the audit runs without crashing
         assert(issues is List<*>)
+    }
+
+    // ---- PacketCapture ----
+
+    @Test
+    fun `action bar capture works`() = arcTest {
+        val player = withPlayer("Steve")
+        // Send an action bar via Adventure API
+        player.mock.sendActionBar(net.kyori.adventure.text.Component.text("❤ 20"))
+        player.packets.assertActionBar("❤ 20")
+        player.packets.assertNoActionBar()
+    }
+
+    // ---- PDC assertions ----
+
+    @Test
+    fun `pdc assertion helpers work`() = arcTest {
+        val item = ItemStack(Material.DIAMOND_SWORD)
+        val meta = item.itemMeta!!
+        meta.persistentDataContainer.set(
+            NamespacedKey(plugin, "rarity"),
+            PersistentDataType.STRING,
+            "EPIC",
+        )
+        item.itemMeta = meta
+        item.assertPdc(plugin, "rarity", PersistentDataType.STRING, "EPIC")
+    }
+
+    // ---- Tab completion ----
+
+    @Test
+    fun `tab complete returns results`() = arcTest {
+        val player = withPlayer("Steve") { grant("bukkit.command.help") }
+        // "help" is a built-in command — tab completing it should not crash
+        val scope = player.tabComplete("help ")
+        // Just assert it returns a TabCompletionScope without throwing
+        assert(scope.completions is List<*>)
+    }
+
+    // ---- VirtualConsole ----
+
+    @Test
+    fun `console can run commands`() = arcTest {
+        // Running an unknown command should not throw — just produce an error message
+        console.runCommand("nonexistent-command-xyz")
+        console.drainMessages()
     }
 }

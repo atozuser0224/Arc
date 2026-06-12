@@ -4,7 +4,10 @@ package dev.arc.test.virtual
 
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.mockbukkit.mockbukkit.entity.PlayerMock
+import org.mockbukkit.mockbukkit.ServerMock
 import dev.arc.test.assert.MessageAssertions
+import dev.arc.test.assert.PacketCapture
+import dev.arc.test.assert.TabCompletionScope
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
@@ -27,6 +30,9 @@ class VirtualPlayer internal constructor(
     internal val mock: PlayerMock,
     val plugin: Plugin,
 ) : MessageAssertions {
+
+    /** Captures action-bar and title packets sent to this player. */
+    val packets: PacketCapture = PacketCapture(mock)
 
     val name: String get() = mock.name
     val uniqueId: UUID get() = mock.uniqueId
@@ -116,5 +122,22 @@ class VirtualPlayer internal constructor(
     /** Collect all pending messages as plain text strings. */
     fun messages(): List<String> = buildList {
         while (true) { add(plain.serialize(mock.nextComponentMessage() ?: break)) }
+    }
+
+    // ---- Tab completion ----
+
+    /**
+     * Run tab completion for [commandLine] (without leading slash) and return a
+     * [TabCompletionScope] for chained assertions.
+     *
+     * ```kotlin
+     * player.tabComplete("shop ").assertContains("buy", "sell")
+     * player.tabComplete("shop b").assertExact("buy")
+     * ```
+     */
+    fun tabComplete(commandLine: String): TabCompletionScope {
+        val server = mock.server as ServerMock
+        val results = server.getCommandTabComplete(mock, commandLine)
+        return TabCompletionScope(results)
     }
 }

@@ -5,6 +5,9 @@ import dev.arc.api.control.ArcControlCommand
 import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
+import dev.arc.api.network.ArcNetworkConfig
+import dev.arc.api.network.ArcRelayClient
+import dev.arc.api.network.ArcServerRegistry
 import dev.arc.api.player.ArcClientWorldStates
 import dev.arc.api.registry.ArcRegistries
 import dev.arc.server.nms.NmsClientWorldStateBackend
@@ -26,6 +29,7 @@ object ArcBootstrap {
 
     private val installed = AtomicBoolean()
     private val standaloneCommandInstalled = AtomicBoolean()
+    private val networkInstalled = AtomicBoolean()
     private val commandOwners = ConcurrentHashMap.newKeySet<Plugin>()
 
     /** Install the (feature-gated) NMS bridge only. */
@@ -55,9 +59,31 @@ object ArcBootstrap {
                     throw error
                 }
             }
+            installNetwork()
         } catch (error: Throwable) {
             installed.set(false)
             throw error
+        }
+    }
+
+    private fun installNetwork() {
+        if (!networkInstalled.compareAndSet(false, true)) return
+        runCatching {
+            ArcNetworkConfig.load()
+            if (!ArcNetworkConfig.enabled) return
+            ArcRelayClient.connect(ArcNetworkConfig)
+            if (!ArcRelayClient.connected) {
+                networkInstalled.set(false)
+                return
+            }
+            ArcServerRegistry.start(ArcNetworkConfig, ArcRelayClient)
+            Runtime.getRuntime().addShutdownHook(Thread({
+                ArcServerRegistry.stop()
+                ArcRelayClient.disconnect()
+            }, "Arc-Network-Shutdown"))
+        }.onFailure {
+            networkInstalled.set(false)
+            java.util.logging.Logger.getLogger("Arc").warning("[Arc-Network] Startup failed: ${it.message}")
         }
     }
 

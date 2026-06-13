@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture
 object ArcServerRegistry {
 
     private var relay: ArcRelayClient? = null
+    private var heartbeatExecutor: java.util.concurrent.ScheduledExecutorService? = null
     private var heartbeatTask: java.util.concurrent.Future<*>? = null
     @Volatile var localServerInfo: ServerInfo? = null
 
@@ -38,9 +39,13 @@ object ArcServerRegistry {
     }
 
     fun start(config: ArcNetworkConfig, relayClient: ArcRelayClient) {
+        stop()
         this.relay = relayClient
-        val executor = java.util.concurrent.Executors.newSingleThreadScheduledExecutor()
-        heartbeatTask = (executor as java.util.concurrent.ScheduledExecutorService).scheduleAtFixedRate(
+        val executor = java.util.concurrent.Executors.newSingleThreadScheduledExecutor { task ->
+            Thread(task, "Arc-Network-Heartbeat").apply { isDaemon = true }
+        }
+        heartbeatExecutor = executor
+        heartbeatTask = executor.scheduleAtFixedRate(
             { sendHeartbeat(config) },
             1, config.heartbeat.intervalSeconds.toLong(), java.util.concurrent.TimeUnit.SECONDS
         )
@@ -48,10 +53,14 @@ object ArcServerRegistry {
 
     fun stop() {
         heartbeatTask?.cancel(false)
+        heartbeatExecutor?.shutdownNow()
+        heartbeatTask = null
+        heartbeatExecutor = null
         relay?.let { r ->
             runCatching { r.del("arc:server:${ArcNetworkConfig.serverId}") }
             runCatching { r.srem("arc:servers:online", ArcNetworkConfig.serverId) }
         }
+        relay = null
     }
 
     /** Get all online server IDs */

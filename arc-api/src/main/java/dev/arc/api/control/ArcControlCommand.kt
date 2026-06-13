@@ -105,27 +105,28 @@ object ArcControlCommand {
             }
 
             complete { ctx ->
-                val args = ctx.args
-                when (args.size) {
-                    1 -> listOf("help", "version", "restart", "confirm", "features", "settings",
-                        "nms", "enable", "disable", "set", "reload", "save") + ArcOpsCommand.roots
-                    2 -> when (args[0].lowercase()) {
-                        "enable", "disable" -> Arc.features.all().map { it.id }
-                        "set"               -> SETTING_KEYS
-                        "nms"               -> listOf("capabilities", "clear-cache")
-                        else                -> ArcOpsCommand.complete(args.toTypedArray())
-                    }
-                    3 -> if (args[0].equals("set", ignoreCase = true) &&
-                        args[1].equals("nmsThreadPolicy", ignoreCase = true)
-                    ) {
-                        NmsThreadPolicy.entries.map { it.name.lowercase() }
-                    } else {
-                        ArcOpsCommand.complete(args.toTypedArray())
-                    }
-                    else -> emptyList()
-                }
+                complete(ctx.args)
             }
         }
+    }
+
+    internal fun complete(args: List<String>): List<String> = when (args.size) {
+        1 -> listOf("help", "version", "restart", "confirm", "features", "settings",
+            "nms", "enable", "disable", "set", "reload", "save") + ArcOpsCommand.roots
+        2 -> when (args[0].lowercase()) {
+            "enable", "disable" -> Arc.features.all().map { it.id }
+            "set"               -> SETTING_KEYS
+            "nms"               -> listOf("capabilities", "clear-cache")
+            else                -> ArcOpsCommand.complete(args.toTypedArray())
+        }
+        3 -> if (args[0].equals("set", ignoreCase = true) &&
+            args[1].equals("nmsThreadPolicy", ignoreCase = true)
+        ) {
+            NmsThreadPolicy.entries.map { it.name.lowercase() }
+        } else {
+            ArcOpsCommand.complete(args.toTypedArray())
+        }
+        else -> ArcOpsCommand.complete(args.toTypedArray())
     }
 
     private fun toggle(sender: CommandSender, id: String?, enabled: Boolean) {

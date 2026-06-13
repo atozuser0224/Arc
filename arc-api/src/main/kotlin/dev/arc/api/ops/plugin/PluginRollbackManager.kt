@@ -53,6 +53,7 @@ object PluginRollbackManager {
             timestamp=${System.currentTimeMillis()}
             version=$version
             jar=${backupJar.name}
+            originalJar=${jarFile.name}
         """.trimIndent())
 
         return id
@@ -85,7 +86,8 @@ object PluginRollbackManager {
         if (!backupJar.isFile) return false
 
         // Copy JAR back to plugins/
-        val targetJar = File("plugins", jarName.substringAfter("_").removePrefix("_"))
+        val targetName = lines["originalJar"] ?: return false
+        val targetJar = File("plugins", targetName)
         backupJar.copyTo(targetJar, overwrite = true)
         return true
     }
@@ -102,8 +104,11 @@ object PluginRollbackManager {
         }
         5 -> {
             val pluginName = args.getOrNull(2)
-            if (pluginName != null) listOf(pluginName, "--list", "--restore")
-            rollbackDir().listFiles { f -> f.extension == "meta" }?.map { it.nameWithoutExtension }?.toList() ?: emptyList()
+            if (pluginName == null || args.getOrNull(3) != "--restore") {
+                emptyList()
+            } else {
+                list(pluginName).map { it.id }
+            }
         }
         else -> emptyList()
     }

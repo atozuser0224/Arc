@@ -19,14 +19,19 @@ object ArcQueue {
 
     fun removeFromQueue(player: UUID, targetServer: String) {
         ArcRelayClient.del("arc:queue:$targetServer:player:${player}:name")
-        ArcRelayClient.zpopmin("arc:queue:$targetServer:player:${player}") // approximate
+        ArcRelayClient.zrem("arc:queue:$targetServer", player.toString())
     }
 
     fun getPosition(player: Player): String {
         val config = ArcNetworkConfig
         for (serverId in ArcServerRegistry.onlineServerIds()) {
             if (isQueued(player, serverId)) {
-                return "§eYou are queued for §f$serverId §e(position not available client-side)"
+                val rank = ArcRelayClient.zrank("arc:queue:$serverId", player.uniqueId.toString())
+                return if (rank == null) {
+                    "§eYou are queued for §f$serverId"
+                } else {
+                    "§eYou are queued for §f$serverId §e(position ${rank + 1})"
+                }
             }
         }
         return "§7You are not in any queue. Use /arc queue join <server>"
@@ -37,8 +42,7 @@ object ArcQueue {
     }
 
     fun getQueueSize(server: String): Int {
-        // Approximate — counts members in the sorted set
-        return ArcServerRegistry.onlineServerIds().size // simplified
+        return ArcRelayClient.zcard("arc:queue:$server").coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
 
     fun pauseQueue(server: String) {

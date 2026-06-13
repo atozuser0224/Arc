@@ -13,14 +13,13 @@ object ArcNetworkCommands {
 
     fun complete(args: Array<out String>): List<String> = when (args.size) {
         2 -> listOf("servers", "server", "players", "route", "send", "sendall", "queue", "evacuate",
-            "broadcast", "hub", "itemmail", "cooldown", "maintenance", "find", "audit")
+            "broadcast", "hub", "cooldown", "maintenance", "find", "audit")
         3 -> when (args.getOrNull(1)?.lowercase()) {
             "server" -> ArcServerRegistry.onlineServerIds()
             "send" -> Bukkit.getOnlinePlayers().map { it.name }
             "sendall" -> ArcServerRegistry.onlineServerIds()
             "route", "find" -> Bukkit.getOnlinePlayers().map { it.name }
             "queue" -> listOf("join", "leave", "status", "pause", "resume")
-            "itemmail" -> listOf("send", "inbox", "claim", "cancel", "history")
             "maintenance" -> listOf("server", "group", "network", "status")
             "cooldown" -> listOf("check", "clear")
             "evacuate" -> ArcServerRegistry.onlineServerIds()
@@ -28,16 +27,26 @@ object ArcNetworkCommands {
             else -> emptyList()
         }
         4 -> when (args.getOrNull(1)?.lowercase()) {
+            "send" -> ArcServerRegistry.onlineServerIds()
             "queue" -> when (args.getOrNull(2)?.lowercase()) {
                 "join", "pause", "resume" -> ArcServerRegistry.onlineServerIds()
-                "check" -> Bukkit.getOnlinePlayers().map { it.name }
                 else -> emptyList()
             }
             "sendall" -> ArcServerRegistry.onlineServerIds()
             "maintenance" -> when (args.getOrNull(2)?.lowercase()) {
                 "server" -> ArcServerRegistry.onlineServerIds()
                 "group" -> ArcNetworkConfig.serverGroups.keys.toList()
+                "network" -> listOf("on", "off")
                 else -> emptyList()
+            }
+            "cooldown" -> Bukkit.getOnlinePlayers().map { it.name }
+            else -> emptyList()
+        }
+        5 -> when (args.getOrNull(1)?.lowercase()) {
+            "maintenance" -> if (args.getOrNull(2)?.lowercase() in listOf("server", "group")) {
+                listOf("on", "off")
+            } else {
+                emptyList()
             }
             else -> emptyList()
         }
@@ -46,7 +55,7 @@ object ArcNetworkCommands {
 
     fun dispatch(sender: CommandSender, args: Array<out String>): Boolean {
         val sub = args.getOrNull(1)?.lowercase() ?: run {
-            sender.sendMessage("/arc network <servers|server|players|send|queue|maintenance|broadcast|itemmail|evacuate|find|audit|cooldown>")
+            sender.sendMessage("/arc network <servers|server|players|send|queue|maintenance|broadcast|evacuate|find|audit|cooldown>")
             return true
         }
 
@@ -70,7 +79,7 @@ object ArcNetworkCommands {
             }
             "sendall" -> {
                 val target = args.getOrNull(2)
-                if (target == null) { sender.sendMessage("/arc network sendall <fromServer> <toServer>"); return true }
+                if (target == null) { sender.sendMessage("/arc network sendall <server>"); return true }
                 sender.sendMessage(ArcPlayerTransfer.sendAll(sender, ArcNetworkConfig.serverId, target))
             }
             "hub" -> sender.sendMessage(ArcPlayerTransfer.hub(sender))
@@ -82,7 +91,7 @@ object ArcNetworkCommands {
             "maintenance" -> maintenance(sender, args)
             "evacuate" -> {
                 val target = args.getOrNull(2)
-                if (target == null) { sender.sendMessage("/arc network evacuate <fromServer> <toServer>"); return true }
+                if (target == null) { sender.sendMessage("/arc network evacuate <server>"); return true }
                 sender.sendMessage(ArcEvacuation.evacuate(sender, ArcNetworkConfig.serverId, target))
             }
 
@@ -93,9 +102,6 @@ object ArcNetworkCommands {
                 ArcNetworkBroadcast.networkBroadcast(sender, msg)
                 sender.sendMessage("§aBroadcast sent")
             }
-
-            // Item mail
-            "itemmail" -> itemmail(sender, args)
 
             // Lookup
             "find", "route" -> {
@@ -186,18 +192,18 @@ object ArcNetworkCommands {
         when (args.getOrNull(2)?.lowercase()) {
             "server" -> {
                 val name = args.getOrNull(3) ?: run { sender.sendMessage("/arc network maintenance server <id> on|off"); return }
-                val on = args.getOrNull(4)?.lowercase() == "on"
+                val on = parseToggle(sender, args.getOrNull(4), "/arc network maintenance server <id> on|off") ?: return
                 ArcNetworkMaintenance.setServerMaintenance(name, on)
                 sender.sendMessage("§aMaintenance ${if (on) "ON" else "OFF"} for $name")
             }
             "group" -> {
                 val grp = args.getOrNull(3) ?: run { sender.sendMessage("/arc network maintenance group <name> on|off"); return }
-                val on = args.getOrNull(4)?.lowercase() == "on"
+                val on = parseToggle(sender, args.getOrNull(4), "/arc network maintenance group <name> on|off") ?: return
                 ArcNetworkMaintenance.setGroupMaintenance(grp, on)
                 sender.sendMessage("§aMaintenance ${if (on) "ON" else "OFF"} for group $grp")
             }
             "network" -> {
-                val on = args.getOrNull(3)?.lowercase() == "on"
+                val on = parseToggle(sender, args.getOrNull(3), "/arc network maintenance network on|off") ?: return
                 ArcNetworkMaintenance.setNetworkMaintenance(on)
                 sender.sendMessage("§aNetwork-wide maintenance ${if (on) "ON" else "OFF"}")
             }
@@ -206,26 +212,11 @@ object ArcNetworkCommands {
         }
     }
 
-    private fun itemmail(sender: CommandSender, args: Array<out String>) {
-        when (args.getOrNull(2)?.lowercase()) {
-            "send" -> {
-                val receiver = args.getOrNull(3)
-                if (receiver == null) { sender.sendMessage("/arc network itemmail send <player>"); return }
-                val p = sender as? Player ?: return
-                sender.sendMessage(ArcItemMail.send(p, receiver))
-            }
-            "inbox" -> { val p = sender as? Player ?: return; sender.sendMessage(ArcItemMail.inbox(p)) }
-            "claim" -> {
-                val id = args.getOrNull(3)?.toLongOrNull() ?: run { sender.sendMessage("/arc network itemmail claim <id>"); return }
-                val p = sender as? Player ?: return
-                sender.sendMessage(ArcItemMail.claim(p, id))
-            }
-            "cancel" -> {
-                val id = args.getOrNull(3)?.toLongOrNull() ?: run { sender.sendMessage("/arc network itemmail cancel <id>"); return }
-                sender.sendMessage(ArcItemMail.cancel(sender as? Player ?: return, id))
-            }
-            "history" -> sender.sendMessage("[Arc] Mail history: (SQL impl required)")
-            else -> sender.sendMessage("/arc network itemmail <send|inbox|claim|cancel|history>")
+    private fun parseToggle(sender: CommandSender, raw: String?, usage: String): Boolean? {
+        return when (raw?.lowercase()) {
+            "on" -> true
+            "off" -> false
+            else -> null.also { sender.sendMessage(usage) }
         }
     }
 

@@ -7,7 +7,6 @@ Arc Network enables multiple Arc game servers to operate as a unified network wi
 - **Server Registry** — auto-discovery and health monitoring via Redis heartbeat
 - **Player Transfer** — cross-server movement with permission and group validation
 - **Queue System** — fair waiting with priority support
-- **Item Mail** — safe cross-server item delivery with anti-duplication
 - **Global Vault** — shared storage (opt-in)
 - **Distributed Lock** — Redis-backed mutex for concurrent operations
 - **Network Audit** — all cross-server actions logged
@@ -34,11 +33,7 @@ arc-network:
       default-hub: true
     survival:
       servers: [survival-1, survival-2, survival-3]
-      item-mail: true
       queue-enabled: true
-  item-mail:
-    enabled: true
-    expire-days: 7
   audit.enabled: true
 ```
 
@@ -55,7 +50,7 @@ arc-network:
 ### Transfer
 ```bash
 /arc network send <player> <server>     # Move one player
-/arc network sendall <from> <to>        # Move all players
+/arc network sendall <server>           # Move all local players
 /arc network hub                        # Go to hub
 /arc network queue join <server>        # Join queue
 /arc network queue leave                # Leave queue
@@ -68,15 +63,7 @@ arc-network:
 /arc network maintenance group <name> on|off
 /arc network maintenance network on|off
 /arc network maintenance status
-/arc network evacuate <from> <to>
-```
-
-### Item Mail
-```bash
-/arc network itemmail send <player>     # Send held item
-/arc network itemmail inbox             # View pending mail
-/arc network itemmail claim <id>        # Claim item
-/arc network itemmail cancel <id>       # Cancel sent mail
+/arc network evacuate <server>
 ```
 
 ### Other
@@ -101,17 +88,6 @@ Every 3 seconds (Proxy):
   → Status TTL expired → mark OFFLINE
 ```
 
-### Item Mail State Machine
-```
-send() → PENDING ──claim()→ CLAIMING ──success→ CLAIMED
-    │       │                      └failure→ PENDING (retry)
-    │       ├──cancel()→ CANCELLED
-    │       └──timeout→ EXPIRED
-    └──DB fail→ item returned to sender
-```
-
-**Duplicate claim prevention**: `arc:lock:mail:<id>` Redis lock ensures only one server processes a claim.
-
 ### Queue Priority Formula
 ```
 score = current_time_ms - priority_offset
@@ -122,30 +98,6 @@ score = current_time_ms - priority_offset
 Redis `ZPOPMIN` atomically pops the lowest score (highest priority).
 
 ## SQL Schema
-
-### arc_item_mail
-```sql
-CREATE TABLE arc_item_mail (
-    id BIGSERIAL PRIMARY KEY,
-    sender_uuid UUID NOT NULL,
-    sender_name VARCHAR(36),
-    receiver_uuid UUID NOT NULL,
-    receiver_name VARCHAR(36),
-    source_server VARCHAR(64) NOT NULL,
-    item_data BYTEA NOT NULL,
-    item_format_version INT DEFAULT 1,
-    minecraft_version VARCHAR(16),
-    item_type VARCHAR(64),
-    item_amount INT DEFAULT 1,
-    status VARCHAR(16) DEFAULT 'PENDING',  -- PENDING,CLAIMING,CLAIMED,CANCELLED,EXPIRED,FAILED
-    fail_reason TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days'),
-    claimed_at TIMESTAMPTZ,
-    INDEX idx_mail_receiver (receiver_uuid, status),
-    INDEX idx_mail_status_expires (status, expires_at)
-);
-```
 
 ### arc_network_audit
 ```sql
@@ -202,16 +154,12 @@ val script = """
 |----------|------------|
 | Redis disconnect | Core retries with backoff; Proxy uses cached state (30s) |
 | SQL disconnect | HikariCP pool auto-reconnects; writes queued in memory (60s) |
-| Item send crash | DB transaction ensures atomicity; item returned on failure |
-| Item claim crash | Lock released by TTL; status=CLAIMING retries on next attempt |
-| Dual claim attempt | Distributed lock fails for second claimer |
 | Network partition | Partitioned servers operate local-only until reconnect |
 
 ## Risk Warnings
 
 | Feature | Risk Level | Default |
 |---------|-----------|---------|
-| Item Mail | Low | ON |
 | Player Transfer | Low | ON |
 | Queue | Low | ON |
 | Global Vault | **Medium** | OFF |
@@ -219,7 +167,7 @@ val script = """
 | Remote Command | **High** | **OFF** |
 | Plugin Deploy | **Critical** | **OFF** |
 
-**Full inventory sync across servers is the highest-risk feature.** It can cause item duplication if any step fails. Arc recommends Item Mail + Global Vault as the safe alternatives.
+**Full inventory sync across servers is the highest-risk feature.** It can cause item duplication if any step fails. Keep it disabled unless an external transactional storage implementation is installed and tested.
 
 ---
 

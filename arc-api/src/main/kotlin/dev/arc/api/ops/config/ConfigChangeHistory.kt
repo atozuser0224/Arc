@@ -7,7 +7,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
- * Tracks every config change made via `/arc config set|reset|migrate`.
+ * Tracks every config change made via `/arc config set|reset`.
  *
  * `/arc config-history [list|diff <id>|search <path>]`
  *

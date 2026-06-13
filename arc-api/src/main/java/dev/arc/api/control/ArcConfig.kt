@@ -42,6 +42,11 @@ class ArcConfig internal constructor(private val file: File) {
         yaml.save(file)
     }
 
+    /** Save values edited through [set] without overwriting them from runtime state first. */
+    fun saveRaw() {
+        yaml.save(file)
+    }
+
     // ---- read helpers -------------------------------------------------------
 
     fun getString(path: String, default: String? = null): String? =
@@ -61,6 +66,22 @@ class ArcConfig internal constructor(private val file: File) {
 
     fun getStringList(path: String): List<String> =
         yaml.getStringList(path)
+
+    fun get(path: String): Any? =
+        yaml.get(path)
+
+    fun contains(path: String): Boolean =
+        yaml.contains(path)
+
+    fun defaultValue(path: String): Any? = when (path) {
+        "settings.tick-budget-millis" -> 2L
+        "settings.default-ttl-millis" -> 1000L
+        "settings.default-pool-size" -> 64
+        "settings.region-batch-concurrency" -> 2
+        "settings.dispatcher-max-pending" -> 10_000
+        "settings.nms-thread-policy" -> "STRICT"
+        else -> if (path.startsWith("features.")) true else null
+    }
 
     fun set(path: String, value: Any?) {
         yaml.set(path, value)

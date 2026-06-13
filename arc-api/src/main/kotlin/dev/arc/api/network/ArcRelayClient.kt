@@ -18,6 +18,7 @@ object ArcRelayClient {
 
     fun connect(cfg: ArcNetworkConfig) {
         this.config = cfg
+        connected = false
         if (!cfg.enabled) return
         try {
             // Reflectively create JedisPool to avoid hard dependency
@@ -40,10 +41,19 @@ object ArcRelayClient {
                     .newInstance(configInst, host, port, timeout)
             }
             jedisPool = pool
-            connected = true
+            val jedis = pool.javaClass.getMethod("getResource").invoke(pool)
+            try {
+                jedis.javaClass.getMethod("ping").invoke(jedis)
+                connected = true
+            } finally {
+                jedis.javaClass.getMethod("close").invoke(jedis)
+            }
         } catch (e: ClassNotFoundException) {
             Bukkit.getLogger().warning("[Arc-Network] Jedis not found on classpath — relay disabled")
         } catch (e: Exception) {
+            runCatching { jedisPool?.javaClass?.getMethod("close")?.invoke(jedisPool) }
+            jedisPool = null
+            connected = false
             Bukkit.getLogger().warning("[Arc-Network] Redis connection failed: ${e.message}")
         }
     }
@@ -53,6 +63,7 @@ object ArcRelayClient {
         runCatching {
             jedisPool?.javaClass?.getMethod("close")?.invoke(jedisPool)
         }
+        jedisPool = null
     }
 
     fun reconnect() {
@@ -107,6 +118,26 @@ object ArcRelayClient {
                 .invoke(jedis, key, count) as? java.util.Set<*> ?: emptySet<Any>()
             result.map { it.toString() }
         } ?: emptyList()
+    }
+
+    fun zrem(key: String, member: String) {
+        jedisOp { jedis ->
+            jedis.javaClass.getMethod("zrem", String::class.java, String::class.java)
+                .invoke(jedis, key, member)
+        }
+    }
+
+    fun zcard(key: String): Long {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("zcard", String::class.java).invoke(jedis, key) as? Long ?: 0L
+        } ?: 0L
+    }
+
+    fun zrank(key: String, member: String): Long? {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("zrank", String::class.java, String::class.java)
+                .invoke(jedis, key, member) as? Long
+        }
     }
 
     // ---- Pub/Sub ----

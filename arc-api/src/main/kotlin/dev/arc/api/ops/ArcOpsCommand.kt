@@ -132,6 +132,7 @@ object ArcOpsCommand {
             "plugin-overrides" -> PluginOverrides.complete(args)
             "audit" -> AuditLog.complete(args)
             "config-history" -> ConfigChangeHistory.complete(args)
+            "network" -> ArcNetworkCommands.complete(args)
             else -> emptyList()
         }
     }

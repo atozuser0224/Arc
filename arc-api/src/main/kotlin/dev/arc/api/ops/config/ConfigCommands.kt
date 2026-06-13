@@ -12,7 +12,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
- * `/arc config get|set|reset|reload|diff|migrate|search <keyword>`.
+ * `/arc config get|set|reset|reload|diff|search <keyword>`.
  */
 object ConfigCommands {
 
@@ -20,11 +20,10 @@ object ConfigCommands {
     private fun backupDir() = File("arc-ops/config-backups").also { it.mkdirs() }
 
     fun complete(args: Array<out String>): List<String> = when (args.size) {
-        2 -> listOf("check", "explain", "get", "set", "reset", "reload", "diff", "migrate", "search")
+        2 -> listOf("check", "explain", "get", "set", "reset", "reload", "diff", "search")
         3 -> when (args.getOrNull(1)?.lowercase()) {
             "explain", "get", "reset" -> ConfigValidator.knownPaths()
             "set" -> ConfigValidator.knownPaths()
-            "migrate" -> listOf("--dry-run", "--apply")
             else -> emptyList()
         }
         else -> emptyList()
@@ -32,7 +31,7 @@ object ConfigCommands {
 
     fun dispatch(sender: CommandSender, args: Array<out String>): Boolean {
         val sub = args.getOrNull(1)?.lowercase() ?: run {
-            sender.sendMessage("/arc config <get|set|reset|reload|diff|migrate|search|check|explain>")
+            sender.sendMessage("/arc config <get|set|reset|reload|diff|search|check|explain>")
             return true
         }
         when (sub) {
@@ -41,7 +40,6 @@ object ConfigCommands {
             "reset" -> reset(sender, args.getOrNull(2))
             "reload" -> reload(sender)
             "diff" -> diff(sender)
-            "migrate" -> migrate(sender, args)
             "search" -> search(sender, args.getOrNull(2))
             "check", "explain" -> delegateToArcOps(sender, args) // existing config handler
             else -> sender.sendMessage("[Arc] unknown config command: $sub")
@@ -51,7 +49,11 @@ object ConfigCommands {
 
     private fun get(sender: CommandSender, path: String?) {
         if (path == null) { sender.sendMessage("[Arc] usage: /arc config get <path>"); return }
-        val value = Arc.config.getString(path) ?: Arc.config.getInt(path).toString()
+        if (!Arc.config.contains(path)) {
+            sender.sendMessage("[Arc] config path not found: $path")
+            return
+        }
+        val value = Arc.config.get(path)
         val defaultValue = "see /arc config explain $path"
         sender.sendMessage("[Arc] $path = §e$value §7(default: $defaultValue)")
     }
@@ -66,9 +68,10 @@ object ConfigCommands {
             raw.toDoubleOrNull() != null -> raw.toDouble()
             else -> raw
         }
-        val old = Arc.config.getString(path)
+        val old = Arc.config.get(path)?.toString()
         Arc.config.set(path, value)
-        Arc.config.save()
+        Arc.config.saveRaw()
+        Arc.config.reload()
         ConfigChangeHistory.record(sender.name, path, old, value.toString())
         AuditLog.log(sender, "config set", "$path = $value")
         sender.sendMessage("[Arc] §aSet $path = $value. Config saved. Use /arc config diff to compare.")
@@ -76,13 +79,18 @@ object ConfigCommands {
 
     private fun reset(sender: CommandSender, path: String?) {
         if (path == null) { sender.sendMessage("[Arc] usage: /arc config reset <path>"); return }
-        val old = Arc.config.getString(path)
+        val old = Arc.config.get(path)?.toString()
         backupConfig()
-        Arc.config.set(path, null)
-        Arc.config.save()
-        ConfigChangeHistory.record(sender.name, path, old, null)
+        val default = Arc.config.defaultValue(path)
+        Arc.config.set(path, default)
+        Arc.config.saveRaw()
+        Arc.config.reload()
+        ConfigChangeHistory.record(sender.name, path, old, default?.toString())
         AuditLog.log(sender, "config reset", path)
-        sender.sendMessage("[Arc] §aReset $path (removed from file, default will apply).")
+        sender.sendMessage(
+            if (default == null) "[Arc] §aRemoved $path from the config."
+            else "[Arc] §aReset $path to default: $default"
+        )
     }
 
     private fun reload(sender: CommandSender) {
@@ -121,13 +129,6 @@ object ConfigCommands {
         if (matches.isEmpty()) { sender.sendMessage("[Arc] no lines match '$keyword'"); return }
         sender.sendMessage("[Arc] Config lines matching '$keyword':")
         matches.forEach { sender.sendMessage("  §e$it") }
-    }
-
-    private fun migrate(sender: CommandSender, args: Array<out String>) {
-        val dryRun = args.any { it == "--dry-run" }
-        sender.sendMessage(if (dryRun) "[Arc] Config migration (dry-run):" else "[Arc] Config migration: apply stub — see arc config migrate")
-        sender.sendMessage("  §7No pending migrations. Integration point for arc.yml → arc-ops.yml migration.")
-        sender.sendMessage("  §7Custom migrations can be written via ArcConfigMigration API.")
     }
 
     private fun delegateToArcOps(sender: CommandSender, args: Array<out String>) {

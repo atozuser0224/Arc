@@ -56,7 +56,7 @@ public class CraftPhotographerManager implements PhotographerManager {
     public void removePhotographer(@NotNull String id) {
         ServerPhotographer photographer = ServerPhotographer.getPhotographer(id);
         if (photographer != null) {
-            photographer.remove(true);
+            photographer.stopRecording(true);
         }
     }
 
@@ -64,14 +64,14 @@ public class CraftPhotographerManager implements PhotographerManager {
     public void removePhotographer(@NotNull UUID uuid) {
         ServerPhotographer photographer = ServerPhotographer.getPhotographer(uuid);
         if (photographer != null) {
-            photographer.remove(true);
+            photographer.stopRecording(true);
         }
     }
 
     @Override
     public void removeAllPhotographers() {
         for (ServerPhotographer photographer : ServerPhotographer.getPhotographers()) {
-            photographer.remove(true);
+            photographer.stopRecording(true);
         }
     }
 

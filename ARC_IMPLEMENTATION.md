@@ -241,7 +241,6 @@ Arc Core (each server) → Redis (Arc Relay) → Arc Proxy Module (Velocity)
 - `network/ArcServerRegistry.kt` — Server heartbeat + registration
 - `network/ArcPlayerTransfer.kt` — Cross-server player movement
 - `network/ArcQueue.kt` — Server queue (Redis sorted sets)
-- `network/ArcItemMail.kt` — Item delivery between servers
 - `network/ArcItemSerializer.kt` — Item serialization for transfer
 - `network/ArcGlobalCooldown.kt` — Cross-server cooldowns
 - `network/ArcNetworkAudit.kt` — Network operation audit trail
@@ -260,9 +259,8 @@ Arc Core (each server) → Redis (Arc Relay) → Arc Proxy Module (Velocity)
 | `/arc network hub` | Go to hub server |
 | `/arc network queue join\|leave\|status` | Queue management |
 | `/arc network maintenance server\|group\|network on\|off` | Maintenance mode |
-| `/arc network evacuate <from> <to>` | Move all players before shutdown |
+| `/arc network evacuate <server>` | Move all local players before shutdown |
 | `/arc network broadcast <msg>` | Network-wide message |
-| `/arc network itemmail send\|inbox\|claim` | Cross-server item delivery |
 | `/arc network find <player>` | Find player across network |
 | `/arc network audit [last]` | Network audit log |
 | `/arc network cooldown check\|clear` | Global cooldown management |
@@ -311,9 +309,7 @@ arc-network:
   server-groups:
     survival:
       servers: [survival-1, survival-2]
-      item-mail: true
       queue-enabled: true
-  item-mail.enabled: true
   global-vault.enabled: false        # DEFAULT OFF
   inventory-transfer.enabled: false  # DEFAULT OFF — HIGH RISK
   remote-command.enabled: false      # DEFAULT OFF — HIGH RISK
@@ -423,7 +419,6 @@ src/main/kotlin/dev/arc/api/
     ├── ArcServerRegistry.kt           # Heartbeat + registration
     ├── ArcPlayerTransfer.kt           # send/sendAll/hub
     ├── ArcQueue.kt                    # Queue system
-    ├── ArcItemMail.kt                 # Item delivery
     ├── ArcItemSerializer.kt           # Serialization format
     ├── ArcGlobalCooldown.kt           # Cross-server cooldowns
     ├── ArcNetworkAudit.kt             # Audit trail

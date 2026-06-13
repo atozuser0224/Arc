@@ -7,6 +7,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Called when a block executes its explosion hit actions.
@@ -18,18 +19,18 @@ public class BlockExplosionHitEvent extends BlockEvent implements Cancellable {
     private final Entity source;
     private final ExplosionResult result;
 
-    public BlockExplosionHitEvent(@NotNull Block block, Entity source, ExplosionResult result) {
+    public BlockExplosionHitEvent(@NotNull Block block, @Nullable Entity source, @NotNull ExplosionResult result) {
         super(block);
         this.source = source;
         this.result = result;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static @NotNull HandlerList getHandlerList() {
         return handlers;
     }
 
@@ -48,7 +49,7 @@ public class BlockExplosionHitEvent extends BlockEvent implements Cancellable {
      *
      * @return Entity responsible for the explosion
      */
-    public Entity getSource() {
+    public @Nullable Entity getSource() {
         return source;
     }
 
@@ -57,7 +58,7 @@ public class BlockExplosionHitEvent extends BlockEvent implements Cancellable {
      *
      * @return the result of the explosion
      */
-    public ExplosionResult getResult() {
+    public @NotNull ExplosionResult getResult() {
         return result;
     }
 }

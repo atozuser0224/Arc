@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: arc <wagwag0224@gmail.com>
+Date: Sun, 14 Jun 2026 06:30:00 +0900
+Subject: [PATCH] fix(build): use Java 21 ingredient record patterns
+
+
+diff --git a/net/minecraft/world/item/crafting/Ingredient.java b/net/minecraft/world/item/crafting/Ingredient.java
+index e9189347cc145bc6dcca2c66d1bd0f23ea71516d..b7315695b7ffbd6771e9ef00d6d3b8b6a58e6fc1 100644
+--- a/net/minecraft/world/item/crafting/Ingredient.java
++++ b/net/minecraft/world/item/crafting/Ingredient.java
+@@ -102,7 +102,7 @@ public final class Ingredient implements StackedContents.IngredientInfo<io.paper
+     public boolean acceptsItem(final io.papermc.paper.inventory.recipe.ItemOrExact itemOrExact) {
+         return switch (itemOrExact) {
+-            case io.papermc.paper.inventory.recipe.ItemOrExact.Item(final Holder<Item> item) ->
++            case io.papermc.paper.inventory.recipe.ItemOrExact.Item(Holder<Item> item) ->
+                 !this.isExact() && this.values.contains(item);
+-            case io.papermc.paper.inventory.recipe.ItemOrExact.Exact(final ItemStack exact) ->
++            case io.papermc.paper.inventory.recipe.ItemOrExact.Exact(ItemStack exact) ->
+                 this.isExact() && this.itemStacks.contains(exact);
+         };

@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: arc <wagwag0224@gmail.com>
+Date: Sun, 14 Jun 2026 06:45:00 +0900
+Subject: [PATCH] fix(tests): allow legacy init before Gale config
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
+index eed2d01c4f884c3aafdef21741fc1a2e2d610199..d1f254f1f18fbb95d5702c632125ccc89e46569b 100644
+--- a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
++++ b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
+@@ -267,5 +267,6 @@ public final class CraftLegacy {
+     static {
+-        if (org.galemc.gale.configuration.GaleGlobalConfiguration.get().logToConsole.legacyMaterialInitialization) LOGGER.warn("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!"); // Paper - Improve logging and errors; doesn't need to be an error // Gale - Purpur - do not log legacy Material initialization
++        final org.galemc.gale.configuration.GaleGlobalConfiguration galeConfig = org.galemc.gale.configuration.GaleGlobalConfiguration.get();
++        if (galeConfig == null || galeConfig.logToConsole.legacyMaterialInitialization) LOGGER.warn("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!"); // Paper - Improve logging and errors; doesn't need to be an error // Gale - Purpur - do not log legacy Material initialization
+         if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
+             new Exception().printStackTrace();
+         }

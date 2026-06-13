@@ -28,7 +28,7 @@ public class CraftPhotographer extends CraftPlayer implements Photographer {
 
     @Override
     public void stopRecording(boolean async, boolean save) {
-        this.getHandle().remove(async, save);
+        this.getHandle().stopRecording(async, save);
     }
 
     @Override

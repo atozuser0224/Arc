@@ -88,7 +88,7 @@ class ItemTransactionLogger(private val plugin: Plugin) : Listener {
     }
 
     /** Whether [player] is currently being tracked. */
-    fun isTracking(player: Player): Boolean = player.uniqueId in tracked
+    fun isTracking(player: Player): Boolean = tracked.containsKey(player.uniqueId)
 
     // ── Log access ─────────────────────────────────────────────────────────────
 

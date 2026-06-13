@@ -46,8 +46,13 @@ object ArcPlayerTransfer {
         val dos = java.io.DataOutputStream(baos)
         dos.writeUTF("Connect")
         dos.writeUTF(targetServer)
-        player.sendPluginMessage(Bukkit.getPluginManager().getPlugin("Arc") ?: return "§cArc plugin not found",
-            "BungeeCord", baos.toByteArray())
+        val carrier = Bukkit.getPluginManager().plugins.firstOrNull { it.isEnabled }
+            ?: return "§cPlayer transfer requires at least one enabled plugin for the proxy message channel"
+        val messenger = Bukkit.getMessenger()
+        if (!messenger.isOutgoingChannelRegistered(carrier, "BungeeCord")) {
+            messenger.registerOutgoingPluginChannel(carrier, "BungeeCord")
+        }
+        player.sendPluginMessage(carrier, "BungeeCord", baos.toByteArray())
 
         // Audit
         ArcNetworkAudit.log("transfer", mapOf(

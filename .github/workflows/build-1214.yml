@@ -2,7 +2,7 @@ name: Build Arc Bucket 1.21.4
 
 on:
   push:
-    branches: [ "ver/1.21.4" ]
+    branches: [ "arc/1.21.4", "ver/1.21.4" ]
   workflow_dispatch:
 
 jobs:
@@ -11,6 +11,7 @@ jobs:
     env:
       BUILD_NUMBER: ${{ github.run_number }}
       GRADLE_MEMORY: "-Xmx4g -XX:MaxMetaspaceSize=2g"
+      DOWNLOAD_API_HOST: ${{ secrets.API_HOST }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
@@ -81,6 +82,9 @@ jobs:
       - name: Create MojmapPaperclipJar
         run: ./gradlew createMojmapPaperclipJar --stacktrace --parallel --no-daemon
 
+      - name: Run Arc tests
+        run: ./gradlew :arc-api:test :arc-server:test --stacktrace --no-daemon
+
       - name: Prepare release notes and artifacts
         run: |
           chmod +x ./scripts/prepareRelease.sh
@@ -116,6 +120,7 @@ jobs:
           echo "sha256=$HASH" >> $GITHUB_OUTPUT
 
       - name: Upload JAR to download API
+        if: ${{ env.DOWNLOAD_API_HOST != '' }}
         uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.API_HOST }}
@@ -125,6 +130,7 @@ jobs:
           target: "~/api/uploads/"
 
       - name: Insert build to download API
+        if: ${{ env.DOWNLOAD_API_HOST != '' }}
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.API_HOST }}

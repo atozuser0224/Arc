@@ -56,15 +56,6 @@ object ArcNetworkConfig {
         val positionMessageInterval: Int = 30,
     )
 
-    data class ItemMailConfig(
-        val enabled: Boolean = true,
-        val maxItemSizeKb: Int = 256,
-        val expireDays: Int = 7,
-        val blockedMaterials: List<String> = listOf("BEDROCK", "BARRIER", "COMMAND_BLOCK", "STRUCTURE_BLOCK"),
-        val requireSameGroup: Boolean = true,
-        val returnOnExpiry: Boolean = false,
-    )
-
     data class GlobalVaultConfig(
         val enabled: Boolean = false,
         val defaultSlots: Int = 9,
@@ -87,7 +78,6 @@ object ArcNetworkConfig {
         val enabled: Boolean = true,
         val logAllAdminActions: Boolean = true,
         val logAllTransfers: Boolean = true,
-        val logAllItemMail: Boolean = true,
         val logAllVault: Boolean = true,
         val retentionDays: Int = 90,
         val sensitiveDataMasking: Boolean = true,
@@ -106,7 +96,6 @@ object ArcNetworkConfig {
         val defaultHub: Boolean = false,
         val allowTransfersFrom: List<String> = listOf("*"),
         val queueEnabled: Boolean = false,
-        val itemMail: Boolean = false,
         val globalVault: Boolean = false,
     )
 
@@ -122,7 +111,6 @@ object ArcNetworkConfig {
     var heartbeat: HeartbeatConfig = HeartbeatConfig()
     var transfer: TransferConfig = TransferConfig()
     var queue: QueueConfig = QueueConfig()
-    var itemMail: ItemMailConfig = ItemMailConfig()
     var globalVault: GlobalVaultConfig = GlobalVaultConfig()
     var inventoryTransfer: InventoryTransferConfig = InventoryTransferConfig()
     var audit: AuditConfig = AuditConfig()
@@ -167,12 +155,92 @@ object ArcNetworkConfig {
             ssl = yml.getBoolean("arc-network.relay.redis.ssl", false),
         )
 
-        // Storage, heartbeat, transfer, queue, item-mail, global-vault, inventory-transfer... load similarly
-        // Abbreviated for the implementation — full load mirrors OpsConfig pattern
+        storage = StorageConfig(
+            type = string(yml, "storage.type", "postgresql"),
+            host = string(yml, "storage.host", "127.0.0.1"),
+            port = yml.getInt(key("storage.port"), 5432),
+            database = string(yml, "storage.database", "arc_network"),
+            username = string(yml, "storage.username", "arc"),
+            password = resolveEnv(yml.getString(key("storage.password"), "")),
+            poolSize = yml.getInt(key("storage.pool-size"), 10),
+            ssl = yml.getBoolean(key("storage.ssl"), true),
+        )
+        heartbeat = HeartbeatConfig(
+            intervalSeconds = yml.getInt(key("heartbeat.interval-seconds"), 2),
+            ttlSeconds = yml.getInt(key("heartbeat.ttl-seconds"), 10),
+            staleThresholdSeconds = yml.getInt(key("heartbeat.stale-threshold-seconds"), 30),
+            statusPublish = yml.getBoolean(key("heartbeat.status-publish"), true),
+        )
+        transfer = TransferConfig(
+            enabled = yml.getBoolean(key("transfer.enabled"), true),
+            saveBeforeTransfer = yml.getBoolean(key("transfer.save-before-transfer"), true),
+            requirePermission = yml.getBoolean(key("transfer.require-permission"), true),
+            permissionPrefix = string(yml, "transfer.permission-prefix", "arc.transfer"),
+            logAllTransfers = yml.getBoolean(key("transfer.log-all-transfers"), true),
+        )
+        queue = QueueConfig(
+            enabled = yml.getBoolean(key("queue.enabled"), true),
+            priorityPermission = string(yml, "queue.priority-permission", "arc.queue.priority"),
+            vipPermission = string(yml, "queue.vip-permission", "arc.queue.vip"),
+            keepOnDisconnectSeconds = yml.getInt(key("queue.keep-on-disconnect-seconds"), 300),
+            transferCheckIntervalSeconds = yml.getInt(key("queue.transfer-check-interval-seconds"), 5),
+            maxQueueSize = yml.getInt(key("queue.max-queue-size"), 1000),
+            positionMessageInterval = yml.getInt(key("queue.position-message-interval"), 30),
+        )
+        globalVault = GlobalVaultConfig(
+            enabled = yml.getBoolean(key("global-vault.enabled"), false),
+            defaultSlots = yml.getInt(key("global-vault.default-slots"), 9),
+            maxSlots = yml.getInt(key("global-vault.max-slots"), 54),
+            perGroup = yml.getBoolean(key("global-vault.per-group"), true),
+            slotPermissions = readIntMap(yml, "global-vault.slot-permissions", GlobalVaultConfig().slotPermissions),
+        )
+        inventoryTransfer = InventoryTransferConfig(
+            enabled = yml.getBoolean(key("inventory-transfer.enabled"), false),
+            requireSameMinecraftVersion = yml.getBoolean(key("inventory-transfer.require-same-minecraft-version"), true),
+            requireSameArcItemFormat = yml.getBoolean(key("inventory-transfer.require-same-arc-item-format"), true),
+            allowedGroups = yml.getStringList(key("inventory-transfer.allowed-groups")),
+            blockedGroups = yml.getStringList(key("inventory-transfer.blocked-groups")).ifEmpty {
+                InventoryTransferConfig().blockedGroups
+            },
+            maxInventorySlots = yml.getInt(key("inventory-transfer.max-inventory-slots"), 41),
+            saveBeforeTransfer = yml.getBoolean(key("inventory-transfer.save-before-transfer"), true),
+        )
+        audit = AuditConfig(
+            enabled = yml.getBoolean(key("audit.enabled"), true),
+            logAllAdminActions = yml.getBoolean(key("audit.log-all-admin-actions"), true),
+            logAllTransfers = yml.getBoolean(key("audit.log-all-transfers"), true),
+            logAllVault = yml.getBoolean(key("audit.log-all-vault"), true),
+            retentionDays = yml.getInt(key("audit.retention-days"), 90),
+            sensitiveDataMasking = yml.getBoolean(key("audit.sensitive-data-masking"), true),
+        )
+        remoteCommand = RemoteCommandConfig(
+            enabled = yml.getBoolean(key("remote-command.enabled"), false),
+            requireConfirm = yml.getBoolean(key("remote-command.require-confirm"), true),
+            rateLimit = yml.getInt(key("remote-command.rate-limit"), 3),
+            allowlist = yml.getStringList(key("remote-command.allowlist")).ifEmpty {
+                RemoteCommandConfig().allowlist
+            },
+            blocklist = yml.getStringList(key("remote-command.blocklist")).ifEmpty {
+                RemoteCommandConfig().blocklist
+            },
+        )
+        lockDefaultTtlSeconds = yml.getInt(key("lock.default-ttl-seconds"), 10)
+        lockMaxTtlSeconds = yml.getInt(key("lock.max-ttl-seconds"), 60)
+        cooldownEnabled = yml.getBoolean(key("cooldown.enabled"), true)
+        cooldownRedisPrefix = string(yml, "cooldown.redis-prefix", "arc:cooldown")
+        configSyncEnabled = yml.getBoolean(key("config-sync.enabled"), false)
+        pluginDeployEnabled = yml.getBoolean(key("plugin-deploy.enabled"), false)
+        proxyType = string(yml, "proxy.type", "velocity")
+        forwardingSecret = resolveEnv(yml.getString(key("proxy.forwarding-secret"), ""))
+        modernForwarding = yml.getBoolean(key("proxy.modern-forwarding"), true)
+        maintenanceDefaultMessage = string(yml, "maintenance.default-message", "&cServer under maintenance")
+        maintenanceKickExisting = yml.getBoolean(key("maintenance.kick-existing"), false)
+
         loadGroups(yml)
     }
 
     private fun loadGroups(yml: YamlConfiguration) {
+        serverGroups.clear()
         val sec = yml.getConfigurationSection("arc-network.server-groups") ?: return
         for (groupName in sec.getKeys(false)) {
             val gs = sec.getConfigurationSection(groupName) ?: continue
@@ -181,7 +249,6 @@ object ArcNetworkConfig {
                 defaultHub = gs.getBoolean("default-hub", false),
                 allowTransfersFrom = gs.getStringList("allow-transfers-from"),
                 queueEnabled = gs.getBoolean("queue-enabled", false),
-                itemMail = gs.getBoolean("item-mail", false),
                 globalVault = gs.getBoolean("global-vault", false),
             )
         }
@@ -196,7 +263,25 @@ object ArcNetworkConfig {
         yml.set("arc-network.server.group", "default")
         yml.set("arc-network.relay.redis.host", "127.0.0.1")
         yml.set("arc-network.relay.redis.port", 6379)
+        yml.set("arc-network.global-vault.enabled", false)
+        yml.set("arc-network.inventory-transfer.enabled", false)
+        yml.set("arc-network.remote-command.enabled", false)
+        yml.set("arc-network.plugin-deploy.enabled", false)
         yml.save(configFile)
+    }
+
+    private fun key(path: String) = "arc-network.$path"
+
+    private fun string(yml: YamlConfiguration, path: String, default: String): String =
+        yml.getString(key(path), default) ?: default
+
+    private fun readIntMap(
+        yml: YamlConfiguration,
+        path: String,
+        default: Map<String, Int>,
+    ): Map<String, Int> {
+        val section = yml.getConfigurationSection(key(path)) ?: return default
+        return section.getKeys(false).associateWith { section.getInt(it) }
     }
 
     private fun resolveEnv(value: String?): String {

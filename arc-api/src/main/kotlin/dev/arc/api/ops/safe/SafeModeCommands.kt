@@ -16,6 +16,11 @@ object SafeModeCommands {
 
     fun complete(args: Array<out String>): List<String> = when (args.size) {
         2 -> listOf("enable", "disable", "on", "off", "allow", "status")
+        3 -> if (args.getOrNull(1).equals("allow", ignoreCase = true)) {
+            Bukkit.getOnlinePlayers().map { it.name }
+        } else {
+            emptyList()
+        }
         else -> emptyList()
     }
 

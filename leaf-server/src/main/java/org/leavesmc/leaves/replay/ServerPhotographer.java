@@ -98,7 +98,7 @@ public class ServerPhotographer extends ServerPlayer {
     @Override
     public void die(@NotNull DamageSource damageSource) {
         super.die(damageSource);
-        remove(true);
+        stopRecording(true);
     }
 
     @Override
@@ -121,12 +121,12 @@ public class ServerPhotographer extends ServerPlayer {
         return stats;
     }
 
-    public void remove(boolean async) {
-        this.remove(async, true);
+    public void stopRecording(boolean async) {
+        this.stopRecording(async, true);
     }
 
-    public void remove(boolean async, boolean save) {
-        super.remove(RemovalReason.KILLED);
+    public void stopRecording(boolean async, boolean save) {
+        super.remove(RemovalReason.KILLED, org.bukkit.event.entity.EntityRemoveEvent.Cause.PLUGIN);
         photographers.remove(this);
         this.recorder.stop();
         this.server.getPlayerList().removePhotographer(this);

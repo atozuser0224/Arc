@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin
  * [PluginInspector], and [ConfirmManager].
  */
 object PluginCommands {
+    private const val FORCE_PERMISSION = "arc.command.plugin.reload.force"
 
     fun roots() = listOf("plugin", "plugins")
 
@@ -19,15 +20,15 @@ object PluginCommands {
         val sub = args.getOrNull(1)?.lowercase() ?: return roots()
         return when {
             args.size == 2 -> listOf("list","info","check","enable","disable","reload",
-                "restart","dependents","reload-chain","leaks","report","outdated","rollback")
+                "restart","dependents","reload-chain","leaks","report","outdated","rollback","confirm")
             args.size == 3 && sub in listOf("info","check","enable","disable","reload",
                 "restart","dependents","reload-chain","leaks") ->
                 Bukkit.getPluginManager().plugins.map { it.name }
             args.size == 3 && sub == "rollback" -> PluginRollbackManager.complete(args)
             args.size == 3 && sub in listOf("reload-chain") ->
                 Bukkit.getPluginManager().plugins.map { it.name }
-            args.size == 4 && sub == "reload-chain" ->
-                listOf("--dry-run", "--apply")
+            args.size >= 4 && sub == "reload-chain" ->
+                listOf("--dry-run", "--apply", "--force").filterNot(args::contains)
             args.size == 4 && sub in listOf("reload", "restart", "reload-chain") ->
                 listOf("--force")
             else -> emptyList()
@@ -121,6 +122,10 @@ object PluginCommands {
     // ---- reload ----
     private fun handleReload(sender: CommandSender, name: String?, force: Boolean): Boolean {
         val plugin = resolvePlugin(sender, name) ?: return true
+        if (force && !sender.hasPermission(FORCE_PERMISSION)) {
+            sender.sendMessage("[Arc] §cMissing permission: $FORCE_PERMISSION")
+            return true
+        }
         val assessment = ReloadSafetyAnalyzer.assess(plugin)
 
         if (assessment.rating == ReloadRating.UNSAFE && !force) {
@@ -145,7 +150,16 @@ object PluginCommands {
     // ---- restart ----
     private fun handleRestart(sender: CommandSender, name: String?, force: Boolean): Boolean {
         val plugin = resolvePlugin(sender, name) ?: return true
+        if (force && !sender.hasPermission(FORCE_PERMISSION)) {
+            sender.sendMessage("[Arc] §cMissing permission: $FORCE_PERMISSION")
+            return true
+        }
         val assessment = ReloadSafetyAnalyzer.assess(plugin)
+        if (assessment.rating == ReloadRating.UNSAFE && !force) {
+            sender.sendMessage(assessment.render())
+            sender.sendMessage("§c§lUNSAFE: use --force if you understand the risks")
+            return true
+        }
         val description = "restart ${plugin.name} (rating=${assessment.rating})"
 
         val token = ConfirmManager.stage(sender, description) {
@@ -173,6 +187,10 @@ object PluginCommands {
         val dryRun = args.any { it == "--dry-run" }
         val force = args.any { it == "--force" }
         val apply = args.any { it == "--apply" }
+        if (force && !sender.hasPermission(FORCE_PERMISSION)) {
+            sender.sendMessage("[Arc] §cMissing permission: $FORCE_PERMISSION")
+            return true
+        }
 
         if (dryRun || !apply) {
             sender.sendMessage(plan.render())
@@ -251,15 +269,9 @@ object PluginCommands {
         val plugins = Bukkit.getPluginManager().plugins
         val oldApi = plugins.filter {
             val v = it.description.apiVersion
-            v != null && v < "1.20"
+            v != null && isApiVersionOlderThan(v, 1, 20)
         }
         val noApi = plugins.filter { it.description.apiVersion == null }
-        val legacyJava = plugins.filter {
-            runCatching {
-                val cl = it.javaClass.classLoader
-                cl?.loadClass(it.description.main)?.let { _ -> false } ?: false
-            }.getOrDefault(false)
-        }
 
         sender.sendMessage("[Arc] Plugin compatibility check:")
         if (oldApi.isNotEmpty()) {
@@ -275,6 +287,13 @@ object PluginCommands {
         }
         sender.sendMessage("  §7Note: api-version is a hint — some plugins work fine with older declarations")
         return true
+    }
+
+    internal fun isApiVersionOlderThan(version: String, major: Int, minor: Int): Boolean {
+        val parts = version.substringBefore('-').split('.')
+        val parsedMajor = parts.getOrNull(0)?.toIntOrNull() ?: return false
+        val parsedMinor = parts.getOrNull(1)?.toIntOrNull() ?: 0
+        return parsedMajor < major || parsedMajor == major && parsedMinor < minor
     }
 
     // ---- confirm handler ----

@@ -74,7 +74,7 @@ object PluginSandboxCheck {
         val apiVer = desc.apiVersion
         if (apiVer == null) {
             findings += Finding(FindingSeverity.WARN, "No api-version declared — may use legacy internals")
-        } else if (apiVer < "1.20") {
+        } else if (PluginCommands.isApiVersionOlderThan(apiVer, 1, 20)) {
             findings += Finding(FindingSeverity.INFO, "Old api-version ($apiVer) — some features may be deprecated")
         }
 

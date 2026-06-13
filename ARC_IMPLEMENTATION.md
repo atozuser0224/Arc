@@ -62,6 +62,40 @@ Focused tests cover path and ID rejection, JSON parsing and escaping, resource
 directory layout, function output, invalid loot ranges, duplicate resources,
 pack metadata, stale cleanup, and preservation of manually managed files.
 
+## 2026-06-13: General PDC Schema DSL
+
+Arc now provides immutable, reusable typed fields for every Bukkit
+`PersistentDataHolder`:
+
+- `pdcSchema("namespace") { int(...); string(...); custom(...) }`;
+- plugin-derived namespaces through `plugin.pdcSchema`;
+- built-in primitive, boolean, string, and array field factories;
+- optional lazy defaults and value validation;
+- duplicate and unsafe field-name rejection;
+- typed get/set/remove/contains, `getOrPut`, and mutation operations;
+- schema lookup and definition introspection.
+
+The existing primitive PDC helpers and `NbtMap` remain source compatible.
+Focused tests verify type tokens, lazy defaults, validation, duplicate
+rejection, namespace safety, and schema lookup.
+
+## 2026-06-13: Player PDC Schema DSL
+
+Typed player persistent fields now support policy-driven declarations:
+
+- `plugin.playerDataSchema { int(...); string(...); boolean(...) }`;
+- immutable `PlayerStore` definitions;
+- optional default suppliers through `getOrDefault`;
+- validation on writes, defaults, migrations, and mutation results;
+- lazy migration from one or more legacy keys;
+- current-key precedence without deleting untouched legacy data;
+- typed get/set/contains/delete operators, `getOrPut`, `mutate`, and overflow
+  checked integer `increment`;
+- duplicate schema field rejection and definition introspection.
+
+Dynamic-proxy tests exercise the actual Bukkit Player/PDC extension functions
+without starting a Minecraft server.
+
 ## Architecture Principle
 
 ```

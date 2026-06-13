@@ -1,6 +1,6 @@
 # Arc API Showcase — Server Pack
 
-A ready-to-run Arc (Leaf 1.21.4) server bundled with the **ArcShowcase** plugin,
+A ready-to-run Arc Bucket 1.21.4 server bundled with the **ArcShowcase** plugin,
 which demonstrates the flagship arc-api developer features.
 
 ## Run
@@ -33,7 +33,7 @@ Built-in Arc admin command is also available: `/arc features`, `/arc settings`, 
 
 ```
 server/
-├── server.jar            # Arc/Leaf 1.21.4 runnable paperclip jar
+├── server.jar            # Arc Bucket 1.21.4 runnable Paperclip jar
 ├── start.bat
 ├── eula.txt
 ├── server.properties     # offline, flat, creative, port 25599

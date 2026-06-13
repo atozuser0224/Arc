@@ -40,7 +40,7 @@ public final class MSPTCommand extends PermissionedLeafSubcommand {
                 .color(RED)
                 .build());
             sender.sendMessage(Component.text()
-                .content("Please enable it in your Leaf configuration to use this command.")
+                .content("Please enable it in the Arc Bucket compatibility configuration to use this command.")
                 .color(GRAY)
                 .build());
             return true;

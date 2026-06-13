@@ -17,11 +17,11 @@ public class AsyncChunkSend {
         new LinkedBlockingQueue<>(),
         new ThreadFactoryBuilder()
             .setPriority(Thread.NORM_PRIORITY)
-            .setNameFormat("Leaf Async Chunk Send Thread")
+            .setNameFormat("Arc Bucket Async Chunk Send Thread")
             .setUncaughtExceptionHandler(Util::onThreadException)
             .setThreadFactory(AsyncChunkSendThread::new)
             .build(),
         new ThreadPoolExecutor.CallerRunsPolicy()
     );
-    public static final Logger LOGGER = LogManager.getLogger("Leaf Async Chunk Send");
+    public static final Logger LOGGER = LogManager.getLogger("Arc Bucket Async Chunk Send");
 }

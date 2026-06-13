@@ -42,7 +42,7 @@ import java.util.jar.JarFile;
  */
 public class LeafConfig {
 
-    public static final Logger LOGGER = LogManager.getLogger(LeafConfig.class.getSimpleName());
+    public static final Logger LOGGER = LogManager.getLogger("Arc Bucket Config");
     protected static final File I_CONFIG_FOLDER = new File("config");
     protected static final String I_CONFIG_PKG = "org.dreeam.leaf.config.modules";
     protected static final String I_GLOBAL_CONFIG_FILE = "leaf-global.yml";

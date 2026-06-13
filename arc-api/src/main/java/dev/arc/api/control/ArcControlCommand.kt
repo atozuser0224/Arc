@@ -190,7 +190,7 @@ object ArcControlCommand {
         val mcVer = Bukkit.getMinecraftVersion()
         val bukkitVer = Bukkit.getBukkitVersion()
         sender.sendMessage("§eArc §f$arcVer §7(Minecraft $mcVer, $bukkitVer)")
-        sender.sendMessage("§7Leaf-based Paper/Purpur compatible server")
+        sender.sendMessage("§7Arc Bucket — Paper/Purpur compatible server")
     }
 
     private fun showHelp(sender: CommandSender) {

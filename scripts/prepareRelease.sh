@@ -5,12 +5,12 @@ IS_EOL=false
 IS_UNSUPPORTED=false
 IS_DEV=false
 
-JAR_NAME="leaf-1.21.4"
+JAR_NAME="arc-bucket-1.21.4"
 CURRENT_TAG="ver-1.21.4"
 RELEASE_NOTES="release_notes.md"
 
-# Rename Leaf jar
-mv ./leaf-server/build/libs/leaf-paperclip-1.21.4-R0.1-SNAPSHOT-mojmap.jar ./$JAR_NAME-${BUILD_NUMBER}.jar
+# Rename Arc Bucket jar
+mv ./leaf-server/build/libs/arc-paperclip-1.21.4-R0.1-SNAPSHOT-mojmap.jar ./$JAR_NAME-${BUILD_NUMBER}.jar
 
 # Branch name
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -75,7 +75,7 @@ if [ $IS_EOL = true ]; then
   {
     echo ""
     echo "> [!WARNING]"
-    echo "> This version of Leaf is end-of-life and will only receive critical bugfixes from upstream."
+    echo "> This version of Arc Bucket is end-of-life and will only receive critical bugfixes from upstream."
     echo "> Update to latest version and gain better performance!"
   } >> $RELEASE_NOTES
 fi
@@ -85,7 +85,7 @@ if [ $IS_UNSUPPORTED = true ]; then
   {
     echo ""
     echo "> [!CAUTION]"
-    echo "> This version of Leaf is unsupported and will not receive any bugfixes."
+    echo "> This version of Arc Bucket is unsupported and will not receive any bugfixes."
     echo "> Use at your own risk!"
   } >> $RELEASE_NOTES
 fi

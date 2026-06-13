@@ -1,0 +1,124 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: arc <wagwag0224@gmail.com>
+Date: Sun, 14 Jun 2026 05:00:00 +0900
+Subject: [PATCH] feat(branding): identify Arc Bucket
+
+Persist the Arc bootstrap hook so patch reapplication keeps the Arc runtime installed.
+
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+index 49ac2b52fc134bfa77a108bf58de3e81be38c683..5a32f27c35464ce84ecb1f32c897e6a565a2d71f 100644
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ b/src/main/java/com/destroystokyo/paper/Metrics.java
+@@ -592,7 +592,7 @@ public class Metrics {
+             boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
+             // Only start Metrics, if it's enabled in the config
+             if (config.getBoolean("enabled", true)) {
+-                Metrics metrics = new Metrics("Leaf", serverUUID, logFailedRequests, Bukkit.getLogger()); // Gale - branding changes - metrics // Leaf - Rebrand
++                Metrics metrics = new Metrics("Arc Bucket", serverUUID, logFailedRequests, Bukkit.getLogger()); // Arc - Rebrand
+ 
+                 metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
+                     String minecraftVersion = Bukkit.getVersion();
+@@ -602,15 +602,15 @@ public class Metrics {
+ 
+                 metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
+                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
+-                final String leafVersion; // Gale - branding changes - metrics // Leaf - Rebrand
++                final String arcVersion; // Arc - Rebrand
+                 final String implVersion = org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion();
+                 if (implVersion != null) {
+                     final String buildOrHash = implVersion.substring(implVersion.lastIndexOf('-') + 1);
+-                    leafVersion = "git-Leaf-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Gale - branding changes - metrics // Leaf - Rebrand
++                    arcVersion = "git-Arc-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Arc - Rebrand
+                 } else {
+-                    leafVersion = "unknown"; // Gale - branding changes - metrics // Leaf - Rebrand
++                    arcVersion = "unknown"; // Arc - Rebrand
+                 }
+-                metrics.addCustomChart(new Metrics.SimplePie("leaf_version", () -> leafVersion)); // Gale - branding changes - metrics // Leaf - Rebrand
++                metrics.addCustomChart(new Metrics.SimplePie("arc_version", () -> arcVersion)); // Arc - Rebrand
+ 
+                 metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+                     Map<String, Map<String, Integer>> map = new HashMap<>(2); // Gale - metrics - reduce HashMap capacity
+diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+index f59879ae7d3c73cd4c4233d30667988bf22f12f1..a1d084baedd3a863fe5af9c9c789943881cab75e 100644
+--- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
++++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+@@ -20,7 +20,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
+     @Override
+     protected LineReader buildReader(LineReaderBuilder builder) {
+         builder
+-                .appName("Leaf") // Gale - branding changes // Leaf - Rebrand
++                .appName("Arc Bucket") // Arc - Rebrand
+                 .variable(LineReader.HISTORY_FILE, java.nio.file.Paths.get(".console_history"))
+                 .completer(new ConsoleCommandCompleter(this.server))
+                 .option(LineReader.Option.COMPLETE_IN_WORD, true);
+diff --git a/src/main/java/io/papermc/paper/PaperBootstrap.java b/src/main/java/io/papermc/paper/PaperBootstrap.java
+index d543b1b107ab8d3eeb1fc3c1cadf489928d2786e..7a552a94bdebd59024c9a3e6be71d1cefd3110f4 100644
+--- a/src/main/java/io/papermc/paper/PaperBootstrap.java
++++ b/src/main/java/io/papermc/paper/PaperBootstrap.java
+@@ -1,5 +1,6 @@
+ package io.papermc.paper;
+ 
++import dev.arc.server.brand.ArcBranding;
+ import java.util.List;
+ import joptsimple.OptionSet;
+ import net.minecraft.SharedConstants;
+@@ -16,6 +17,12 @@ public final class PaperBootstrap {
+     public static void boot(final OptionSet options) {
+         SharedConstants.tryDetectVersion();
+ 
++        LOGGER.info("");
++        ArcBranding.INSTANCE.startupBanner(
++            ServerBuildInfo.buildInfo().asString(ServerBuildInfo.StringRepresentation.VERSION_SIMPLE),
++            SharedConstants.getCurrentVersion().getId()
++        ).forEach(LOGGER::info);
++        LOGGER.info("");
+         getStartupVersionMessages().forEach(LOGGER::info);
+ 
+         Main.main(options);
+diff --git a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
+index f267abd6f905180cfa5cf4961cf79f57544a891c..a9a47a517d25126f2e25cdd8be10ec78dba613a8 100644
+--- a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
++++ b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
+@@ -35,7 +35,7 @@ public record ServerBuildInfoImpl(
+     // Leaf start - Rebrand & Fix Pufferfish and Purpur patches
+     private static final String BRAND_PUFFERFISH_NAME = "Pufferfish";
+     private static final String BRAND_PURPUR_NAME = "Purpur";
+-    private static final String BRAND_LEAF_NAME = "Leaf";
++    private static final String BRAND_ARC_NAME = "Arc Bucket";
+     // Leaf end - Rebrand & Fix Pufferfish and Purpur patches
+ 
+     private static final String BUILD_DEV = "DEV";
+@@ -48,9 +48,9 @@ public record ServerBuildInfoImpl(
+         this(
+             getManifestAttribute(manifest, ATTRIBUTE_BRAND_ID)
+                 .map(Key::key)
+-                .orElse(BRAND_LEAF_ID), // Gale - branding changes // Leaf - Rebrand
++                .orElse(BRAND_ARC_ID), // Arc - Rebrand
+             getManifestAttribute(manifest, ATTRIBUTE_BRAND_NAME)
+-                .orElse(BRAND_LEAF_NAME), // Gale - branding changes // Leaf - Rebrand
++                .orElse(BRAND_ARC_NAME), // Arc - Rebrand
+             SharedConstants.getCurrentVersion().getId(),
+             SharedConstants.getCurrentVersion().getName(),
+             getManifestAttribute(manifest, ATTRIBUTE_BUILD_NUMBER)
+@@ -72,7 +72,8 @@ public record ServerBuildInfoImpl(
+             || brandId.equals(BRAND_PAPER_ID)
+             || brandId.equals(BRAND_GALE_ID) // Gale - branding changes
+             || brandId.equals(BRAND_PUFFERFISH_ID)
+-            || brandId.equals(BRAND_PURPUR_ID);
++            || brandId.equals(BRAND_PURPUR_ID)
++            || brandId.equals(BRAND_LEAF_ID); // Arc - legacy Leaf compatibility
+             // Leaf end - Rebrand & Fix Pufferfish and Purpur patches
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 77e5fc9e2625e2e31f12ff46c80ca55d39d6fe33..997fadf847b414e2d029fae3483106e4d3430455 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -512,6 +512,7 @@ public final class CraftServer implements Server {
+         datapackManager = new io.papermc.paper.datapack.PaperDatapackManager(console.getPackRepository()); // Paper
+         this.spark = new io.papermc.paper.SparksFly(this); // Paper - spark
+         org.leavesmc.leaves.protocol.core.LeavesProtocolManager.init(); // Leaves - protocol
++        dev.arc.server.ArcBootstrap.install(); // Arc - install API/NMS bridge
+     }
+ 
+     public boolean getCommandBlockOverride(String command) {

@@ -76,6 +76,42 @@ public class CommandBuilder(public val name: String) {
     public fun sub(name: String, block: SubCommandBuilder.() -> Unit) {
         subs[name.lowercase()] = SubCommandBuilder(name).apply(block)
     }
+
+    internal fun completeFor(
+        sender: CommandSender,
+        alias: String,
+        args: Array<String>,
+    ): List<String> {
+        if (permission?.let(sender::hasPermission) == false) return emptyList()
+        if (isPlayerOnly && sender !is Player) return emptyList()
+
+        val current = args.lastOrNull().orEmpty()
+        val matchedSub = args.firstOrNull()
+            ?.lowercase()
+            ?.let(subs::get)
+
+        val candidates = if (matchedSub != null && args.size > 1) {
+            if (matchedSub.permission?.let(sender::hasPermission) == false) return emptyList()
+            if (matchedSub.isPlayerOnly && sender !is Player) return emptyList()
+            matchedSub.onComplete?.invoke(CommandContext(sender, alias, args.drop(1))).orEmpty()
+        } else {
+            val subcommands = if (args.size <= 1) {
+                subs.values
+                    .asSequence()
+                    .filter { it.permission?.let(sender::hasPermission) != false }
+                    .filter { !it.isPlayerOnly || sender is Player }
+                    .map { it.name }
+                    .toList()
+            } else {
+                emptyList()
+            }
+            subcommands + onComplete?.invoke(CommandContext(sender, alias, args.toList())).orEmpty()
+        }
+
+        return candidates
+            .filter { it.startsWith(current, ignoreCase = true) }
+            .distinctBy(String::lowercase)
+    }
 }
 
 /**
@@ -158,18 +194,7 @@ public fun Plugin.command(name: String, block: CommandBuilder.() -> Unit) {
         }
 
         override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): List<String> {
-            val typed = args.getOrNull(0)?.lowercase() ?: ""
-
-            if (args.size <= 1) {
-                val subMatches = builder.subs.keys.filter { it.startsWith(typed) }
-                val extra = builder.onComplete?.invoke(CommandContext(sender, alias, args.toList())) ?: emptyList()
-                return (subMatches + extra).distinct()
-            }
-
-            val sub = builder.subs[args[0].lowercase()] ?: return emptyList()
-            val ctx = CommandContext(sender, alias, args.drop(1))
-            return (sub.onComplete?.invoke(ctx) ?: emptyList())
-                .filter { it.startsWith(args.last(), ignoreCase = true) }
+            return builder.completeFor(sender, alias, args)
         }
     }
 
@@ -229,15 +254,7 @@ public fun command(name: String, prefix: String, block: CommandBuilder.() -> Uni
         }
 
         override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): List<String> {
-            val typed = args.getOrNull(0)?.lowercase() ?: ""
-            if (args.size <= 1) {
-                val subMatches = builder.subs.keys.filter { it.startsWith(typed) }
-                val extra = builder.onComplete?.invoke(CommandContext(sender, alias, args.toList())) ?: emptyList()
-                return (subMatches + extra).distinct()
-            }
-            val sub = builder.subs[args[0].lowercase()] ?: return emptyList()
-            return (sub.onComplete?.invoke(CommandContext(sender, alias, args.drop(1))) ?: emptyList())
-                .filter { it.startsWith(args.last(), ignoreCase = true) }
+            return builder.completeFor(sender, alias, args)
         }
     }
 

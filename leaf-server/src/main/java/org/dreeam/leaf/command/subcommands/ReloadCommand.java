@@ -28,7 +28,7 @@ public final class ReloadCommand extends PermissionedLeafSubcommand {
     }
 
     private void doReload(final CommandSender sender) {
-        Command.broadcastCommandMessage(sender, Component.text("Reloading Leaf config...", NamedTextColor.GREEN));
+        Command.broadcastCommandMessage(sender, Component.text("Reloading Arc Bucket compatibility config...", NamedTextColor.GREEN));
 
         LeafConfig.reloadAsync(sender);
     }

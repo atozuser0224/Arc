@@ -24,6 +24,6 @@ public final class LeafCommands {
     }
 
     public static void registerCommands(final MinecraftServer server) {
-        COMMANDS.forEach((s, command) -> server.server.getCommandMap().register(s, "Leaf", command));
+        COMMANDS.forEach((s, command) -> server.server.getCommandMap().register(s, "Arc Bucket", command));
     }
 }

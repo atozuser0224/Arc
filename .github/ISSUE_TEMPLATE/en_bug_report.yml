@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Before reporting an issue, make sure you are running the latest build of Leaf and checked for duplicate issues in [Issues](https://github.com/Winds-Studio/Leaf/issues) and the [Leaf docs](https://docs.leafmc.one/)!
+        Before reporting an issue, make sure you are running the latest Arc Bucket build and checked for duplicates in [Issues](https://github.com/atozuser0224/Arc/issues).
 
   - type: checkboxes
     attributes:
@@ -18,7 +18,7 @@ body:
           required: true
         - label: I ticked all the boxes without actually reading them
           required: false
-        - label: I am using latest Leaf build from https://github.com/Winds-Studio/Leaf/releases
+        - label: I am using the latest Arc Bucket build from https://github.com/atozuser0224/Arc/releases
           required: true
         - label: I tested and couldn't replicate this issue on [latest Purpur build](https://purpurmc.org/)
           required: true

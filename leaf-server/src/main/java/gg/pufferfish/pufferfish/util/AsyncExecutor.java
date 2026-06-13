@@ -11,7 +11,7 @@ import java.util.concurrent.locks.LockSupport;
 
 public class AsyncExecutor implements Runnable {
 
-    private final Logger LOGGER = LogManager.getLogger("Leaf");
+    private final Logger LOGGER = LogManager.getLogger("Arc Bucket");
     private final PriorityQueue<Runnable> jobs = PriorityQueues.synchronize(new ObjectArrayFIFOQueue<>());
     public final Thread thread;
     private volatile boolean killswitch = false;

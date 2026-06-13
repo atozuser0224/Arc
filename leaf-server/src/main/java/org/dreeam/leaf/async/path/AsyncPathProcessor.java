@@ -27,7 +27,7 @@ import java.util.function.Consumer;
  */
 public class AsyncPathProcessor {
 
-    private static final String THREAD_PREFIX = "Leaf Async Pathfinding";
+    private static final String THREAD_PREFIX = "Arc Bucket Async Pathfinding";
     private static final Logger LOGGER = LogManager.getLogger(THREAD_PREFIX);
     private static long lastWarnMillis = System.currentTimeMillis();
     public static ThreadPoolExecutor PATH_PROCESSING_EXECUTOR = null;
@@ -125,7 +125,7 @@ public class AsyncPathProcessor {
             }
 
             if (System.currentTimeMillis() - lastWarnMillis > 30000L) {
-                LOGGER.warn("Async pathfinding processor is busy! Pathfinding tasks will be treated as policy defined in config. Increasing max-threads in Leaf config may help.");
+                LOGGER.warn("Async pathfinding is busy. Increasing max-threads in the Arc Bucket compatibility config may help.");
                 lastWarnMillis = System.currentTimeMillis();
             }
         };

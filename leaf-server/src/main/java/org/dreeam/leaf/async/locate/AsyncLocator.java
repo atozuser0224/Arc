@@ -52,14 +52,14 @@ public class AsyncLocator {
             new LinkedBlockingQueue<>(),
             new ThreadFactoryBuilder()
                 .setThreadFactory(
-                    r -> new AsyncLocatorThread(r, "Leaf Async Locator Thread") {
+                    r -> new AsyncLocatorThread(r, "Arc Bucket Async Locator Thread") {
                         @Override
                         public void run() {
                             r.run();
                         }
                     }
                 )
-                .setNameFormat("Leaf Async Locator Thread - %d")
+                .setNameFormat("Arc Bucket Async Locator Thread - %d")
                 .setPriority(Thread.NORM_PRIORITY - 2)
                 .build()
         );

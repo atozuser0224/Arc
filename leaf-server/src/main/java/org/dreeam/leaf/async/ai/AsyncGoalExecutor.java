@@ -12,7 +12,7 @@ import java.util.OptionalInt;
 
 public class AsyncGoalExecutor {
 
-    protected static final Logger LOGGER = LogManager.getLogger("Leaf Async Goal");
+    protected static final Logger LOGGER = LogManager.getLogger("Arc Bucket Async Goal");
     protected final SpscIntQueue queue;
     private final ServerLevel world;
 

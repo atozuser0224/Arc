@@ -11,7 +11,7 @@ public class AsyncGoalThread extends Thread {
 
     public static volatile boolean RUNNING = true;
     public AsyncGoalThread(final MinecraftServer server) {
-        super(() -> run(server), "Leaf Async Goal Thread");
+        super(() -> run(server), "Arc Bucket Async Goal Thread");
         this.setDaemon(false);
         this.setUncaughtExceptionHandler(Util::onThreadException);
         this.setPriority(Thread.NORM_PRIORITY - 1);

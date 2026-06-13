@@ -104,6 +104,7 @@ class ArcShowcasePlugin : JavaPlugin() {
 
         // 4) Command DSL — runtime registration straight onto the command map.
         command("showcase") {
+            complete { listOf("effect", "give", "verify", "stats") }
             execute { ctx ->
                 val sender = ctx.sender
                 if (ctx.isPlayer) ctx.player.increment(commandsRun, 1)

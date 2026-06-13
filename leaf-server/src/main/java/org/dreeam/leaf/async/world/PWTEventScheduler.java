@@ -13,7 +13,7 @@ public class PWTEventScheduler {
     private PWTEventScheduler() {
         this.executor = Executors.newCachedThreadPool(
             new ThreadFactoryBuilder()
-                .setNameFormat("Leaf PWT Event Scheduler Thread - %d")
+                .setNameFormat("Arc Bucket PWT Event Scheduler Thread - %d")
                 .setDaemon(true)
                 .setPriority(Thread.NORM_PRIORITY - 2)
                 .build()

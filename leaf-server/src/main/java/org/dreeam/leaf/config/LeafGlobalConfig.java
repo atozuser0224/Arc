@@ -23,13 +23,13 @@ public class LeafGlobalConfig {
         configFile.set("config-version", CURRENT_VERSION);
 
         configFile.addComments("config-version", pickStringRegionBased("""
-                Leaf Config
-                GitHub Repo: https://github.com/Winds-Studio/Leaf
-                Discord: https://discord.com/invite/gfgAwdSEuM""",
+                Arc Bucket Compatibility Config
+                GitHub Repo: https://github.com/atozuser0224/Arc
+                Legacy Leaf keys are retained for plugin and config compatibility.""",
             """
-                Leaf Config
-                GitHub Repo: https://github.com/Winds-Studio/Leaf
-                QQ Group: 619278377"""));
+                Arc Bucket Compatibility Config
+                GitHub Repo: https://github.com/atozuser0224/Arc
+                为兼容插件和旧配置，保留 Leaf 配置键。"""));
 
         // Pre-structure to force order
         structureConfig();

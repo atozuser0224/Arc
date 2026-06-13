@@ -91,23 +91,31 @@ object ArcOpsCommand {
             "network" -> ArcNetworkCommands.complete(args)
             else -> emptyList()
         }
-        3 -> when {
-            args[0] in listOf("plugin", "plugins") -> PluginCommands.complete(args)
-            args[0] == "config" -> ConfigCommands.complete(args)
-            args[0] == "command" -> CommandSearch.complete(args)
-            args[0] == "permission" -> PermissionSearch.complete(args)
-            args[0] == "world" -> WorldCommands.complete(args)
-            args[0] == "logs" -> LogCommands.complete(args)
-            args[0] == "paste" -> PasteCommands.complete(args)
-            args[0] in listOf("safe-mode", "maintenance") -> SafeModeCommands.complete(args)
-            args[0] == "sandbox" -> PluginSandboxCheck.complete(args)
-            args[0] == "reload-policy" -> ReloadPolicy.complete(args)
-            args[0] == "plugin-overrides" -> PluginOverrides.complete(args)
-            args[0] == "audit" -> AuditLog.complete(args)
-            args[0] == "config-history" -> ConfigChangeHistory.complete(args)
-            args[0] == "network" -> ArcNetworkCommands.complete(args)
-            args[0] == "startup-profile" && args[1] == "detail" -> Bukkit.getPluginManager().plugins.map { it.name }
-            args[0] == "pregen" && args[1] == "start" -> Bukkit.getWorlds().map { it.name }
+        3 -> when (args[0].lowercase()) {
+            "plugin", "plugins" -> PluginCommands.complete(args)
+            "config" -> ConfigCommands.complete(args)
+            "command" -> CommandSearch.complete(args)
+            "permission" -> PermissionSearch.complete(args)
+            "world" -> WorldCommands.complete(args)
+            "logs" -> LogCommands.complete(args)
+            "paste" -> PasteCommands.complete(args)
+            "safe-mode", "maintenance" -> SafeModeCommands.complete(args)
+            "sandbox" -> PluginSandboxCheck.complete(args)
+            "reload-policy" -> ReloadPolicy.complete(args)
+            "plugin-overrides" -> PluginOverrides.complete(args)
+            "audit" -> AuditLog.complete(args)
+            "config-history" -> ConfigChangeHistory.complete(args)
+            "network" -> ArcNetworkCommands.complete(args)
+            "startup-profile" -> if (args[1].equals("detail", ignoreCase = true)) {
+                Bukkit.getPluginManager().plugins.map { it.name }
+            } else {
+                emptyList()
+            }
+            "pregen" -> if (args[1].equals("start", ignoreCase = true)) {
+                Bukkit.getWorlds().map { it.name }
+            } else {
+                emptyList()
+            }
             else -> emptyList()
         }
         else -> when (args.getOrNull(0)?.lowercase()) {

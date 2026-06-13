@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ShutdownExecutors {
 
-    public static final Logger LOGGER = LogManager.getLogger("Leaf");
+    public static final Logger LOGGER = LogManager.getLogger("Arc Bucket");
 
     public static void shutdown(MinecraftServer server) {
         if (server.mobSpawnExecutor != null && server.mobSpawnExecutor.thread.isAlive()) {

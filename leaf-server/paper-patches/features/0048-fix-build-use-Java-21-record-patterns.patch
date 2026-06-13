@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: arc <wagwag0224@gmail.com>
+Date: Sun, 14 Jun 2026 05:08:15 +0900
+Subject: [PATCH] fix(build): use Java 21 record patterns
+
+
+diff --git a/src/main/java/io/papermc/paper/util/Holderable.java b/src/main/java/io/papermc/paper/util/Holderable.java
+index 746c14b1792dd060a9cf19865c10cb93e1e7f688..f13492a95fbe77cd784f1aac0fd6e13e5e6a5455 100644
+--- a/src/main/java/io/papermc/paper/util/Holderable.java
++++ b/src/main/java/io/papermc/paper/util/Holderable.java
+@@ -36,7 +36,7 @@ public interface Holderable<M> extends Handleable<M> {
+                 }
+                 yield registry.get(Key.key(string));
+             }
+-            case JsonObjectWrapper(final JsonObject element) -> {
++            case JsonObjectWrapper(JsonObject element) -> {
+                 if (!(registry instanceof final CraftRegistry<?, ?> craftRegistry) || !craftRegistry.supportsDirectHolders()) {
+                     throw new IllegalArgumentException("Cannot deserialize direct holders for " + registry);
+                 }

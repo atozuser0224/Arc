@@ -1,0 +1,80 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: arc <wagwag0224@gmail.com>
+Date: Sun, 14 Jun 2026 05:04:13 +0900
+Subject: [PATCH] fix(branding): remove Leaf runtime messages
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index f89f6cea94486842a5e9015200a0d648225c8615..711f822ea8cd0e7196bc313e2b83961a01afb9c4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -3744,7 +3744,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+     @Override
+     @Deprecated(forRemoval = true)
+     public CompletableFuture<ItemStack> getSkullAsynchronously() {
+-        org.apache.logging.log4j.LogManager.getLogger("Leaf")
++        org.apache.logging.log4j.LogManager.getLogger("Arc Bucket")
+             .warn("You should not use this method: Player#getSkullAsynchronously(), cause low performance, " +
+                 "and will be removed in the future.");
+         java.util.concurrent.ExecutorService executorService = java.util.concurrent.Executors.newCachedThreadPool();
+diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
+index f6f787db016f4d1ac14648ebf2b8e162a3e85962..758570caf776d094c42198411d6e778eec003297 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
++++ b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
+@@ -491,7 +491,7 @@ public class CraftScheduler implements BukkitScheduler {
+                 this.parsePending();
+             } else {
+                 // this.debugTail = this.debugTail.setNext(new CraftAsyncDebugger(this.currentTick + CraftScheduler.RECENT_TICKS, task.getOwner(), task.getTaskClass())); // Paper
+-                task.getOwner().getLogger().log(Level.SEVERE, "Unexpected Async Task in the Sync Scheduler. Report this to Leaf"); // Paper // Gale - branding changes // Leaf - Rebrand
++                task.getOwner().getLogger().log(Level.SEVERE, "Unexpected Async Task in the Sync Scheduler. Report this to Arc Bucket"); // Arc - Rebrand
+                 // We don't need to parse pending
+                 // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
+             }
+diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
+index 4e11ae93c325955f0d488c2ac82e34b96dbf68ac..69dbf07f67b2e166d62a72bda56a174009da69da 100644
+--- a/src/main/java/org/spigotmc/WatchdogThread.java
++++ b/src/main/java/org/spigotmc/WatchdogThread.java
+@@ -82,15 +82,15 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+                     We do not want people to report thread issues to Paper,
+                     but we do want people to report thread issues to Gale.
+                     */
+-                    logger.log(Level.SEVERE, "The server has stopped responding! This is (probably) not a Paper bug. This could be a Leaf bug."); // Paper // Leaf - Rebrand
++                    logger.log(Level.SEVERE, "The server has stopped responding! This may be an Arc Bucket issue."); // Arc - Rebrand
+                     // Gale end - branding changes
+                     logger.log(Level.SEVERE, "If you see a plugin in the Server thread dump below, then please report it to that author");
+                     logger.log(Level.SEVERE, "\t *Especially* if it looks like HTTP or MySQL operations are occurring");
+                     logger.log(Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once");
+                     logger.log(Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes");
+-                    logger.log(Level.SEVERE, "If you are unsure or think this is a Leaf bug, please report this to https://github.com/Winds-Studio/Leaf/issues - and if you think this is a Paper bug, please report this to https://github.com/PaperMC/Paper/issues"); // Gale - branding changes // Leaf - Rebrand
++                    logger.log(Level.SEVERE, "If you think this is an Arc Bucket issue, report it to https://github.com/atozuser0224/Arc/issues"); // Arc - Rebrand
+                     logger.log(Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports");
+-                    logger.log(Level.SEVERE, "Leaf version: " + Bukkit.getServer().getVersion()); // Gale - branding changes // Leaf - Rebrand
++                    logger.log(Level.SEVERE, "Arc Bucket version: " + Bukkit.getServer().getVersion()); // Arc - Rebrand
+ 
+                     if (net.minecraft.world.level.Level.lastPhysicsProblem != null) {
+                         logger.log(Level.SEVERE, "------------------------------");
+@@ -115,13 +115,13 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+                     We do not want people to report thread issues to Paper,
+                     but we do want people to report thread issues to Gale.
+                     */
+-                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - If you think this is a Leaf bug, please report it at https://github.com/Winds-Studio/Leaf/issues - THIS IS NOT A PAPER BUG OR CRASH - " + Bukkit.getServer().getVersion() + " ---"); // Leaf - Rebrand
++                    logger.log(Level.SEVERE, "--- REPORT ARC BUCKET ISSUES AT https://github.com/atozuser0224/Arc/issues - " + Bukkit.getServer().getVersion() + " ---"); // Arc - Rebrand
+                     // Gale end - branding changes
+                     logger.log(Level.SEVERE, "The server has not responded for " + (currentTime - lastTick) / 1000 + " seconds! Creating thread dump");
+                 }
+                 // Paper end - Different message for short timeout
+                 logger.log(Level.SEVERE, "------------------------------");
+-                logger.log(Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Leaf!):"); // Paper // Gale - branding changes // Leaf - Rebrand
++                logger.log(Level.SEVERE, "Server thread dump (check plugins before reporting to Arc Bucket):"); // Arc - Rebrand
+                 FeatureHooks.dumpAllChunkLoadInfo(MinecraftServer.getServer(), isLongTimeout); // Paper - log detailed tick information
+                 WatchdogThread.dumpThread(ManagementFactory.getThreadMXBean().getThreadInfo(MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE), logger);
+                 logger.log(Level.SEVERE, "------------------------------");
+@@ -154,7 +154,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+                     We do not want people to report thread issues to Paper,
+                     but we do want people to report thread issues to Gale.
+                     */
+-                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - If you think this is a Leaf bug, please report it at https://github.com/Winds-Studio/Leaf/issues - THIS IS NOT A PAPER BUG OR CRASH ---"); // Leaf - Rebrand
++                    logger.log(Level.SEVERE, "--- REPORT ARC BUCKET ISSUES AT https://github.com/atozuser0224/Arc/issues ---"); // Arc - Rebrand
+                     // Gale end - branding changes
+                 }
+ 

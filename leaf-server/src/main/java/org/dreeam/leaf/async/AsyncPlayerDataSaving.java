@@ -26,7 +26,7 @@ public class AsyncPlayerDataSaving {
                 new LinkedBlockingQueue<>(),
                 new com.google.common.util.concurrent.ThreadFactoryBuilder()
                     .setPriority(Thread.NORM_PRIORITY - 2)
-                    .setNameFormat("Leaf IO Thread")
+                    .setNameFormat("Arc Bucket IO Thread")
                     .setUncaughtExceptionHandler(Util::onThreadException)
                     .build(),
                 new ThreadPoolExecutor.DiscardPolicy()

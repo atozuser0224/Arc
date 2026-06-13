@@ -11,7 +11,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-rootProject.name = "leaf"
+rootProject.name = "arc"
 
 for (name in listOf("leaf-api", "leaf-server", "arc-api", "arc-server", "arc-test")) {
     val projName = name.lowercase(Locale.ENGLISH)

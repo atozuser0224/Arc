@@ -189,24 +189,51 @@
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
 -            "Implementation-Title" to "Gale", // Gale - branding changes
-+            "Implementation-Title" to "Leaf", // Gale - branding changes // Leaf - Rebrand
++            "Implementation-Title" to "Arc Bucket", // Arc - Rebrand
              "Implementation-Version" to implementationVersion,
              "Implementation-Vendor" to date,
 -            "Specification-Title" to "Gale", // Gale - branding changes
-+            "Specification-Title" to "Leaf", // Gale - branding changes // Leaf - Rebrand
++            "Specification-Title" to "Arc Bucket", // Arc - Rebrand
              "Specification-Version" to project.version,
 -            "Specification-Vendor" to "GaleMC Team", // Gale - branding changes
 -            "Brand-Id" to "galemc:gale", // Gale - branding changes
 -            "Brand-Name" to "Gale", // Gale - branding changes
-+            "Specification-Vendor" to "Winds Studio", // Gale - branding changes // Leaf - Rebrand
-+            "Brand-Id" to "winds-studio:leaf", // Gale - branding changes // Leaf - Rebrand
-+            "Brand-Name" to "Leaf", // Gale - branding changes // Leaf - Rebrand
++            "Specification-Vendor" to "Arc Project", // Arc - Rebrand
++            "Brand-Id" to "arc:arc-bucket", // Arc - Rebrand
++            "Brand-Name" to "Arc Bucket", // Arc - Rebrand
              "Build-Number" to (build ?: ""),
              "Build-Time" to buildTime.toString(),
              "Git-Branch" to gitBranch,
-@@ -420,5 +_,4 @@
+@@ -390,18 +_,18 @@
+ // Gale start - branding changes - package license into jar
+ // Based on io.papermc.paperweight.core.taskcontainers.PaperclipTasks
+ tasks.named("createMojmapPaperclipJar") {
+-    val name = rootProject.name
+     val version = project.version
+     val licenseFileName = "LICENSE.txt"
+     val licenseFilePath = layout.projectDirectory.dir("../paper-server/$licenseFileName").asFile
+ 
+     // Based on io.papermc.paperweight.core.taskcontainers.PaperclipTasks
+     val jarName = listOfNotNull(
+-        name,
++        "leaf",
+         "paperclip",
+         version,
+         "mojmap"
+     ).joinToString("-") + ".jar"
++    val distributionJar = layout.buildDirectory.file("libs/arc-paperclip-$version-mojmap.jar")
+ 
+     // Based on io.papermc.paperweight.core.taskcontainers.PaperclipTasks
+     val zipFile = layout.buildDirectory.file("libs/$jarName").get().path
+@@ -419,10 +_,10 @@
+ 
              zip(rootDir, zipFile)
          } finally {
 -            @OptIn(kotlin.io.path.ExperimentalPathApi::class)
              rootDir.toFile().deleteRecursively()
          }
+ 
++        file(zipFile).copyTo(distributionJar.get().asFile, overwrite = true)
+     }
+ }
+ // Gale end - branding changes - package license into jar

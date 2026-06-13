@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MultithreadedTracker {
 
-    private static final String THREAD_PREFIX = "Leaf Async Tracker";
+    private static final String THREAD_PREFIX = "Arc Bucket Async Tracker";
     private static final Logger LOGGER = LogManager.getLogger(THREAD_PREFIX);
     private static long lastWarnMillis = System.currentTimeMillis();
     public static ThreadPoolExecutor TRACKER_EXECUTOR = null;
@@ -194,7 +194,7 @@ public class MultithreadedTracker {
             }
 
             if (System.currentTimeMillis() - lastWarnMillis > 30000L) {
-                LOGGER.warn("Async entity tracker is busy! Tracking tasks will be done in the server thread. Increasing max-threads in Leaf config may help.");
+                LOGGER.warn("Async entity tracker is busy. Increasing max-threads in the Arc Bucket compatibility config may help.");
                 lastWarnMillis = System.currentTimeMillis();
             }
         };

@@ -15,6 +15,7 @@ It introduces ergonomic, allocation-conscious helpers that the Java API does not
 | Players | `dev.arc.api.player.*` | `player.send("<red>hi")`, `actionBar`, `title` (MiniMessage) |
 | Geometry | `dev.arc.api.math.*` | Vector/Location operators, **lazy** `a.blocksTo(b)` cuboid `Sequence` (O(1) memory) |
 | Text | `dev.arc.api.text.*` | `"<red>hi".mm()` MiniMessage helpers |
+| Custom effects | `dev.arc.api.effect.customEffects` | plugin-scoped virtual effects with immutable definitions, reapply policies, lifecycle callbacks, and optional vanilla HUD icons |
 | Cooldowns | `dev.arc.api.util.Cooldown` | per-key rate-limit tracker: `if (cd.tryUse(id)) …` |
 | Load spreading | `dev.arc.api.scheduling.TickDispatcher` | drains bursty work under a per-tick ms budget — turns one-tick freezes into smooth spread |
 | Async batches | `dispatchRegionBatch(...)` | region-owned, future-based batches with time and concurrency backpressure |
@@ -82,6 +83,38 @@ Helpers can pull live defaults from settings:
 val cache = TtlCache.withDefaults<Chunk, Int> { it.entities.size }   // uses Arc.settings.defaultTtlMillis
 val pool  = ObjectPool.withDefaults(factory = { StringBuilder() })   // uses Arc.settings.defaultPoolSize
 ```
+
+## Custom effects
+
+Arc custom effects provide server-defined gameplay behavior without requiring a
+modded client or mutating Minecraft's version-sensitive native mob-effect
+registry:
+
+```kotlin
+val effects = customEffects {
+    effect("mana_regen") {
+        visual(PotionEffectType.REGENERATION)
+        defaultDuration = 10.seconds
+        reapplyPolicy = EffectReapplyPolicy.KEEP_STRONGER
+
+        onTick(interval = 20) { player, instance ->
+            restoreMana(player, instance.amplifier + 1)
+        }
+        onRemove { player, _, reason ->
+            player.sendMessage("Mana regeneration ended: $reason")
+        }
+    }
+}
+
+val manaRegen = effects["mana_regen"]
+effects.apply(player, manaRegen, duration = 30.seconds, amplifier = 1)
+```
+
+`KEEP_STRONGER` is the default. `REPLACE`, `EXTEND`, and `IGNORE` are also
+available per definition or application. Call `effects.close()` during plugin
+shutdown. Multiple custom effects sharing one visual potion type are
+reconciled, but Arc cannot restore an unrelated potion effect previously
+applied by another plugin because Bukkit exposes no ownership metadata.
 
 ### Built-in `/arc` command
 

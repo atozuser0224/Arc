@@ -10,6 +10,39 @@ Arc is a Leaf-based (Paper/Purpur fork) Minecraft server software that provides:
 4. **Operations suite** — diagnostics, monitoring, and admin tools
 5. **Multi-server network** — Redis-based cross-server player transfer, item mail, and management
 
+## 2026-06-13: Kotlin Custom Effect Registry
+
+Arc now includes a plugin-scoped virtual effect registry in
+`dev.arc.api.effect`:
+
+- `plugin.customEffects { effect("id") { ... } }` Kotlin DSL;
+- immutable `NamespacedKey` definitions and duplicate-key validation;
+- `KEEP_STRONGER`, `REPLACE`, `EXTEND`, and `IGNORE` reapplication policies;
+- application, interval tick, expiration, and reason-aware removal callbacks;
+- optional Bukkit potion effects for vanilla-client HUD visibility;
+- shared visual ownership reconciliation between custom effects;
+- explicit lookup, active snapshots, unregister, clear, and idempotent shutdown;
+- callback exception isolation with effect and player diagnostics;
+- a Bukkit-independent deterministic state engine.
+
+Focused tests cover application, all reapplication policies, tick ordering,
+expiration, explicit and bulk removal, immutable snapshots, invalid inputs, and
+duration-to-tick ceiling conversion.
+
+Known limitation: Bukkit does not expose potion-effect ownership. If another
+plugin applies the same visual potion type, Arc cannot reliably restore that
+unrelated effect after the final Arc custom effect is removed.
+
+### Supporting API fixes
+
+- `ModChannel` no longer leaks `FriendlyByteBuf`, Netty, or NMS types through
+  `arc-api`. The new `ModPacketBuffer` provides network-order primitives,
+  Minecraft-compatible VarInt strings and byte arrays, UUIDs, bounds checks,
+  and read/write mode validation.
+- `WorldDataStore.keys()` now uses the Paper 1.21 `NamespacedKey` string
+  property instead of the Adventure `Key` factory method.
+- `ModPacketBuffer` has focused round-trip and malformed-input tests.
+
 ## Architecture Principle
 
 ```

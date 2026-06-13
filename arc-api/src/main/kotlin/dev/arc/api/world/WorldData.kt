@@ -52,8 +52,8 @@ class WorldDataStore(private val plugin: Plugin, val world: World) {
 
     /** Returns all key names set by this plugin on this world. */
     fun keys(): Set<String> = world.persistentDataContainer.keys
-        .filter { it.namespace() == plugin.name.lowercase() }
-        .map { it.key() }
+        .filter { it.namespace == plugin.name.lowercase() }
+        .map { it.key }
         .toSet()
 }
 

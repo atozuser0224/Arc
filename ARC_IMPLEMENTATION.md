@@ -43,6 +43,25 @@ unrelated effect after the final Arc custom effect is removed.
   property instead of the Adventure `Key` factory method.
 - `ModPacketBuffer` has focused round-trip and malformed-input tests.
 
+## 2026-06-13: Safe Datapack Kotlin DSL
+
+The prototype datapack writer was replaced with a tested two-layer API:
+
+- `DatapackContent`: Bukkit-independent resource model and deployment engine;
+- `DatapackMaker`: Bukkit world-container, enable, and reload adapter;
+- validated `ResourceId` and pack-relative path handling;
+- Gson-backed biome, loot table, and tag generation;
+- raw recipe, advancement, and predicate JSON resources;
+- `.mcfunction` builder with one-command-per-line validation;
+- Minecraft 1.21.4 singular resource and tag directory normalization;
+- duplicate resource rejection and UTF-8 output;
+- `.arc-manifest` cleanup that removes stale Arc files while preserving
+  unrelated files in the same pack.
+
+Focused tests cover path and ID rejection, JSON parsing and escaping, resource
+directory layout, function output, invalid loot ranges, duplicate resources,
+pack metadata, stale cleanup, and preservation of manually managed files.
+
 ## Architecture Principle
 
 ```

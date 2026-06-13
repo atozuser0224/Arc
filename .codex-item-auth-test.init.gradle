@@ -1,0 +1,10 @@
+gradle.beforeProject { project ->
+    if (project.path == ":arc-api") {
+        project.afterEvaluate {
+            project.sourceSets.main.kotlin.setSrcDirs(["src/main/kotlin"])
+            project.sourceSets.main.kotlin.include("dev/arc/api/item/ItemAuthenticator.kt")
+            project.sourceSets.test.kotlin.setSrcDirs(["src/test/kotlin"])
+            project.sourceSets.test.kotlin.include("dev/arc/api/item/ItemAuthenticatorTest.kt")
+        }
+    }
+}

@@ -5,7 +5,9 @@ import dev.arc.api.control.ArcControlCommand
 import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
+import dev.arc.api.player.ArcClientWorldStates
 import dev.arc.api.registry.ArcRegistries
+import dev.arc.server.nms.NmsClientWorldStateBackend
 import dev.arc.server.nms.NmsNpcBackend
 import dev.arc.server.nms.NmsRegistryBackend
 import dev.arc.server.nms.ReflectiveArcNms
@@ -44,6 +46,7 @@ object ArcBootstrap {
             Arc.registerThreadScheduler(LeafParallelWorldScheduler)
             ArcRegistries.backend = NmsRegistryBackend
             ArcNpcs.backend = NmsNpcBackend
+            ArcClientWorldStates.installBackend(NmsClientWorldStateBackend)
             if (standaloneCommandInstalled.compareAndSet(false, true)) {
                 try {
                     ArcControlCommand.register()

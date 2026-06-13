@@ -1,0 +1,1373 @@
+Initialized native services in: C:\Users\wagwa\.gradle\native
+Initialized jansi services in: C:\Users\wagwa\.gradle\native
+Removing 3 daemon stop events from registry
+Previous Daemon (4032) stopped at Sat Jun 13 21:20:39 KST 2026 stop command received
+Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
+Starting process 'Gradle build daemon'. Working directory: C:\Users\wagwa\.gradle\daemon\8.14.2 Command: C:\Users\wagwa\.jdks\corretto-21.0.10\bin\java.exe --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -Duser.country=KR -Duser.language=ko -Duser.variant -cp C:\Users\wagwa\.gradle\wrapper\dists\gradle-8.14.2-bin\2pb3mgt1p815evrl3weanttgr\gradle-8.14.2\lib\gradle-daemon-main-8.14.2.jar -javaagent:C:\Users\wagwa\.gradle\wrapper\dists\gradle-8.14.2-bin\2pb3mgt1p815evrl3weanttgr\gradle-8.14.2\lib\agents\gradle-instrumentation-agent-8.14.2.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.14.2
+Successfully started process 'Gradle build daemon'
+An attempt to start the daemon took 1.409 secs.
+The client will now receive all logging from the daemon (pid: 41784). The daemon log file: C:\Users\wagwa\.gradle\daemon\8.14.2\daemon-41784.out.log
+Starting build in new daemon [memory: 512 MiB]
+Using 12 worker leases.
+Received JVM installation metadata from 'C:\Users\wagwa\.jdks\corretto-21.0.10': {JAVA_HOME=C:\Users\wagwa\.jdks\corretto-21.0.10, JAVA_VERSION=21.0.10, JAVA_VENDOR=Amazon.com Inc., RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.10+7-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.10+7-LTS, VM_VENDOR=Amazon.com Inc., OS_ARCH=amd64}
+Watching the file system is configured to be disabled
+File system watching is inactive
+Starting Build
+Resolved plugin [id: 'org.gradle.toolchains.foojay-resolver-convention', version: '1.0.0']
+Settings evaluated using settings file 'C:\Users\wagwa\ARC-1.21.4\settings.gradle.kts'.
+Using local directory build cache for the root build (location = C:\Users\wagwa\.gradle\caches\build-cache-1, remove unused entries = after 7 days).
+Projects loaded. Root project using build file 'C:\Users\wagwa\ARC-1.21.4\build.gradle.kts'.
+Included projects: [root project 'leaf', project ':arc-api', project ':arc-server', project ':arc-test', project ':leaf-api', project ':leaf-server']
+
+> Configure project :
+Evaluating root project 'leaf' using build file 'C:\Users\wagwa\ARC-1.21.4\build.gradle.kts'.
+Resolved plugin [id: 'org.gradle.maven-publish']
+Resolved plugin [id: 'org.jetbrains.kotlin.jvm', version: '2.0.21']
+Resolved plugin [id: 'io.papermc.paperweight.patcher', version: '2.0.0-beta.14']
+Using Kotlin Gradle Plugin gradle85 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+Starting process 'command 'git''. Working directory: C:\Users\wagwa\ARC-1.21.4 Command: git --version
+Successfully started process 'command 'git''
+paperweight-patcher v2.0.0-beta.14 (running on 'Windows 11')
+Using Kotlin Gradle Plugin gradle85 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+Using Kotlin Gradle Plugin gradle85 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+Using Kotlin Gradle Plugin gradle85 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+Using Kotlin Gradle Plugin gradle85 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+Using Kotlin Gradle Plugin gradle85 variant
+kotlin scripting plugin: created the scripting discovery configuration: kotlinScriptDef
+kotlin scripting plugin: created the scripting discovery configuration: testKotlinScriptDef
+
+> Configure project :arc-api
+Evaluating project ':arc-api' using build file 'C:\Users\wagwa\ARC-1.21.4\arc-api\build.gradle.kts'.
+
+> Configure project :arc-server
+Evaluating project ':arc-server' using build file 'C:\Users\wagwa\ARC-1.21.4\arc-server\build.gradle.kts'.
+
+> Configure project :arc-test
+Evaluating project ':arc-test' using build file 'C:\Users\wagwa\ARC-1.21.4\arc-test\build.gradle.kts'.
+
+> Configure project :leaf-api
+Evaluating project ':leaf-api' using build file 'C:\Users\wagwa\ARC-1.21.4\leaf-api\build.gradle.kts'.
+Resolved plugin [id: 'org.gradle.java-library']
+Resolved plugin [id: 'org.gradle.maven-publish']
+Resolved plugin [id: 'org.gradle.idea']
+
+> Configure project :leaf-server
+Evaluating project ':leaf-server' using build file 'C:\Users\wagwa\ARC-1.21.4\leaf-server\build.gradle.kts'.
+Resolved plugin [id: 'org.gradle.java-library']
+Resolved plugin [id: 'org.gradle.maven-publish']
+Resolved plugin [id: 'io.papermc.paperweight.core']
+Starting process 'command 'git''. Working directory: C:\Users\wagwa\ARC-1.21.4 Command: git --version
+Successfully started process 'command 'git''
+paperweight-core v2.0.0-beta.14 (running on 'Windows 11')
+kotlin scripting plugin: created the scripting discovery configuration: log4jPluginsKotlinScriptDef
+Fork order: gale -> leaf
+All projects evaluated.
+Task path ':leaf-server:createMojmapPaperclipJar' matched project ':leaf-server'
+Task name matched 'createMojmapPaperclipJar'
+Selected primary task 'createMojmapPaperclipJar' from project :leaf-server
+Starting process 'command 'C:\Program Files\Java\jdk-26\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm7148337854936116686probe Command: C:\Program Files\Java\jdk-26\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Program Files\Java\jdk-26\bin\java.exe''
+Received JVM installation metadata from 'C:\Program Files\Java\jdk-26': {JAVA_HOME=C:\Program Files\Java\jdk-26, JAVA_VERSION=26, JAVA_VENDOR=Oracle Corporation, RUNTIME_NAME=Java(TM) SE Runtime Environment, RUNTIME_VERSION=26+35-2893, VM_NAME=Java HotSpot(TM) 64-Bit Server VM, VM_VERSION=26+35-2893, VM_VENDOR=Oracle Corporation, OS_ARCH=amd64}
+Starting process 'command 'C:\Program Files\Java\jdk-17\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm14877079201382900243probe Command: C:\Program Files\Java\jdk-17\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Program Files\Java\jdk-17\bin\java.exe''
+Received JVM installation metadata from 'C:\Program Files\Java\jdk-17': {JAVA_HOME=C:\Program Files\Java\jdk-17, JAVA_VERSION=17.0.12, JAVA_VENDOR=Oracle Corporation, RUNTIME_NAME=Java(TM) SE Runtime Environment, RUNTIME_VERSION=17.0.12+8-LTS-286, VM_NAME=Java HotSpot(TM) 64-Bit Server VM, VM_VERSION=17.0.12+8-LTS-286, VM_VENDOR=Oracle Corporation, OS_ARCH=amd64}
+Starting process 'command 'C:\Users\wagwa\.jdks\openjdk-26.0.1\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm4575354656812527830probe Command: C:\Users\wagwa\.jdks\openjdk-26.0.1\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Users\wagwa\.jdks\openjdk-26.0.1\bin\java.exe''
+Received JVM installation metadata from 'C:\Users\wagwa\.jdks\openjdk-26.0.1': {JAVA_HOME=C:\Users\wagwa\.jdks\openjdk-26.0.1, JAVA_VERSION=26.0.1, JAVA_VENDOR=Oracle Corporation, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=26.0.1+8-34, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=26.0.1+8-34, VM_VENDOR=Oracle Corporation, OS_ARCH=amd64}
+Starting process 'command 'C:\Users\wagwa\.jdks\ms-25.0.3\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm3739543127541218498probe Command: C:\Users\wagwa\.jdks\ms-25.0.3\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Users\wagwa\.jdks\ms-25.0.3\bin\java.exe''
+Received JVM installation metadata from 'C:\Users\wagwa\.jdks\ms-25.0.3': {JAVA_HOME=C:\Users\wagwa\.jdks\ms-25.0.3, JAVA_VERSION=25.0.3, JAVA_VENDOR=Microsoft, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=25.0.3+9-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.0.3+9-LTS, VM_VENDOR=Microsoft, OS_ARCH=amd64}
+Starting process 'command 'C:\Program Files\Eclipse Adoptium\jdk-8.0.462.8-hotspot\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm14408759422860589625probe Command: C:\Program Files\Eclipse Adoptium\jdk-8.0.462.8-hotspot\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Program Files\Eclipse Adoptium\jdk-8.0.462.8-hotspot\bin\java.exe''
+Received JVM installation metadata from 'C:\Program Files\Eclipse Adoptium\jdk-8.0.462.8-hotspot': {JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-8.0.462.8-hotspot\jre, JAVA_VERSION=1.8.0_462, JAVA_VENDOR=Temurin, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=1.8.0_462-b08, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.462-b08, VM_VENDOR=Temurin, OS_ARCH=amd64}
+Starting process 'command 'C:\Program Files\Eclipse Adoptium\jdk-11.0.28.6-hotspot\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm16952452495066112756probe Command: C:\Program Files\Eclipse Adoptium\jdk-11.0.28.6-hotspot\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Program Files\Eclipse Adoptium\jdk-11.0.28.6-hotspot\bin\java.exe''
+Received JVM installation metadata from 'C:\Program Files\Eclipse Adoptium\jdk-11.0.28.6-hotspot': {JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-11.0.28.6-hotspot, JAVA_VERSION=11.0.28, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=11.0.28+6, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=11.0.28+6, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
+Starting process 'command 'C:\Users\wagwa\.jdks\ms-17.0.15\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm1047623023501629651probe Command: C:\Users\wagwa\.jdks\ms-17.0.15\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Users\wagwa\.jdks\ms-17.0.15\bin\java.exe''
+Received JVM installation metadata from 'C:\Users\wagwa\.jdks\ms-17.0.15': {JAVA_HOME=C:\Users\wagwa\.jdks\ms-17.0.15, JAVA_VERSION=17.0.15, JAVA_VENDOR=Microsoft, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.15+6-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.15+6-LTS, VM_VENDOR=Microsoft, OS_ARCH=amd64}
+Starting process 'command 'C:\Users\wagwa\.jdks\azul-21.0.11\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm9552684527502334613probe Command: C:\Users\wagwa\.jdks\azul-21.0.11\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Users\wagwa\.jdks\azul-21.0.11\bin\java.exe''
+Received JVM installation metadata from 'C:\Users\wagwa\.jdks\azul-21.0.11': {JAVA_HOME=C:\Users\wagwa\.jdks\azul-21.0.11, JAVA_VERSION=21.0.11, JAVA_VENDOR=Azul Systems, Inc., RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.11+10-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.11+10-LTS, VM_VENDOR=Azul Systems, Inc., OS_ARCH=amd64}
+Starting process 'command 'C:\Users\wagwa\.jdks\ms-17.0.14\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm14279572237615379194probe Command: C:\Users\wagwa\.jdks\ms-17.0.14\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Users\wagwa\.jdks\ms-17.0.14\bin\java.exe''
+Received JVM installation metadata from 'C:\Users\wagwa\.jdks\ms-17.0.14': {JAVA_HOME=C:\Users\wagwa\.jdks\ms-17.0.14, JAVA_VERSION=17.0.14, JAVA_VENDOR=Microsoft, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.14+7-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.14+7-LTS, VM_VENDOR=Microsoft, OS_ARCH=amd64}
+Starting process 'command 'C:\Users\wagwa\.jdks\corretto-1.8.0_462\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm17112209775394371347probe Command: C:\Users\wagwa\.jdks\corretto-1.8.0_462\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Users\wagwa\.jdks\corretto-1.8.0_462\bin\java.exe''
+Received JVM installation metadata from 'C:\Users\wagwa\.jdks\corretto-1.8.0_462': {JAVA_HOME=C:\Users\wagwa\.jdks\corretto-1.8.0_462\jre, JAVA_VERSION=1.8.0_462, JAVA_VENDOR=Amazon.com Inc., RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=1.8.0_462-b08, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.462-b08, VM_VENDOR=Amazon.com Inc., OS_ARCH=amd64}
+Starting process 'command 'C:\Users\wagwa\.gradle\jdks\eclipse_adoptium-21-amd64-windows.2\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm13329955933431363277probe Command: C:\Users\wagwa\.gradle\jdks\eclipse_adoptium-21-amd64-windows.2\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Users\wagwa\.gradle\jdks\eclipse_adoptium-21-amd64-windows.2\bin\java.exe''
+Received JVM installation metadata from 'C:\Users\wagwa\.gradle\jdks\eclipse_adoptium-21-amd64-windows.2': {JAVA_HOME=C:\Users\wagwa\.gradle\jdks\eclipse_adoptium-21-amd64-windows.2, JAVA_VERSION=21.0.7, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.7+6-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.7+6-LTS, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
+Starting process 'command 'C:\Program Files\Java\jdk-24\bin\java.exe''. Working directory: C:\Users\wagwa\.gradle\.tmp\tmp-jvm15298266933835295665probe Command: C:\Program Files\Java\jdk-24\bin\java.exe -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command 'C:\Program Files\Java\jdk-24\bin\java.exe''
+Received JVM installation metadata from 'C:\Program Files\Java\jdk-24': {JAVA_HOME=C:\Program Files\Java\jdk-24, JAVA_VERSION=24.0.2, JAVA_VENDOR=Oracle Corporation, RUNTIME_NAME=Java(TM) SE Runtime Environment, RUNTIME_VERSION=24.0.2+12-54, VM_NAME=Java HotSpot(TM) 64-Bit Server VM, VM_VERSION=24.0.2+12-54, VM_VENDOR=Oracle Corporation, OS_ARCH=amd64}
+Starting process 'command 'git''. Working directory: C:\Users\wagwa\ARC-1.21.4 Command: git -c commit.gpgsign=false -c core.safecrlf=false rev-parse --short=7 HEAD
+Successfully started process 'command 'git''
+Starting process 'command 'git''. Working directory: C:\Users\wagwa\ARC-1.21.4 Command: git -c commit.gpgsign=false -c core.safecrlf=false show -s --format=%ci 52e33e0
+Successfully started process 'command 'git''
+Starting process 'command 'git''. Working directory: C:\Users\wagwa\ARC-1.21.4 Command: git -c commit.gpgsign=false -c core.safecrlf=false rev-parse --abbrev-ref HEAD
+Successfully started process 'command 'git''
+Tasks to be executed: [task ':arc-api:checkKotlinGradlePluginConfigurationErrors', task ':leaf-api:checkKotlinGradlePluginConfigurationErrors', task ':leaf-api:compileKotlin', task ':leaf-api:compileJava', task ':arc-api:compileKotlin', task ':arc-api:compileJava', task ':arc-api:processResources', task ':arc-api:classes', task ':arc-api:jar', task ':arc-server:checkKotlinGradlePluginConfigurationErrors', task ':arc-server:compileKotlin', task ':arc-server:compileJava', task ':arc-server:processResources', task ':arc-server:classes', task ':arc-server:jar', task ':leaf-api:processResources', task ':leaf-api:classes', task ':leaf-api:generateApiVersioningFile', task ':leaf-api:jar', task ':leaf-server:checkKotlinGradlePluginConfigurationErrors', task ':leaf-server:compileLog4jPluginsKotlin', task ':leaf-server:compileLog4jPluginsJava', task ':leaf-server:downloadMcManifest', task ':leaf-server:downloadMcVersionManifest', task ':leaf-server:downloadServerJar', task ':leaf-server:extractFromBundler', task ':leaf-server:compileKotlin', task ':leaf-server:compileJava', task ':leaf-server:copyLicense', task ':leaf-server:processResources', task ':leaf-server:classes', task ':leaf-server:processLog4jPluginsResources', task ':leaf-server:log4jPluginsClasses', task ':leaf-server:jar', task ':leaf-server:fixJarForReobf', task ':leaf-server:downloadMappings', task ':leaf-server:filterVanillaJar', task ':leaf-server:generateMappings', task ':leaf-server:cloneSpigotBuildData', task ':leaf-server:unpackSpigotBuildData', task ':leaf-server:generateSpigotMappings', task ':leaf-server:spigotRemapJar', task ':leaf-server:cleanupMappings', task ':leaf-server:patchMappings', task ':leaf-server:generateReobfMappings', task ':leaf-server:patchReobfMappings', task ':leaf-server:generateRelocatedReobfMappings', task ':leaf-server:includeMappings', task ':leaf-server:createMojmapBundlerJar', task ':leaf-server:createMojmapPaperclipJar']
+Tasks that were excluded: []
+Resolve mutations for :arc-api:checkKotlinGradlePluginConfigurationErrors (Thread[#125,Execution worker,5,main]) started.
+Resolve mutations for :leaf-api:checkKotlinGradlePluginConfigurationErrors (Thread[#135,Execution worker Thread 11,5,main]) started.
+Resolve mutations for :arc-server:checkKotlinGradlePluginConfigurationErrors (Thread[#134,Execution worker Thread 10,5,main]) started.
+Resolve mutations for :leaf-server:checkKotlinGradlePluginConfigurationErrors (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-api:checkKotlinGradlePluginConfigurationErrors (Thread[#135,Execution worker Thread 11,5,main]) started.
+:leaf-server:checkKotlinGradlePluginConfigurationErrors (Thread[#133,Execution worker Thread 9,5,main]) started.
+:arc-server:checkKotlinGradlePluginConfigurationErrors (Thread[#134,Execution worker Thread 10,5,main]) started.
+:arc-api:checkKotlinGradlePluginConfigurationErrors (Thread[#125,Execution worker,5,main]) started.
+
+> Task :arc-api:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Skipping task ':arc-api:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+
+> Task :leaf-api:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Skipping task ':leaf-api:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+
+> Task :arc-server:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Skipping task ':arc-server:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+
+> Task :leaf-server:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Skipping task ':leaf-server:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+Resolve mutations for :arc-api:processResources (Thread[#125,Execution worker,5,main]) started.
+Resolve mutations for :leaf-server:downloadMcManifest (Thread[#133,Execution worker Thread 9,5,main]) started.
+Resolve mutations for :leaf-api:compileKotlin (Thread[#135,Execution worker Thread 11,5,main]) started.
+Resolve mutations for :arc-server:processResources (Thread[#134,Execution worker Thread 10,5,main]) started.
+:leaf-server:downloadMcManifest (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-api:compileKotlin (Thread[#135,Execution worker Thread 11,5,main]) started.
+:arc-api:processResources (Thread[#125,Execution worker,5,main]) started.
+:arc-server:processResources (Thread[#134,Execution worker Thread 10,5,main]) started.
+
+> Task :arc-api:processResources NO-SOURCE
+Skipping task ':arc-api:processResources' as it has no source files and no previous output files.
+
+> Task :arc-server:processResources UP-TO-DATE
+Caching disabled for task ':arc-server:processResources' because:
+  Not worth caching
+Skipping task ':arc-server:processResources' as it is up-to-date.
+
+> Task :leaf-api:compileKotlin NO-SOURCE
+Skipping task ':leaf-api:compileKotlin' as it has no source files and no previous output files.
+Resolve mutations for :leaf-api:compileJava (Thread[#134,Execution worker Thread 10,5,main]) started.
+:leaf-api:compileJava (Thread[#134,Execution worker Thread 10,5,main]) started.
+
+> Task :leaf-api:compileJava UP-TO-DATE
+Build cache key for task ':leaf-api:compileJava' is 5daf4e6667466cf99af4f13880053130
+Skipping task ':leaf-api:compileJava' as it is up-to-date.
+No compile result for :leaf-api:compileJava
+work action resolve main (project :leaf-api) (Thread[#134,Execution worker Thread 10,5,main]) started.
+work action resolve main (project :leaf-api) (Thread[#134,Execution worker Thread 10,5,main]) started.
+Resolve mutations for :arc-api:compileKotlin (Thread[#134,Execution worker Thread 10,5,main]) started.
+Resolve mutations for :leaf-api:processResources (Thread[#126,Execution worker Thread 2,5,main]) started.
+:leaf-api:processResources (Thread[#126,Execution worker Thread 2,5,main]) started.
+:arc-api:compileKotlin (Thread[#132,Execution worker Thread 8,5,main]) started.
+
+> Task :leaf-api:processResources NO-SOURCE
+Skipping task ':leaf-api:processResources' as it has no source files and no previous output files.
+Resolve mutations for :leaf-api:classes (Thread[#126,Execution worker Thread 2,5,main]) started.
+:leaf-api:classes (Thread[#126,Execution worker Thread 2,5,main]) started.
+
+> Task :leaf-api:classes UP-TO-DATE
+Skipping task ':leaf-api:classes' as it has no actions.
+Resolve mutations for :leaf-api:generateApiVersioningFile (Thread[#126,Execution worker Thread 2,5,main]) started.
+:leaf-api:generateApiVersioningFile (Thread[#126,Execution worker Thread 2,5,main]) started.
+
+> Task :leaf-api:generateApiVersioningFile UP-TO-DATE
+Custom actions are attached to task ':leaf-api:generateApiVersioningFile'.
+Caching disabled for task ':leaf-api:generateApiVersioningFile' because:
+  Gradle would require more information to cache this task
+Skipping task ':leaf-api:generateApiVersioningFile' as it is up-to-date.
+Resolve mutations for :leaf-api:jar (Thread[#126,Execution worker Thread 2,5,main]) started.
+:leaf-api:jar (Thread[#126,Execution worker Thread 2,5,main]) started.
+
+> Task :leaf-api:jar UP-TO-DATE
+Caching disabled for task ':leaf-api:jar' because:
+  Not worth caching
+Skipping task ':leaf-api:jar' as it is up-to-date.
+work action resolve leaf-api-1.21.4-R0.1-SNAPSHOT.jar (project :leaf-api) (Thread[#126,Execution worker Thread 2,5,main]) started.
+
+> Task :leaf-server:downloadMcManifest
+Caching disabled for task ':leaf-server:downloadMcManifest' because:
+  Task is untracked because: The Minecraft manifest is a changing resource
+Task ':leaf-server:downloadMcManifest' is not up-to-date because:
+  Task is untracked because: The Minecraft manifest is a changing resource
+Resolve mutations for :leaf-server:downloadMcVersionManifest (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:downloadMcVersionManifest (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:downloadMcVersionManifest UP-TO-DATE
+Build cache key for task ':leaf-server:downloadMcVersionManifest' is 147a41b891dac0d698baf8c76c371b08
+Skipping task ':leaf-server:downloadMcVersionManifest' as it is up-to-date.
+Resolve mutations for :leaf-server:downloadServerJar (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:downloadServerJar (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:downloadServerJar UP-TO-DATE
+Build cache key for task ':leaf-server:downloadServerJar' is 4ade52f1142346fe2e50223484887630
+Skipping task ':leaf-server:downloadServerJar' as it is up-to-date.
+Resolve mutations for :leaf-server:extractFromBundler (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:extractFromBundler (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:extractFromBundler UP-TO-DATE
+Build cache key for task ':leaf-server:extractFromBundler' is 17cdc63cf89902545efaf84c9326b0c0
+Skipping task ':leaf-server:extractFromBundler' as it is up-to-date.
+Resolve mutations for :leaf-server:copyLicense (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:copyLicense (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:copyLicense UP-TO-DATE
+Caching disabled for task ':leaf-server:copyLicense' because:
+  Not worth caching
+Skipping task ':leaf-server:copyLicense' as it is up-to-date.
+Resolve mutations for :leaf-server:processResources (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:processResources (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :arc-api:compileKotlin
+Build cache key for task ':arc-api:compileKotlin' is 5269930b8d8d915ec54fb9727ae8de02
+Task ':arc-api:compileKotlin' is not up-to-date because:
+  Input property 'sources' file C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\AIGoalEditor.kt has been added.
+  Input property 'sources' file C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\AnimationScheduler.kt has been added.
+  Input property 'sources' file C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\BlockBreakAnimation.kt has been added.
+  and more...
+Kotlin source files: C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ai\GoalDsl.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ai\MobAi.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ai\MobGoalRegistry.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\animation\Animation.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\attribute\Attributes.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\attribute\CustomAttributes.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\block\BlockBatch.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\block\Blocks.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\block\Light.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\block\VirtualBlocks.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\blockstate\BlockStates.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\bossbar\BossBars.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\bus\MessageBus.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\cache\PlayerCache.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\channel\ModChannel.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\channel\ModPacketBuffer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\chat\Chat.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\chat\ChatPipeline.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\chunk\Chunks.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\client\ClientView.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\combat\Combat.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\combat\DamageSources.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\command\Commands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\config\Config.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\config\ConfigWatcher.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\conversation\ChatInput.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\conversation\Form.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\countdown\Countdown.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\data\PlayerData.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\data\PlayerStore.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\data\Sql.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\datapack\DatapackContent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\datapack\DatapackMaker.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\db\Database.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\display\Displays.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\effect\CustomEffect.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\effect\CustomEffectEngine.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\effect\Effects.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\AIGoalEditor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\AnimationScheduler.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\BlockBreakAnimation.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\Entities.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\EntityEffects.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\EntityTemplate.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\EntityVisibility.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\Equipment.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\Fireworks.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\GlowRegistry.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\VirtualEntity.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\ArcInitializeEvent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\EventFlow.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\Events.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\MenuCloseEvent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\MenuOpenEvent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\PlayerChangeChunkEvent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\PlayerDoubleSneakEvent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\ServerLagSpikeEvent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\event\ServerLoadLevelChangeEvent.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\format\Format.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\game\Game.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\gui\Menu.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\gui\Merchants.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\gui\PaginatedMenu.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\hologram\Hologram.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\hologram\Holograms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\http\Http.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\hud\Hud.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\inventory\Inventories.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\item\DataComponents.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\item\Enchants.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\item\ItemAuthenticator.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\item\ItemBehavior.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\item\ItemBuilder.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\lang\Lang.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\lifecycle\ArcReloadable.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\math\Spline.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\movement\Movement.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\nbt\Nbt.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\nbt\NbtDsl.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\net\PacketBuilder.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\net\PacketBundle.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcGlobalCooldown.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcItemMail.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcItemSerializer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcNetworkAudit.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcNetworkConfig.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcNetworkServices.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcPlayerTransfer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcQueue.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcRelayClient.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\network\ArcServerRegistry.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\nms\NmsRef.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\npc\Npc.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\numbers\Numbers.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\ArcOps.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\ArcOpsCommand.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\async\ArcAsync.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\audit\AuditLog.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\bundle\IssueBundle.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\chunk\ChunkDiagnostics.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\commands\CommandSearch.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\config\ConfigChangeHistory.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\config\ConfigCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\config\PluginOverrides.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\configcheck\ConfigValidator.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\crash\CrashAnalyzer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\doctor\ServerDoctor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\entity\EntityAiOptimizer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\entity\EntityDensityGuard.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\lagspike\LagSpikeMonitor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\logs\LogCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\memory\MemoryGuard.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\metrics\ServerSnapshot.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\metrics\TickSampler.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\network\ArcNetworkCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\OpsConfig.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\paste\PasteCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\PasteUploader.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\permissions\PermissionSearch.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\ConfirmManager.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\DependencyGraph.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\PluginCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\PluginInspector.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\PluginLifecycle.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\PluginRollbackManager.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\PluginSandboxCheck.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\ReloadPolicy.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugin\ReloadSafetyAnalyzer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\plugincost\PluginCostTracker.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\pregen\ChunkPregenerator.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\profiler\MainThreadProfiler.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\proxy\ProxySetupChecker.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\safe\SafeModeCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\scheduler\ArcSchedulers.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\security\SecurityAudit.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\snapshot\SnapshotCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\startup\StartupProfile.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\status\StatusHttpServer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\watchdog\StallWatchdog.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\ops\worlds\WorldCommands.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\packet\PacketBridge.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\packet\PacketInterceptor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\packet\Packets.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\particle\ParticleEffects.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\particle\Particles.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\pdc\PdcSchema.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\pdc\PersistentData.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\AdaptiveGovernor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\AdaptiveViewDistance.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\EntityThrottler.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\MetricsHistory.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\PerfBackend.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\PerfUtils.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\ServerLoad.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\perf\TickBudget.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\permission\PermissionRegistry.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\permission\Permissions.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\AdvancementAnimation.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\ClientWorldState.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\Cooldowns.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\FakeAdvancementProgress.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\FakeAdvancementTree.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\FakeWorldState.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\GameRuleOverride.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\InventoryIntegrityGuard.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\ItemTransactionLogger.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\NativeAntiCheat.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\PlayerAbilityOverride.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\PlayerControl.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\PlayerPersistentData.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\ServerCooldown.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\ToastNotification.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\potion\Potions.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\profile\Profiles.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\recipe\Recipes.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\region\Cuboid.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\region\RegionEffects.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\registry\DynamicRegistry.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\registry\Registries.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\registry\RegistryDsl.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\registry\sample\MagicSystemSample.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\scheduler\Scheduler.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\scoreboard\FlickerFreeScoreboard.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\scoreboard\Sidebar.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\serialize\Serialization.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\service\Services.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\skin\Skins.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\sound\Sounds.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\stats\Stats.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\tablist\Tablist.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\task\Pipeline.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\team\Teams.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\time\Time.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\title\Titles.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\vector\Vectors.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\BorderEvents.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\ChunkGenerationModifier.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\ClientSideWorld.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\Explosions.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\Gamerules.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\LiveMapRenderer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\Locations.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\LootTables.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\NoiseAccessor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\RayTrace.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\SchematicPlacer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\StructureBuilder.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\Structures.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\WorldBorders.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\WorldChunk.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\WorldData.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\WorldOps.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\WorldSnapshot.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\Arc.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\control\ArcConfig.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\control\ArcControlCommand.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\control\ArcFeatures.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\control\ArcSettings.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\coroutine\Coroutines.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\event\Events.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\item\Items.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\math\Geometry.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\menu\Menu.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\ArcBlockNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\ArcEntityNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\ArcItemNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\ArcNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\ArcPlayerNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\ArcServerNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\GatedArcNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\nms\NoOpArcNms.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\player\Players.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\scheduling\ArcThreadScheduler.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\scheduling\Futures.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\scheduling\Scheduling.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\scheduling\TickBatch.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\scheduling\TickDispatcher.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\text\Text.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\util\Cooldowns.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\util\ObjectPool.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\java\dev\arc\api\util\TtlCache.kt
+Java source files:
+Script source files:
+Script file extensions:
+Using Kotlin/JVM incremental compilation
+[KOTLIN] Kotlin compilation 'jdkHome' argument: C:\Users\wagwa\.jdks\corretto-21.0.10
+
+> Task :leaf-server:processResources UP-TO-DATE
+Caching disabled for task ':leaf-server:processResources' because:
+  Not worth caching
+Skipping task ':leaf-server:processResources' as it is up-to-date.
+Resolve mutations for :leaf-server:processLog4jPluginsResources (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:processLog4jPluginsResources (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:processLog4jPluginsResources NO-SOURCE
+Skipping task ':leaf-server:processLog4jPluginsResources' as it has no source files and no previous output files.
+Resolve mutations for :leaf-server:downloadMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:downloadMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:downloadMappings UP-TO-DATE
+Build cache key for task ':leaf-server:downloadMappings' is a7a3b97f32262713fab932b5b6f52b35
+Skipping task ':leaf-server:downloadMappings' as it is up-to-date.
+Resolve mutations for :leaf-server:filterVanillaJar (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:filterVanillaJar (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:filterVanillaJar UP-TO-DATE
+Build cache key for task ':leaf-server:filterVanillaJar' is 46d4f781f6c2c83aaf197a3edf31b687
+Skipping task ':leaf-server:filterVanillaJar' as it is up-to-date.
+Resolve mutations for :leaf-server:generateMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:generateMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:generateMappings UP-TO-DATE
+Build cache key for task ':leaf-server:generateMappings' is 1ae50a3d1c2ca538938daf27d73fd778
+Skipping task ':leaf-server:generateMappings' as it is up-to-date.
+Resolve mutations for :leaf-server:cloneSpigotBuildData (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:cloneSpigotBuildData (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:cloneSpigotBuildData UP-TO-DATE
+Build cache key for task ':leaf-server:cloneSpigotBuildData' is 70d2a13f1947b31f408fe877d617e051
+Skipping task ':leaf-server:cloneSpigotBuildData' as it is up-to-date.
+Resolve mutations for :leaf-server:unpackSpigotBuildData (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:unpackSpigotBuildData (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:unpackSpigotBuildData UP-TO-DATE
+Caching disabled for task ':leaf-server:unpackSpigotBuildData' because:
+  Caching has not been enabled for the task
+Skipping task ':leaf-server:unpackSpigotBuildData' as it is up-to-date.
+Resolve mutations for :leaf-server:generateSpigotMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:generateSpigotMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:generateSpigotMappings UP-TO-DATE
+Build cache key for task ':leaf-server:generateSpigotMappings' is 3792a182c9ff4a2bc81128fa2f939aca
+Skipping task ':leaf-server:generateSpigotMappings' as it is up-to-date.
+Resolve mutations for :leaf-server:spigotRemapJar (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:spigotRemapJar (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:spigotRemapJar UP-TO-DATE
+Build cache key for task ':leaf-server:spigotRemapJar' is 0d67f333e235b36c375bebc2d5e62154
+Skipping task ':leaf-server:spigotRemapJar' as it is up-to-date.
+Resolve mutations for :leaf-server:cleanupMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:cleanupMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:cleanupMappings UP-TO-DATE
+Build cache key for task ':leaf-server:cleanupMappings' is a3abf7c903c183ae1383a92bcc6cb169
+Skipping task ':leaf-server:cleanupMappings' as it is up-to-date.
+Resolve mutations for :leaf-server:patchMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+:leaf-server:patchMappings (Thread[#133,Execution worker Thread 9,5,main]) started.
+
+> Task :leaf-server:patchMappings UP-TO-DATE
+Caching disabled for task ':leaf-server:patchMappings' because:
+  Caching has not been enabled for the task
+Skipping task ':leaf-server:patchMappings' as it is up-to-date.
+
+> Task :arc-api:compileKotlin
+i: cannot connect to registry: Connection refused: connect
+i: starting the daemon as: C:\Users\wagwa\.jdks\corretto-21.0.10\bin\java -cp C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-compiler-embeddable\2.0.21\79346ed53db48b18312a472602eb5c057070c54d\kotlin-compiler-embeddable-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\2.0.21\618b539767b4899b4660a83006e052b63f1db551\kotlin-stdlib-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-script-runtime\2.0.21\c9b044380ad41f89aa89aa896c2d32a8c0b2129d\kotlin-script-runtime-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-reflect\1.6.10\1cbe9c92c12a94eea200d23c2bbaedaf3daf5132\kotlin-reflect-1.6.10.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-daemon-embeddable\2.0.21\c9e933b23287de9b5a17e2116b4657bb91aea72c\kotlin-daemon-embeddable-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.intellij.deps\trove4j\1.0.20200330\3afb14d5f9ceb459d724e907a21145e8ff394f02\trove4j-1.0.20200330.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlinx\kotlinx-coroutines-core-jvm\1.6.4\2c997cd1c0ef33f3e751d3831929aeff1390cb30\kotlinx-coroutines-core-jvm-1.6.4.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar -Djava.awt.headless=true -Djava.rmi.server.hostname=127.0.0.1 -Xmx512m -XX:MaxMetaspaceSize=384m -XX:ReservedCodeCacheSize=320m -Dkotlin.environment.keepalive -ea -XX:+UseCodeCacheFlushing -XX:+UseParallelGC --add-exports java.base/sun.nio.ch=ALL-UNNAMED org.jetbrains.kotlin.daemon.KotlinCompileDaemon --daemon-runFilesPath C:\Users\wagwa\AppData\Local\kotlin\daemon --daemon-autoshutdownIdleSeconds=7200 --daemon-compilerClasspath C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-compiler-embeddable\2.0.21\79346ed53db48b18312a472602eb5c057070c54d\kotlin-compiler-embeddable-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\2.0.21\618b539767b4899b4660a83006e052b63f1db551\kotlin-stdlib-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-script-runtime\2.0.21\c9b044380ad41f89aa89aa896c2d32a8c0b2129d\kotlin-script-runtime-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-reflect\1.6.10\1cbe9c92c12a94eea200d23c2bbaedaf3daf5132\kotlin-reflect-1.6.10.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-daemon-embeddable\2.0.21\c9e933b23287de9b5a17e2116b4657bb91aea72c\kotlin-daemon-embeddable-2.0.21.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.intellij.deps\trove4j\1.0.20200330\3afb14d5f9ceb459d724e907a21145e8ff394f02\trove4j-1.0.20200330.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlinx\kotlinx-coroutines-core-jvm\1.6.4\2c997cd1c0ef33f3e751d3831929aeff1390cb30\kotlinx-coroutines-core-jvm-1.6.4.jar;C:\Users\wagwa\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar
+i: #1 retrying connecting to the daemon
+Options for KOTLIN DAEMON: IncrementalCompilationOptions(super=CompilationOptions(compilerMode=INCREMENTAL_COMPILER, targetPlatform=JVM, reportCategories=[0, 3], reportSeverity=2, requestedCompilationResults=[0], kotlinScriptExtensions=[]), areFileChangesKnown=true, modifiedFiles=[C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\AIGoalEditor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\AnimationScheduler.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\BlockBreakAnimation.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\GlowRegistry.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\entity\VirtualEntity.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\nbt\NbtDsl.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\net\PacketBuilder.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\net\PacketBundle.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\AdvancementAnimation.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\FakeAdvancementProgress.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\FakeAdvancementTree.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\FakeWorldState.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\GameRuleOverride.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\InventoryIntegrityGuard.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\ItemTransactionLogger.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\NativeAntiCheat.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\PlayerAbilityOverride.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\player\ToastNotification.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\scoreboard\FlickerFreeScoreboard.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\ChunkGenerationModifier.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\ClientSideWorld.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\LiveMapRenderer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\NoiseAccessor.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\SchematicPlacer.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\StructureBuilder.kt, C:\Users\wagwa\ARC-1.21.4\arc-api\src\main\kotlin\dev\arc\api\world\WorldSnapshot.kt], deletedFiles=[], classpathChanges=NoChanges, workingDir=C:\Users\wagwa\ARC-1.21.4\arc-api\build\kotlin\compileKotlin\cacheable, multiModuleICSettings=MultiModuleICSettings(buildHistoryFile=C:\Users\wagwa\ARC-1.21.4\arc-api\build\kotlin\compileKotlin\local-state\build-history.bin, useModuleDetection=false), usePreciseJavaTracking=true, icFeatures=IncrementalCompilationFeatures(withAbiSnapshot=false, preciseCompilationResultsBackup=true, keepIncrementalCompilationCachesInMemory=true, enableUnsafeIncrementalCompilationForMultiplatform=false), outputFiles=[C:\Users\wagwa\ARC-1.21.4\arc-api\build\classes\kotlin\main, C:\Users\wagwa\ARC-1.21.4\arc-api\build\kotlin\compileKotlin\cacheable, C:\Users\wagwa\ARC-1.21.4\arc-api\build\kotlin\compileKotlin\local-state])
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:7:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:32:51 Unresolved reference 'Goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:35:18 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:36:22 Unresolved reference 'CraftMob'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:36:32 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:41:38 Unresolved reference 'Goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:42:5 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:42:9 Unresolved reference 'goalSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:45:44 Unresolved reference 'TargetGoal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:46:5 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:46:9 Unresolved reference 'targetSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:49:26 Unresolved reference 'Goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:50:5 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:50:9 Unresolved reference 'goalSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:53:32 Unresolved reference 'TargetGoal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:54:5 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:54:9 Unresolved reference 'targetSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:57:10 Unresolved reference 'Goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:58:19 Unresolved reference 'goalSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:60:38 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:61:10 Overload resolution ambiguity between candidates:
+fun <R, T> Result<T>.map(transform: (@ParameterName(...) T) -> R): Result<R>
+    [R|Contract description]
+     <
+        CallsInPlace(transform, AT_MOST_ONCE)
+    >
+fun <T, R> Array<out T>.map(transform: (T) -> R): List<R>
+fun <R> BooleanArray.map(transform: (Boolean) -> R): List<R>
+fun <R> ByteArray.map(transform: (Byte) -> R): List<R>
+fun <R> CharArray.map(transform: (Char) -> R): List<R>
+fun <R> DoubleArray.map(transform: (Double) -> R): List<R>
+fun <R> FloatArray.map(transform: (Float) -> R): List<R>
+fun <R> IntArray.map(transform: (Int) -> R): List<R>
+fun <R> LongArray.map(transform: (Long) -> R): List<R>
+fun <R> ShortArray.map(transform: (Short) -> R): List<R>
+fun <T, R> Iterable<T>.map(transform: (T) -> R): List<R>
+fun <K, V, R> Map<out K, V>.map(transform: (Map.Entry<K, V>) -> R): List<R>
+fun <R> UByteArray.map(transform: (UByte) -> R): List<R>
+fun <R> UIntArray.map(transform: (UInt) -> R): List<R>
+fun <R> ULongArray.map(transform: (ULong) -> R): List<R>
+fun <R> UShortArray.map(transform: (UShort) -> R): List<R>
+fun <T, R> Sequence<T>.map(transform: (T) -> R): Sequence<R>
+fun <R> CharSequence.map(transform: (Char) -> R): List<R>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:61:14 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:61:19 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:62:10 Overload resolution ambiguity between candidates:
+fun <T> Iterable<T>.forEach(action: (T) -> Unit): Unit
+fun <K, V> Map<out K, V>.forEach(action: (Map.Entry<K, V>) -> Unit): Unit
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:62:18 Recursion in implicit types.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:62:20 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:62:35 Expression expected, but package name found.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:66:10 Unresolved reference 'Goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:67:19 Unresolved reference 'targetSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:69:38 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:70:10 Overload resolution ambiguity between candidates:
+fun <R, T> Result<T>.map(transform: (@ParameterName(...) T) -> R): Result<R>
+    [R|Contract description]
+     <
+        CallsInPlace(transform, AT_MOST_ONCE)
+    >
+fun <T, R> Array<out T>.map(transform: (T) -> R): List<R>
+fun <R> BooleanArray.map(transform: (Boolean) -> R): List<R>
+fun <R> ByteArray.map(transform: (Byte) -> R): List<R>
+fun <R> CharArray.map(transform: (Char) -> R): List<R>
+fun <R> DoubleArray.map(transform: (Double) -> R): List<R>
+fun <R> FloatArray.map(transform: (Float) -> R): List<R>
+fun <R> IntArray.map(transform: (Int) -> R): List<R>
+fun <R> LongArray.map(transform: (Long) -> R): List<R>
+fun <R> ShortArray.map(transform: (Short) -> R): List<R>
+fun <T, R> Iterable<T>.map(transform: (T) -> R): List<R>
+fun <K, V, R> Map<out K, V>.map(transform: (Map.Entry<K, V>) -> R): List<R>
+fun <R> UByteArray.map(transform: (UByte) -> R): List<R>
+fun <R> UIntArray.map(transform: (UInt) -> R): List<R>
+fun <R> ULongArray.map(transform: (ULong) -> R): List<R>
+fun <R> UShortArray.map(transform: (UShort) -> R): List<R>
+fun <T, R> Sequence<T>.map(transform: (T) -> R): Sequence<R>
+fun <R> CharSequence.map(transform: (Char) -> R): List<R>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:70:14 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:70:19 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:71:10 Overload resolution ambiguity between candidates:
+fun <T> Iterable<T>.forEach(action: (T) -> Unit): Unit
+fun <K, V> Map<out K, V>.forEach(action: (Map.Entry<K, V>) -> Unit): Unit
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:71:18 Recursion in implicit types.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:71:20 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:71:35 Expression expected, but package name found.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:76:19 Unresolved reference 'goalSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:77:28 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:77:33 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:77:40 Overload resolution ambiguity between candidates:
+fun <T> Pair<T, T>.toList(): List<T>
+fun <T> Triple<T, T, T>.toList(): List<T>
+fun <T> Array<out T>.toList(): List<T>
+fun BooleanArray.toList(): List<Boolean>
+fun ByteArray.toList(): List<Byte>
+fun CharArray.toList(): List<Char>
+fun DoubleArray.toList(): List<Double>
+fun FloatArray.toList(): List<Float>
+fun IntArray.toList(): List<Int>
+fun LongArray.toList(): List<Long>
+fun ShortArray.toList(): List<Short>
+fun <T> Enumeration<T>.toList(): List<T>
+fun <T> Iterable<T>.toList(): List<T>
+fun <K, V> Map<out K, V>.toList(): List<Pair<K, V>>
+fun <T> Sequence<T>.toList(): List<T>
+fun CharSequence.toList(): List<Char>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:77:49 Overload resolution ambiguity between candidates:
+fun <T> Iterable<T>.forEach(action: (T) -> Unit): Unit
+fun <K, V> Map<out K, V>.forEach(action: (Map.Entry<K, V>) -> Unit): Unit
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:77:57 Recursion in implicit types.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:77:59 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:77:74 Expression expected, but package name found.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:82:19 Unresolved reference 'targetSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:83:28 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:83:33 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:83:40 Overload resolution ambiguity between candidates:
+fun <T> Pair<T, T>.toList(): List<T>
+fun <T> Triple<T, T, T>.toList(): List<T>
+fun <T> Array<out T>.toList(): List<T>
+fun BooleanArray.toList(): List<Boolean>
+fun ByteArray.toList(): List<Byte>
+fun CharArray.toList(): List<Char>
+fun DoubleArray.toList(): List<Double>
+fun FloatArray.toList(): List<Float>
+fun IntArray.toList(): List<Int>
+fun LongArray.toList(): List<Long>
+fun ShortArray.toList(): List<Short>
+fun <T> Enumeration<T>.toList(): List<T>
+fun <T> Iterable<T>.toList(): List<T>
+fun <K, V> Map<out K, V>.toList(): List<Pair<K, V>>
+fun <T> Sequence<T>.toList(): List<T>
+fun CharSequence.toList(): List<Char>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:83:49 Overload resolution ambiguity between candidates:
+fun <T> Iterable<T>.forEach(action: (T) -> Unit): Unit
+fun <K, V> Map<out K, V>.forEach(action: (Map.Entry<K, V>) -> Unit): Unit
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:83:57 Recursion in implicit types.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:83:59 Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:83:74 Expression expected, but package name found.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:90:9 Unresolved reference 'goalSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:90:56 Unresolved reference 'priority'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:90:69 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:90:77 Overload resolution ambiguity between candidates:
+fun <T, R : Comparable<R>> Array<out T>.sortedBy(crossinline selector: (T) -> R?): List<T>
+fun <R : Comparable<R>> BooleanArray.sortedBy(crossinline selector: (Boolean) -> R?): List<Boolean>
+fun <R : Comparable<R>> ByteArray.sortedBy(crossinline selector: (Byte) -> R?): List<Byte>
+fun <R : Comparable<R>> CharArray.sortedBy(crossinline selector: (Char) -> R?): List<Char>
+fun <R : Comparable<R>> DoubleArray.sortedBy(crossinline selector: (Double) -> R?): List<Double>
+fun <R : Comparable<R>> FloatArray.sortedBy(crossinline selector: (Float) -> R?): List<Float>
+fun <R : Comparable<R>> IntArray.sortedBy(crossinline selector: (Int) -> R?): List<Int>
+fun <R : Comparable<R>> LongArray.sortedBy(crossinline selector: (Long) -> R?): List<Long>
+fun <R : Comparable<R>> ShortArray.sortedBy(crossinline selector: (Short) -> R?): List<Short>
+fun <T, R : Comparable<R>> Iterable<T>.sortedBy(crossinline selector: (T) -> R?): List<T>
+fun <T, R : Comparable<R>> Sequence<T>.sortedBy(crossinline selector: (T) -> R?): Sequence<T>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:90:86 Unresolved reference 'priority'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:90:91 Unresolved reference 'priority'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:94:9 Unresolved reference 'targetSelector'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:94:58 Unresolved reference 'priority'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:94:71 Unresolved reference 'goal'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:94:79 Overload resolution ambiguity between candidates:
+fun <T, R : Comparable<R>> Array<out T>.sortedBy(crossinline selector: (T) -> R?): List<T>
+fun <R : Comparable<R>> BooleanArray.sortedBy(crossinline selector: (Boolean) -> R?): List<Boolean>
+fun <R : Comparable<R>> ByteArray.sortedBy(crossinline selector: (Byte) -> R?): List<Byte>
+fun <R : Comparable<R>> CharArray.sortedBy(crossinline selector: (Char) -> R?): List<Char>
+fun <R : Comparable<R>> DoubleArray.sortedBy(crossinline selector: (Double) -> R?): List<Double>
+fun <R : Comparable<R>> FloatArray.sortedBy(crossinline selector: (Float) -> R?): List<Float>
+fun <R : Comparable<R>> IntArray.sortedBy(crossinline selector: (Int) -> R?): List<Int>
+fun <R : Comparable<R>> LongArray.sortedBy(crossinline selector: (Long) -> R?): List<Long>
+fun <R : Comparable<R>> ShortArray.sortedBy(crossinline selector: (Short) -> R?): List<Short>
+fun <T, R : Comparable<R>> Iterable<T>.sortedBy(crossinline selector: (T) -> R?): List<T>
+fun <T, R : Comparable<R>> Sequence<T>.sortedBy(crossinline selector: (T) -> R?): Sequence<T>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:94:88 Unresolved reference 'priority'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AIGoalEditor.kt:94:93 Unresolved reference 'priority'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/AnimationScheduler.kt:53:49 Overload resolution ambiguity between candidates:
+fun runTaskTimer(p0: @NotNull() Plugin, p1: @NotNull() Runnable, p2: Long, p3: Long): @NotNull() BukkitTask
+fun runTaskTimer(p0: @NotNull() Plugin, p1: @NotNull() Consumer<in BukkitTask!>, p2: Long, p3: Long): Unit
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/BlockBreakAnimation.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/BlockBreakAnimation.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/BlockBreakAnimation.kt:9:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/BlockBreakAnimation.kt:34:23 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/BlockBreakAnimation.kt:42:22 Unresolved reference 'ClientboundBlockDestructionPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/BlockBreakAnimation.kt:43:34 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/BlockBreakAnimation.kt:43:47 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:8:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:9:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:86:36 Unresolved reference 'CraftEntity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:86:49 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:87:34 Initializer type mismatch: expected 'kotlin.Byte', actual 'kotlin.text.MatchGroup?'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:87:59 Unresolved reference 'Entity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:93:22 Unresolved reference 'ClientboundSetEntityDataPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:95:13 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:95:20 Unresolved reference 'SynchedEntityData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:95:55 Unresolved reference 'Entity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:97:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/GlowRegistry.kt:97:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:5:25 Unresolved reference 'adventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:10:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:11:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:12:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:13:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:14:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:15:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:17:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:18:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:53:26 Unresolved reference 'NmsEntityType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:53:45 Unresolved reference 'CraftEntityType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:74:27 Unresolved reference 'ClientboundAddEntityPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:78:25 Unresolved reference 'Vec3'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:81:35 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:81:48 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:89:22 Unresolved reference 'ClientboundRemoveEntitiesPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:90:34 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:90:47 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:96:22 Unresolved reference 'ClientboundTeleportEntityPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:98:13 Unresolved reference 'PositionMoveRotation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:98:34 Unresolved reference 'Vec3'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:98:61 Unresolved reference 'Vec3'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:99:13 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:102:34 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:102:47 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:113:21 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:113:21 Not enough information to infer type argument for 'E'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:118:17 Unresolved reference 'SynchedEntityData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:118:52 Unresolved reference 'Entity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:121:17 Unresolved reference 'SynchedEntityData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:121:52 Unresolved reference 'Entity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:124:39 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:125:26 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:125:49 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:125:49 Not enough information to infer type argument for 'R'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:125:53 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:125:55 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:126:13 Inapplicable candidate(s): fun add(element: <ERROR TYPE REF: Cannot infer argument for type parameter E>): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:126:17 Unresolved reference 'SynchedEntityData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:126:52 Unresolved reference 'Entity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:129:13 Inapplicable candidate(s): fun add(element: <ERROR TYPE REF: Cannot infer argument for type parameter E>): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:129:17 Unresolved reference 'SynchedEntityData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:129:52 Unresolved reference 'Entity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:131:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:131:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/entity/VirtualEntity.kt:131:56 Unresolved reference 'ClientboundSetEntityDataPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:10:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:11:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:12:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:13:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:14:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:15:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:34:48 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:38:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:38:66 Unresolved reference 'IntTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:39:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:39:66 Unresolved reference 'LongTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:40:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:40:66 Unresolved reference 'ShortTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:41:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:41:66 Unresolved reference 'ByteTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:42:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:42:66 Unresolved reference 'FloatTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:43:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:43:66 Unresolved reference 'DoubleTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:44:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:44:66 Unresolved reference 'StringTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:45:57 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:45:66 Unresolved reference 'ByteTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:46:58 Unresolved reference 'putIntArray'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:47:59 Unresolved reference 'putLongArray'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:48:59 Unresolved reference 'putByteArray'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:52:29 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:52:52 Unresolved reference 'getCompound'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:52:74 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:54:13 Unresolved reference 'put'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:58:35 Overload resolution ambiguity between candidates:
+fun <T> MutableCollection<out T>.remove(element: T): Boolean
+fun <K, V> MutableMap<out K, V>.remove(key: K): V?
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:62:49 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:62:71 Unresolved reference 'getInt'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:63:49 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:63:71 Unresolved reference 'getLong'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:64:49 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:64:71 Unresolved reference 'getFloat'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:65:51 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:65:73 Unresolved reference 'getDouble'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:66:51 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:66:73 Unresolved reference 'getString'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:67:53 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:67:75 Unresolved reference 'getBoolean'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:68:49 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:68:71 Unresolved reference 'getByte'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:69:55 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:69:78 Unresolved reference 'getIntArray'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:70:57 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:70:80 Unresolved reference 'getLongArray'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:71:57 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:71:79 Unresolved reference 'getByteArray'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:75:17 None of the following candidates is applicable:
+fun CharSequence.contains(char: Char, ignoreCase: Boolean = ...): Boolean
+fun CharSequence.contains(other: CharSequence, ignoreCase: Boolean = ...): Boolean
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:75:49 Unresolved reference 'getCompound'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:79:39 Unresolved reference 'allKeys'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:89:15 Unresolved reference 'CraftItemStack'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:90:26 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:93:12 Unresolved reference 'CraftItemStack'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:100:15 Unresolved reference 'CraftItemStack'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:106:39 Unresolved reference 'CraftItemStack'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:114:24 Unresolved reference 'CraftEntity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:114:37 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:115:15 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:125:24 Unresolved reference 'CraftEntity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:125:37 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/nbt/NbtDsl.kt:126:15 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:7:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:24:10 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:24:65 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:25:14 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:25:27 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:25:60 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:25:67 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:32:10 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:32:74 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:33:25 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:33:38 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:34:39 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:34:46 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:49:42 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:49:49 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:52:23 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:52:49 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:53:20 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:53:28 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:53:35 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:58:35 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:58:48 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:59:21 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:59:21 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBuilder.kt:59:29 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:8:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:39:42 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:39:49 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:42:23 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:43:28 Unresolved reference 'Packet'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:43:35 Unresolved reference 'ClientGamePacketListener'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:48:56 Unresolved reference 'ClientboundBundlePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:50:12 Unresolved reference 'ClientboundBundlePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:56:14 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:56:27 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:60:5 Unresolved reference 'ClientboundBundlePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:61:30 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:61:43 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:61:66 Unresolved reference 'ClientboundBundlePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:67:30 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/net/PacketBundle.kt:67:43 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/AdvancementAnimation.kt:57:48 Overload resolution ambiguity between candidates:
+fun runTaskLater(p0: @NotNull() Plugin, p1: @NotNull() Runnable, p2: Long): @NotNull() BukkitTask
+fun runTaskLater(p0: @NotNull() Plugin, p1: @NotNull() Consumer<in BukkitTask!>, p2: Long): Unit
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/AdvancementAnimation.kt:129:5 Cannot access 'constructor(plugin: Plugin, players: List<Player>): AdvancementAnimation': it is private in 'dev/arc/api/player/AdvancementAnimation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/AdvancementAnimation.kt:139:5 Cannot access 'constructor(plugin: Plugin, players: List<Player>): AdvancementAnimation': it is private in 'dev/arc/api/player/AdvancementAnimation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:10:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:11:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:12:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:13:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:14:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:15:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:16:25 Unresolved reference 'adventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:18:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:19:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:56:25 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:59:25 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:59:44 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:98:52 Unresolved reference 'AdvancementProgress'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:101:17 Unresolved reference 'AdvancementProgress'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:107:55 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:107:55 Not enough information to infer type argument for 'V'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:108:20 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:108:20 Not enough information to infer type argument for 'B'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:108:27 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:108:60 Unresolved reference 'ImpossibleTrigger'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:112:9 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:116:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:116:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:117:13 Unresolved reference 'ClientboundUpdateAdvancementsPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:117:56 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:117:69 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:117:81 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:117:87 Argument type mismatch: actual type is 'kotlin.Pair<A, B>', but 'kotlin.Pair<K, V>' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:117:93 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:117:93 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <A, B> A.to(that: B): Pair<A, B>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:148:33 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:148:62 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:159:53 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:159:53 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:159:56 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:162:21 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:163:37 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:163:41 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:163:43 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:164:23 Unresolved reference 'CraftItemStack'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:165:23 Unresolved reference 'DisplayInfo'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:167:13 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:168:13 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:171:35 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:172:35 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:173:40 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:177:40 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:177:40 Not enough information to infer type argument for 'V'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:178:24 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:178:24 Not enough information to infer type argument for 'B'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:178:31 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:178:64 Unresolved reference 'ImpossibleTrigger'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:180:28 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:181:19 Unresolved reference 'Advancement'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:182:22 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:183:22 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:184:13 Unresolved reference 'AdvancementRewards'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:188:22 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:188:25 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementProgress.kt:190:26 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:10:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:11:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:12:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:13:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:14:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:15:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:16:25 Unresolved reference 'adventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:18:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:19:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:64:45 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:64:74 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:75:38 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:75:38 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:75:41 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:79:25 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:80:41 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:80:45 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:80:47 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:81:27 Unresolved reference 'CraftItemStack'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:82:27 Unresolved reference 'DisplayInfo'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:84:17 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:85:17 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:88:39 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:89:39 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:90:44 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:94:33 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:94:66 Unresolved reference 'ImpossibleTrigger'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:95:23 Unresolved reference 'Advancement'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:96:26 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:97:26 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:98:17 Unresolved reference 'AdvancementRewards'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:99:17 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:99:30 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:100:17 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:102:26 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:102:29 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:104:47 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:110:29 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:111:30 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:116:46 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:118:50 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:120:36 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:120:63 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:120:67 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:120:81 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:120:81 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:137:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:137:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:138:13 Unresolved reference 'ClientboundUpdateAdvancementsPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:138:70 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:26 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:30 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:43 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:43 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:58 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:58 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:58 Not enough information to infer type argument for 'R'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:62 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:67 Unresolved reference 'id'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:75 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:151:75 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:152:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:152:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:153:13 Unresolved reference 'ClientboundUpdateAdvancementsPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:153:56 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:153:74 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:160:24 Unresolved reference 'AdvancementProgress'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:161:29 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:161:62 Unresolved reference 'ImpossibleTrigger'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:162:25 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:162:38 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:162:53 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:164:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:164:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:165:13 Unresolved reference 'ClientboundUpdateAdvancementsPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:165:56 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:165:69 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:165:81 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:165:87 Argument type mismatch: actual type is 'kotlin.Pair<A, B>', but 'kotlin.Pair<K, V>' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:165:98 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:165:98 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <A, B> A.to(that: B): Pair<A, B>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:172:24 Unresolved reference 'AdvancementProgress'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:173:29 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:173:62 Unresolved reference 'ImpossibleTrigger'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:174:25 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:174:38 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:174:53 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:175:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:175:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:176:13 Unresolved reference 'ClientboundUpdateAdvancementsPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:176:56 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:176:69 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:176:81 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:176:87 Argument type mismatch: actual type is 'kotlin.Pair<A, B>', but 'kotlin.Pair<K, V>' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:176:98 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:176:98 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <A, B> A.to(that: B): Pair<A, B>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:184:51 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:184:69 Unresolved reference 'AdvancementProgress'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:186:22 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:186:22 Not enough information to infer type argument for 'K'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:186:22 Not enough information to infer type argument for 'V'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:187:28 Unresolved reference 'AdvancementProgress'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:188:33 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:188:66 Unresolved reference 'ImpossibleTrigger'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:189:29 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:189:42 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:189:57 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:191:24 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:191:24 Not enough information to infer type argument for 'B'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeAdvancementTree.kt:191:24 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <A, B> A.to(that: B): Pair<A, B>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:7:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:37:24 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:37:37 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:38:25 Unresolved reference 'ClientboundSetTimePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:48:25 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:48:38 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:50:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:50:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:51:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:51:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:53:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:53:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:54:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:54:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:63:14 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:63:27 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:64:9 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:64:36 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:78:25 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:78:38 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:79:15 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:79:42 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:80:15 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:80:42 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:81:15 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:81:42 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:91:24 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:91:37 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:96:15 Unresolved reference 'ClientboundSetTimePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:96:112 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:100:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:100:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:101:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:101:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:103:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:103:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:104:19 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:104:46 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:106:15 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/FakeWorldState.kt:106:42 Unresolved reference 'ClientboundGameEventPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:5:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:7:24 Unresolved reference 'entity'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:30:27 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:30:40 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:31:16 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:31:62 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:31:66 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:32:14 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:32:14 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:32:18 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:32:20 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:32:70 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:32:83 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:35:9 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:40:13 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:41:18 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:45:13 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:46:18 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/GameRuleOverride.kt:49:39 Unresolved reference 'PlayerGameRuleOverrides'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ItemTransactionLogger.kt:91:63 Method 'contains' from ConcurrentHashMap might have unexpected semantics: it calls 'containsValue' instead of 'containsKey'. Use the explicit form of the call to 'containsKey'/'containsValue'/'contains' or cast the value to 'kotlin.collections.Map' instead. See https://youtrack.jetbrains.com/issue/KT-18053 for more details.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:10:30 Unresolved reference 'PlayerMoveRawEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:81:26 Unresolved reference 'PlayerMoveRawEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:82:28 Unresolved reference 'player'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:84:20 Unresolved reference 'hasPosition'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:86:24 Unresolved reference 'toX'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:86:36 Unresolved reference 'fromX'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:87:24 Unresolved reference 'toY'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:87:36 Unresolved reference 'fromY'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:88:24 Unresolved reference 'toZ'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:88:36 Unresolved reference 'fromZ'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:94:88 Unresolved reference 'isCancelled'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:96:20 'operator' modifier is required on 'FirNamedFunctionSymbol kotlin/compareTo' in 'compareTo'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:98:90 Unresolved reference 'isCancelled'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:101:19 Unresolved reference 'hasRotation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:102:43 Unresolved reference 'toYaw'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:102:57 Unresolved reference 'fromYaw'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:102:66 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:102:66 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T, R> T.let(block: (T) -> R): R
+    [R|Contract description]
+     <
+        CallsInPlace(block, EXACTLY_ONCE)
+    >
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:102:70 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/NativeAntiCheat.kt:103:24 'operator' modifier is required on 'FirNamedFunctionSymbol kotlin/compareTo' in 'compareTo'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:7:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:32:46 Unresolved reference 'Abilities'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:33:38 Unresolved reference 'invulnerable'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:34:34 Unresolved reference 'flying'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:35:32 Unresolved reference 'mayfly'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:36:36 Unresolved reference 'instabuild'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:37:34 Unresolved reference 'mayBuild'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:38:35 Unresolved reference 'flyingSpeed'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:39:36 Unresolved reference 'walkingSpeed'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:47:30 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:47:43 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:51:16 Unresolved reference 'Abilities'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:51:28 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:51:33 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:52:12 Unresolved reference 'invulnerable'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:53:12 Unresolved reference 'flying'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:54:12 Unresolved reference 'mayfly'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:55:12 Unresolved reference 'instabuild'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:56:12 Unresolved reference 'mayBuild'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:57:12 Unresolved reference 'flyingSpeed'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:58:12 Unresolved reference 'walkingSpeed'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:60:31 Unresolved reference 'ClientboundPlayerAbilitiesPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:68:30 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:68:43 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/PlayerAbilityOverride.kt:69:31 Unresolved reference 'ClientboundPlayerAbilitiesPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:10:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:11:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:12:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:13:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:14:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:15:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:16:25 Unresolved reference 'adventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:18:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:19:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:58:27 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:59:17 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:60:17 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:61:22 Unresolved reference 'AdvancementType'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:81:14 Unresolved reference 'ResourceLocation'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:82:19 Unresolved reference 'CraftItemStack'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:83:19 Unresolved reference 'DisplayInfo'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:85:9 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:86:9 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:87:18 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:93:25 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:93:58 Unresolved reference 'ImpossibleTrigger'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:94:23 Unresolved reference 'Advancement'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:95:18 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:96:18 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:97:9 Unresolved reference 'AdvancementRewards'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:98:9 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:98:28 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:99:9 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:101:18 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:101:21 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:103:18 Unresolved reference 'AdvancementHolder'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:105:20 Unresolved reference 'AdvancementProgress'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:106:21 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:106:40 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:106:55 Unresolved reference 'AdvancementRequirements'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:109:25 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:109:38 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:111:15 Unresolved reference 'ClientboundUpdateAdvancementsPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:111:58 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:111:74 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:111:86 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:111:92 Argument type mismatch: actual type is 'kotlin.Pair<A, B>', but 'kotlin.Pair<K, V>' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:111:95 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:113:15 Unresolved reference 'ClientboundUpdateAdvancementsPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:113:58 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:113:71 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/player/ToastNotification.kt:113:82 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:10:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:11:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:12:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:13:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:14:25 Unresolved reference 'adventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:15:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:97:62 Method 'contains' from ConcurrentHashMap might have unexpected semantics: it calls 'containsValue' instead of 'containsKey'. Use the explicit form of the call to 'containsKey'/'containsValue'/'contains' or cast the value to 'kotlin.collections.Map' instead. See https://youtrack.jetbrains.com/issue/KT-18053 for more details.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:102:31 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:102:44 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:103:24 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:106:19 Unresolved reference 'ClientboundSetObjectivePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:108:13 Unresolved reference 'ObjectiveCriteria'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:108:60 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:117:22 Unresolved reference 'Objective'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:117:32 Unresolved reference 'Scoreboard'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:117:60 Unresolved reference 'ObjectiveCriteria'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:118:13 Unresolved reference 'ObjectiveCriteria'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:119:23 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:120:13 Unresolved reference 'DisplaySlot'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:138:31 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:138:44 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:140:23 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:141:13 Unresolved reference 'DisplaySlot'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:145:23 Unresolved reference 'ClientboundResetScorePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:146:23 Unresolved reference 'ClientboundSetPlayerTeamPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:147:21 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:147:55 Unresolved reference 'Scoreboard'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:150:19 Unresolved reference 'ClientboundSetObjectivePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:150:66 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:151:13 Unresolved reference 'ObjectiveCriteria'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:151:60 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:157:31 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:157:44 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:161:24 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:161:58 Unresolved reference 'Scoreboard'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:162:29 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:163:19 Unresolved reference 'ClientboundSetPlayerTeamPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:164:19 Unresolved reference 'ClientboundSetPlayerTeamPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:165:13 Unresolved reference 'ClientboundSetPlayerTeamPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:167:19 Unresolved reference 'ClientboundSetScorePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:167:82 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:167:100 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:171:31 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:171:44 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:173:19 Unresolved reference 'ClientboundResetScorePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:174:19 Unresolved reference 'ClientboundSetPlayerTeamPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:175:17 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:175:51 Unresolved reference 'Scoreboard'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:180:31 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:180:44 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:181:24 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:181:58 Unresolved reference 'Scoreboard'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:182:29 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:183:19 Unresolved reference 'ClientboundSetPlayerTeamPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:187:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:187:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:188:13 Unresolved reference 'ClientboundSetObjectivePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:188:60 Unresolved reference 'PaperAdventure'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:189:17 Unresolved reference 'ObjectiveCriteria'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/scoreboard/FlickerFreeScoreboard.kt:189:64 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:10:30 Unresolved reference 'ChunkCarveEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:11:30 Unresolved reference 'ChunkNoiseGenerateEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:12:30 Unresolved reference 'ChunkSurfaceBuildEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:38:24 Unresolved reference 'ChunkNoiseGenerateEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:39:42 Unresolved reference 'world'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:39:55 Unresolved reference 'chunkX'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:39:69 Unresolved reference 'chunkZ'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:40:19 Unresolved reference 'isCancelled'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:44:26 Unresolved reference 'ChunkSurfaceBuildEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:45:44 Unresolved reference 'world'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:45:57 Unresolved reference 'chunkX'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:45:71 Unresolved reference 'chunkZ'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:46:19 Unresolved reference 'isCancelled'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:50:24 Unresolved reference 'ChunkCarveEvent'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:51:42 Unresolved reference 'world'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:51:55 Unresolved reference 'chunkX'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:51:69 Unresolved reference 'chunkZ'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ChunkGenerationModifier.kt:52:19 Unresolved reference 'isCancelled'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:11:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:12:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:76:23 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:86:32 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:129:49 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:130:33 Unresolved reference 'CraftBlockData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:130:49 Unresolved reference 'state'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:131:22 Unresolved reference 'ClientboundBlockUpdatePacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:132:20 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:132:33 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/ClientSideWorld.kt:135:41 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:9:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:10:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:114:33 Unresolved reference 'CraftMapView'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:114:47 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:115:21 Unresolved reference 'MapItemSavedData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:116:22 Unresolved reference 'ClientboundMapItemDataPacket'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:117:17 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:118:32 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:120:34 Unresolved reference 'CraftPlayer'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:120:47 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:127:20 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:128:17 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:137:26 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:140:50 Argument type mismatch: actual type is 'kotlin.Int', but 'java.math.BigInteger' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:140:58 Argument type mismatch: actual type is 'kotlin.Int', but 'java.math.BigInteger' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:141:49 Argument type mismatch: actual type is 'kotlin.Int', but 'java.math.BigInteger' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:141:57 Argument type mismatch: actual type is 'kotlin.Int', but 'java.math.BigInteger' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:142:42 Argument type mismatch: actual type is 'kotlin.Int', but 'java.math.BigInteger' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:142:50 Argument type mismatch: actual type is 'kotlin.Int', but 'java.math.BigInteger' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:143:32 None of the following candidates is applicable:
+fun minus(other: Byte): Int
+fun minus(other: Double): Double
+fun minus(other: Float): Float
+fun minus(other: Int): Int
+fun minus(other: Long): Long
+fun minus(other: Short): Int
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:143:59 None of the following candidates is applicable:
+fun minus(other: Byte): Int
+fun minus(other: Double): Double
+fun minus(other: Float): Float
+fun minus(other: Int): Int
+fun minus(other: Long): Long
+fun minus(other: Short): Int
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:143:85 None of the following candidates is applicable:
+fun minus(other: Byte): Int
+fun minus(other: Double): Double
+fun minus(other: Float): Float
+fun minus(other: Int): Int
+fun minus(other: Long): Long
+fun minus(other: Short): Int
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:145:22 Unresolved reference 'compareTo'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/LiveMapRenderer.kt:145:47 Assignment type mismatch: actual type is 'org.bukkit.Location', but 'kotlin.Int' was expected.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:10:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:27:27 Unresolved reference 'ServerLevel'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:27:51 Unresolved reference 'CraftWorld'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:27:63 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:28:22 Unresolved reference 'NoiseBasedChunkGenerator'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:29:18 Unresolved reference 'chunkSource'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:29:44 Unresolved reference 'NoiseBasedChunkGenerator'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:31:46 Unresolved reference 'chunkSource'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:39:14 Unresolved reference 'getBaseHeight'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:39:44 Unresolved reference 'Heightmap'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:47:14 Unresolved reference 'getBaseHeight'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:47:44 Unresolved reference 'Heightmap'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:58:26 Unresolved reference 'getBaseColumn'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:59:28 Unresolved reference 'minY'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:72:17 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:73:16 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/NoiseAccessor.kt:73:63 Unresolved reference 'net.minecraft.world.level.block.state.BlockState'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:11:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:12:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:62:30 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:62:71 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:63:32 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:63:75 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:74:23 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:77:25 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:88:27 Unresolved reference 'StructureTemplate'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:88:48 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:88:48 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:88:48 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:88:48 Property delegate must have a 'getValue(StructurePopulator, KProperty1<StructurePopulator, ERROR CLASS: Symbol not found for StructureTemplate>)' method. None of the following functions is applicable:
+fun <T> Lazy<T>.getValue(thisRef: Any?, property: KProperty<*>): T
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:88:48 Not enough information to infer type argument for 'T'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:88:53 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:89:19 Unresolved reference 'NbtIo'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:89:59 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:90:9 Unresolved reference 'StructureTemplate'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:90:29 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:90:34 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:90:39 Unresolved reference 'load'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:95:43 Unresolved reference 'CraftLimitedRegion'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:95:63 Unresolved reference 'handle'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:96:28 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:97:23 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:98:24 Unresolved reference 'StructurePlaceSettings'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/SchematicPlacer.kt:102:18 Unresolved reference 'placeInWorld'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:5:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:6:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:7:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:8:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:9:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:10:12 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:13:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:14:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:15:19 Unresolved reference 'craftbukkit'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:47:44 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:53:30 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:58:30 Unresolved reference 'BlockPos'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:67:18 Unresolved reference 'StructureTemplate'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:68:24 Unresolved reference 'StructureTemplate'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:71:43 Unresolved reference 'CraftBlockData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:71:59 Unresolved reference 'state'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:72:45 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:72:45 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> T.also(block: (T) -> Unit): T
+    [R|Contract description]
+     <
+        CallsInPlace(block, EXACTLY_ONCE)
+    >
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:72:52 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:89:27 Unresolved reference 'x'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:89:51 Unresolved reference 'y'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:89:75 Unresolved reference 'z'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:101:27 Unresolved reference 'x'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:101:51 Unresolved reference 'y'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:101:75 Unresolved reference 'z'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:111:24 Unresolved reference 'StructureTemplate'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:113:19 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:114:29 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:115:31 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:119:43 Unresolved reference 'CraftBlockData'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:119:59 Unresolved reference 'state'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:120:32 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:123:32 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:128:26 Unresolved reference 'CompoundTag'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:129:31 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:130:29 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:130:68 Unresolved reference 'x'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:131:29 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:131:68 Unresolved reference 'y'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:132:29 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:132:68 Unresolved reference 'z'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:140:33 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:141:28 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:142:27 Overload resolution ambiguity between candidates:
+fun <T, R : Comparable<R>> Iterable<T>.maxOfOrNull(selector: (T) -> R): R?
+fun <T> Iterable<T>.maxOfOrNull(selector: (T) -> Double): Double?
+fun <T> Iterable<T>.maxOfOrNull(selector: (T) -> Float): Float?
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:142:39 Overload resolution ambiguity between candidates:
+fun String?.plus(other: Any?): String
+fun <T> Array<T>.plus(element: T): Array<T>
+fun ByteArray.plus(element: Byte): ByteArray
+fun IntArray.plus(element: Int): IntArray
+fun LongArray.plus(element: Long): LongArray
+fun ShortArray.plus(element: Short): ShortArray
+fun <T> Collection<T>.plus(element: T): List<T>
+fun <T> Iterable<T>.plus(element: T): List<T>
+fun <T> Set<T>.plus(element: T): Set<T>
+fun <T> Sequence<T>.plus(element: T): Sequence<T>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:142:48 Unresolved reference 'x'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:143:27 Overload resolution ambiguity between candidates:
+fun <T, R : Comparable<R>> Iterable<T>.maxOfOrNull(selector: (T) -> R): R?
+fun <T> Iterable<T>.maxOfOrNull(selector: (T) -> Double): Double?
+fun <T> Iterable<T>.maxOfOrNull(selector: (T) -> Float): Float?
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:143:39 Overload resolution ambiguity between candidates:
+fun String?.plus(other: Any?): String
+fun <T> Array<T>.plus(element: T): Array<T>
+fun ByteArray.plus(element: Byte): ByteArray
+fun IntArray.plus(element: Int): IntArray
+fun LongArray.plus(element: Long): LongArray
+fun ShortArray.plus(element: Short): ShortArray
+fun <T> Collection<T>.plus(element: T): List<T>
+fun <T> Iterable<T>.plus(element: T): List<T>
+fun <T> Set<T>.plus(element: T): Set<T>
+fun <T> Sequence<T>.plus(element: T): Sequence<T>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:143:48 Unresolved reference 'y'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:144:27 Overload resolution ambiguity between candidates:
+fun <T, R : Comparable<R>> Iterable<T>.maxOfOrNull(selector: (T) -> R): R?
+fun <T> Iterable<T>.maxOfOrNull(selector: (T) -> Double): Double?
+fun <T> Iterable<T>.maxOfOrNull(selector: (T) -> Float): Float?
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:144:39 Overload resolution ambiguity between candidates:
+fun String?.plus(other: Any?): String
+fun <T> Array<T>.plus(element: T): Array<T>
+fun ByteArray.plus(element: Byte): ByteArray
+fun IntArray.plus(element: Int): IntArray
+fun LongArray.plus(element: Long): LongArray
+fun ShortArray.plus(element: Short): ShortArray
+fun <T> Collection<T>.plus(element: T): List<T>
+fun <T> Iterable<T>.plus(element: T): List<T>
+fun <T> Set<T>.plus(element: T): Set<T>
+fun <T> Sequence<T>.plus(element: T): Sequence<T>
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:144:48 Unresolved reference 'z'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:145:26 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:146:26 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:147:26 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:149:39 Unresolved reference 'minecraft'.
+e: file:///C:/Users/wagwa/ARC-1.21.4/arc-api/src/main/kotlin/dev/arc/api/world/StructureBuilder.kt:152:9 Unresolved reference 'NbtIo'.
+Finished executing kotlin compiler using DAEMON strategy
+Restoring task outputs to pre-compilation state
+
+> Task :arc-api:compileKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':arc-api:compileKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 22s
+20 actionable tasks: 2 executed, 18 up-to-date
+EXIT=1

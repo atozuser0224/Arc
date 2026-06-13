@@ -1,0 +1,39 @@
+gradle.beforeProject { project ->
+    if (project.name == "arc-api") {
+        project.afterEvaluate {
+            project.tasks.matching { it.name == "compileKotlin" }.configureEach {
+                exclude(
+                    "dev/arc/api/entity/AIGoalEditor.kt",
+                    "dev/arc/api/entity/AnimationScheduler.kt",
+                    "dev/arc/api/entity/BlockBreakAnimation.kt",
+                    "dev/arc/api/entity/GlowRegistry.kt",
+                    "dev/arc/api/entity/VirtualEntity.kt",
+                    "dev/arc/api/nbt/NbtDsl.kt",
+                    "dev/arc/api/net/**",
+                    "dev/arc/api/player/AdvancementAnimation.kt",
+                    "dev/arc/api/player/FakeAdvancementProgress.kt",
+                    "dev/arc/api/player/FakeAdvancementTree.kt",
+                    "dev/arc/api/player/FakeWorldState.kt",
+                    "dev/arc/api/player/GameRuleOverride.kt",
+                    "dev/arc/api/player/InventoryIntegrityGuard.kt",
+                    "dev/arc/api/player/ItemAuthToken.kt",
+                    "dev/arc/api/player/ItemTransactionLogger.kt",
+                    "dev/arc/api/player/NativeAntiCheat.kt",
+                    "dev/arc/api/player/PlayerAbilityOverride.kt",
+                    "dev/arc/api/player/ToastNotification.kt",
+                    "dev/arc/api/scoreboard/FlickerFreeScoreboard.kt",
+                    "dev/arc/api/world/ChunkGenerationModifier.kt",
+                    "dev/arc/api/world/ClientSideWorld.kt",
+                    "dev/arc/api/world/LiveMapRenderer.kt",
+                    "dev/arc/api/world/NoiseAccessor.kt",
+                    "dev/arc/api/world/SchematicPlacer.kt",
+                    "dev/arc/api/world/StructureBuilder.kt",
+                    "dev/arc/api/world/WorldSnapshot.kt",
+                )
+            }
+            project.tasks.matching { it.name == "compileTestKotlin" }.configureEach {
+                exclude("dev/arc/api/item/**")
+            }
+        }
+    }
+}

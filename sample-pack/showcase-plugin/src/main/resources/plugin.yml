@@ -1,0 +1,6 @@
+name: ArcShowcase
+version: 1.0.0
+main: dev.arc.sample.ArcShowcasePlugin
+api-version: '1.21'
+author: Arc
+description: A guided tour of the Arc developer API (effects, PDC, datapacks, item auth, events, command DSL).

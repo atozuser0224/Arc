@@ -72,7 +72,8 @@ Arc now provides immutable, reusable typed fields for every Bukkit
 - built-in primitive, boolean, string, and array field factories;
 - optional lazy defaults and value validation;
 - duplicate and unsafe field-name rejection;
-- typed get/set/remove/contains, `getOrPut`, and mutation operations;
+- typed get/set/remove/contains, `getOrPut`, mutation, and overflow-checked
+  integer/long increment operations;
 - schema lookup and definition introspection.
 
 The existing primitive PDC helpers and `NbtMap` remain source compatible.

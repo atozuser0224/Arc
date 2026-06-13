@@ -165,6 +165,7 @@ val data = pdcSchema("myplugin") {
 
 player[kills] = 10
 player.mutate(kills) { it + 1 }
+player.increment(kills, 5)
 val current = player.getOrDefault(kills)
 ```
 

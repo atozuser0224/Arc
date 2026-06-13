@@ -241,3 +241,17 @@ public fun <P : Any, C : Any> PersistentDataHolder.mutate(
     this[field] = next
     return next
 }
+
+/** Increment an integer field with overflow checking, initializing it to zero when absent. */
+@JvmOverloads
+public fun PersistentDataHolder.increment(
+    field: PdcField<Int, Int>,
+    amount: Int = 1,
+): Int = mutate(field, 0) { Math.addExact(it, amount) }
+
+/** Increment a long field with overflow checking, initializing it to zero when absent. */
+@JvmOverloads
+public fun PersistentDataHolder.increment(
+    field: PdcField<Long, Long>,
+    amount: Long = 1L,
+): Long = mutate(field, 0L) { Math.addExact(it, amount) }

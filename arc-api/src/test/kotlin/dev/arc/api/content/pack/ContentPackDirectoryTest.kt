@@ -4,6 +4,7 @@ import dev.arc.api.content.ContentId
 import dev.arc.api.content.ContentRegistry
 import java.nio.file.Files
 import kotlin.io.path.createDirectories
+import kotlin.io.path.writeBytes
 import kotlin.io.path.writeText
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -17,6 +18,8 @@ class ContentPackDirectoryTest {
         try {
             writePack(root.resolve("magic"), "magic", "wand")
             writePack(root.resolve("tech"), "tech", "wrench")
+            root.resolve("magic/assets/textures/item").createDirectories()
+            root.resolve("magic/assets/textures/item/wand.png").writeBytes(byteArrayOf(1))
             val registry = ContentRegistry()
 
             val result = ContentPackDirectory().publish(root, registry)
@@ -24,6 +27,7 @@ class ContentPackDirectoryTest {
             assertTrue(result.accepted)
             assertTrue(ContentId.parse("magic:wand") in registry.current!!.definitions)
             assertTrue(ContentId.parse("tech:wrench") in registry.current!!.definitions)
+            assertTrue(result.assets.single().path == "textures/item/wand.png")
         } finally {
             root.toFile().deleteRecursively()
         }

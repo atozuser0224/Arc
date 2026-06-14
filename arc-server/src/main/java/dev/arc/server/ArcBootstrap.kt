@@ -5,6 +5,9 @@ import dev.arc.api.control.ArcControlCommand
 import dev.arc.api.content.runtime.ArcContentRuntime
 import dev.arc.api.content.ArcContent
 import dev.arc.api.content.pack.ContentPackDirectory
+import dev.arc.api.sync.ArcSync
+import dev.arc.api.sync.ArcSyncService
+import dev.arc.api.sync.ManifestKeyStore
 import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
@@ -103,7 +106,13 @@ object ArcBootstrap {
                     "[Arc-Content] ${diagnostic.field ?: "pack"}: ${diagnostic.message}",
                 )
             }
+            return
         }
+        val revision = result.revision ?: return
+        val serverId = "${org.bukkit.Bukkit.getIp().ifBlank { "0.0.0.0" }}:${org.bukkit.Bukkit.getPort()}"
+        val service = ArcSyncService(serverId, ManifestKeyStore.loadOrCreate(Path.of("arc-sync")))
+        service.publish(revision, result.assets)
+        ArcSync.install(service)
     }
 
     private fun installNetwork() {

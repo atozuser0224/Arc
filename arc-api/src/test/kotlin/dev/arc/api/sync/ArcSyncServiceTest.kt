@@ -9,6 +9,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
+import com.google.gson.JsonParser
 
 class ArcSyncServiceTest {
 
@@ -28,7 +29,13 @@ class ArcSyncServiceTest {
 
         assertTrue(ManifestSigner.verify(signed, keys.public))
         assertEquals(revision.hash, signed.manifest.revision)
-        assertEquals(asset.sha256, plan.blobs.single().sha256)
+        assertTrue(plan.blobs.any { it.sha256 == asset.sha256 })
+        val catalogBlob = signed.manifest.blobs.single { it.path == "arc/catalog.json" }
+        val catalog = JsonParser.parseString(
+            requireNotNull(service.blob(catalogBlob.sha256)).toString(Charsets.UTF_8),
+        ).asJsonObject
+        assertEquals("Arc: magic", catalog["title"].asString)
+        assertEquals("magic:wand", catalog["entries"].asJsonArray.single().asJsonObject["id"].asString)
     }
 
     @Test

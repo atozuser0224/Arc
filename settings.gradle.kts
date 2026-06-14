@@ -3,6 +3,7 @@ import java.util.Locale
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        maven("https://maven.fabricmc.net/")
         maven("https://repo.papermc.io/repository/maven-public/")
     }
 }
@@ -13,7 +14,7 @@ plugins {
 
 rootProject.name = "arc"
 
-for (name in listOf("leaf-api", "leaf-server", "arc-api", "arc-server", "arc-test")) {
+for (name in listOf("leaf-api", "leaf-server", "arc-protocol", "arc-api", "arc-server", "arc-test", "arc-client")) {
     val projName = name.lowercase(Locale.ENGLISH)
     include(projName)
     findProject(":$projName")!!.projectDir = file(name)

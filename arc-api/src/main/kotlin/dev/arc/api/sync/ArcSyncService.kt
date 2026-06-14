@@ -1,5 +1,7 @@
 package dev.arc.api.sync
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import dev.arc.api.content.CompiledContentRevision
 import dev.arc.api.content.ContentType
 import dev.arc.api.content.asset.ContentAsset
@@ -28,10 +30,14 @@ public class ArcSyncService(
         revision: CompiledContentRevision,
         assets: List<ContentAsset>,
     ): SignedManifest {
-        require(assets.map { it.path }.distinct().size == assets.size) {
+        require(assets.none { it.path == CATALOG_PATH }) {
+            "$CATALOG_PATH is reserved by ArcSync"
+        }
+        val publishedAssets = listOf(catalogAsset(revision)) + assets
+        require(publishedAssets.map { it.path }.distinct().size == publishedAssets.size) {
             "Asset paths must be unique"
         }
-        require(assets.map { it.sha256 }.distinct().size == assets.size) {
+        require(publishedAssets.map { it.sha256 }.distinct().size == publishedAssets.size) {
             "Asset hashes must be unique"
         }
         val features = buildSet {
@@ -50,10 +56,10 @@ public class ArcSyncService(
             serverId = serverId,
             revision = revision.hash,
             requiredFeatures = features,
-            blobs = assets.map { SyncBlob(it.path, it.sha256, it.bytes.size.toLong()) },
+            blobs = publishedAssets.map { SyncBlob(it.path, it.sha256, it.bytes.size.toLong()) },
         )
         val signed = ManifestSigner.sign(manifest, keys.private)
-        snapshotRef.set(Snapshot(signed, assets.associateBy { it.sha256 }))
+        snapshotRef.set(Snapshot(signed, publishedAssets.associateBy { it.sha256 }))
         return signed
     }
 
@@ -67,6 +73,29 @@ public class ArcSyncService(
 
     public fun blob(sha256: String): ByteArray? =
         snapshotRef.get()?.blobs?.get(sha256)?.bytes?.copyOf()
+
+    private fun catalogAsset(revision: CompiledContentRevision): ContentAsset {
+        val root = JsonObject()
+        root.addProperty("revision", revision.hash)
+        root.addProperty("title", revision.catalog.title)
+        val entries = JsonArray()
+        revision.catalog.entries.forEach { entry ->
+            val definition = revision.definitions.getValue(entry.id)
+            entries.add(JsonObject().apply {
+                addProperty("id", entry.id.toString())
+                addProperty("type", entry.type.name.lowercase())
+                addProperty("pack", entry.packId.toString())
+                addProperty("order", entry.order)
+                addProperty("fallback", definition.fallback.toString())
+            })
+        }
+        root.add("entries", entries)
+        return ContentAsset(CATALOG_PATH, root.toString().toByteArray(Charsets.UTF_8))
+    }
+
+    private companion object {
+        const val CATALOG_PATH = "arc/catalog.json"
+    }
 }
 
 public object ArcSync {

@@ -4,6 +4,7 @@
 // are applied to every subproject from the root build.gradle.kts.
 
 dependencies {
+    api(project(":arc-protocol"))
     // Re-expose the full Bukkit/Paper API (incl. Adventure) to Arc API consumers.
     api(project(":leaf-api"))
     // Coroutine support for the Bukkit-main dispatcher / structured concurrency DSL.

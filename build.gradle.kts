@@ -3,6 +3,12 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+    dependencies {
+        classpath("com.google.code.gson:gson:2.11.0")
+    }
+}
+
 plugins {
     `maven-publish`
     kotlin("jvm") version "2.0.21"

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "arc",
+  "version": "${version}",
+  "name": "Arc",
+  "description": "Server-driven content runtime for Arc servers.",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.arc.client.fabric.ArcClientMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "fabric-api": "*",
+    "fabric-language-kotlin": ">=1.12.3+kotlin.2.0.21",
+    "minecraft": "1.21.4",
+    "java": ">=21"
+  }
+}

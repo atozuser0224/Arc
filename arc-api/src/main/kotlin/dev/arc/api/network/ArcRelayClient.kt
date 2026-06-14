@@ -271,6 +271,21 @@ object ArcRelayClient {
         jedisOp { jedis -> jedis.javaClass.getMethod("del", String::class.java).invoke(jedis, "arc:cooldown:$key") }
     }
 
+    // ---- Score queries ----
+    fun zscore(key: String, member: String): Double? {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("zscore", String::class.java, String::class.java)
+                .invoke(jedis, key, member) as? Double
+        }
+    }
+
+    fun zrevrank(key: String, member: String): Long? {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("zrevrank", String::class.java, String::class.java)
+                .invoke(jedis, key, member) as? Long
+        }
+    }
+
     // ---- Plain SET (no TTL) ----
     fun set(key: String, value: String) {
         jedisOp { jedis ->

@@ -29,6 +29,8 @@ object ArcNetworkInbox {
             if (!ArcRelayClient.connected) return@Runnable
             drainBroadcast(plugin)
             drainBans(plugin)
+            drainChat(plugin)
+            if (ArcNetworkConfig.pluginDeployEnabled) drainDeploy(plugin)
             if (ArcNetworkConfig.remoteCommand.enabled) drainRemoteCommands(plugin)
         }, 40L, 40L).taskId
     }
@@ -126,6 +128,16 @@ object ArcNetworkInbox {
                 }
             }
         })
+    }
+
+    private fun drainChat(plugin: Plugin) {
+        val messages = ArcRelayClient.rpopBatch("arc:inbox:chat:${ArcNetworkConfig.serverId}")
+        ArcNetworkChat.processIncoming(plugin, messages)
+    }
+
+    private fun drainDeploy(plugin: Plugin) {
+        val messages = ArcRelayClient.rpopBatch("arc:inbox:deploy:${ArcNetworkConfig.serverId}")
+        ArcPluginDeploy.processIncoming(plugin, messages)
     }
 
     private fun jsonStr(json: String, key: String): String? =

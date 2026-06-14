@@ -31,6 +31,7 @@ object ArcGlobalBan {
         store(banKey(uuid), entry, durationSeconds)
         ArcNetworkAudit.log("ban.player", mapOf("uuid" to uuid.toString(), "player" to playerName,
             "reason" to reason, "actor" to actor, "expiry" to (expiry?.toString() ?: "permanent")))
+        ArcDiscordWebhook.sendBan(playerName, reason, actor, durationSeconds == null)
         broadcastBan(entry)
         return entry
     }

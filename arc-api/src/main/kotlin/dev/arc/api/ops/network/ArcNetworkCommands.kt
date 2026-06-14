@@ -14,7 +14,8 @@ object ArcNetworkCommands {
     fun complete(args: Array<out String>): List<String> = when (args.size) {
         2 -> listOf("servers", "server", "players", "route", "send", "sendall", "queue", "evacuate",
             "broadcast", "hub", "cooldown", "maintenance", "find", "audit", "remote-cmd",
-            "ban", "unban", "mute", "unmute", "economy", "globalconfig")
+            "ban", "unban", "mute", "unmute", "economy", "globalconfig",
+            "vault", "leaderboard", "deploy", "chat")
         3 -> when (args.getOrNull(1)?.lowercase()) {
             "server" -> ArcServerRegistry.onlineServerIds()
             "send" -> Bukkit.getOnlinePlayers().map { it.name }
@@ -150,6 +151,34 @@ object ArcNetworkCommands {
 
             // Global config
             "globalconfig" -> globalConfig(sender, args)
+
+            // Vault
+            "vault" -> {
+                val player = sender as? Player ?: run { sender.sendMessage("§cPlayer only"); return true }
+                val ownerName = args.getOrNull(2)
+                val owner = if (ownerName != null) Bukkit.getOfflinePlayer(ownerName).uniqueId else player.uniqueId
+                ArcGlobalVault.open(player, owner)
+            }
+
+            // Leaderboard
+            "leaderboard" -> leaderboard(sender, args)
+
+            // Plugin deploy
+            "deploy" -> {
+                val jar = args.getOrNull(2) ?: run { sender.sendMessage("/arc network deploy <file.jar> [server|all]"); return true }
+                val targetArg = args.getOrNull(3) ?: "all"
+                val targets = if (targetArg == "all") ArcServerRegistry.onlineServerIds() else listOf(targetArg)
+                ArcPluginDeploy.deploy(sender, jar, targets)
+            }
+
+            // Cross-server chat toggle
+            "chat" -> {
+                when (args.getOrNull(2)?.lowercase()) {
+                    "on", "enable" -> { ArcNetworkChat.enabled = true; sender.sendMessage("§aNetwork chat enabled") }
+                    "off", "disable" -> { ArcNetworkChat.enabled = false; sender.sendMessage("§7Network chat disabled") }
+                    else -> sender.sendMessage("§7Network chat: §${if (ArcNetworkChat.enabled) "a" else "c"}${if (ArcNetworkChat.enabled) "ON" else "OFF"}")
+                }
+            }
 
             else -> false
         }
@@ -384,6 +413,47 @@ object ArcNetworkCommands {
                 }
             }
             else -> sender.sendMessage("/arc network globalconfig <get|set|del|list>")
+        }
+    }
+
+    private fun leaderboard(sender: CommandSender, args: Array<out String>) {
+        when (args.getOrNull(2)?.lowercase()) {
+            "top" -> {
+                val name = args.getOrNull(3) ?: "coins"
+                val entries = ArcLeaderboard.getTop(name, 10)
+                if (entries.isEmpty()) { sender.sendMessage("§7Leaderboard '$name' is empty"); return }
+                sender.sendMessage("[Arc] §6Top 10 — §e$name:")
+                entries.forEachIndexed { i, (uuid, score) ->
+                    val playerName = runCatching { Bukkit.getOfflinePlayer(java.util.UUID.fromString(uuid)).name ?: uuid }.getOrElse { uuid }
+                    val scoreStr = if (score == score.toLong().toDouble()) score.toLong().toString() else "%.2f".format(score)
+                    sender.sendMessage("  §7#${i + 1} §f$playerName §8— §e$scoreStr")
+                }
+            }
+            "rank" -> {
+                val name = args.getOrNull(3) ?: "coins"
+                val playerName = args.getOrNull(4) ?: run { sender.sendMessage("/arc network leaderboard rank <board> <player>"); return }
+                val player = Bukkit.getOfflinePlayer(playerName)
+                val rank = ArcLeaderboard.getRank(name, player.uniqueId)
+                val score = ArcLeaderboard.getScore(name, player.uniqueId)
+                if (rank == null) { sender.sendMessage("§7$playerName not ranked in '$name'"); return }
+                sender.sendMessage("§e$playerName §7is §f#${rank + 1} §7on §e$name §7with score §f${"%.0f".format(score)}")
+            }
+            "set" -> {
+                val name = args.getOrNull(3) ?: run { sender.sendMessage("/arc network leaderboard set <board> <player> <score>"); return }
+                val playerName = args.getOrNull(4) ?: run { sender.sendMessage("/arc network leaderboard set <board> <player> <score>"); return }
+                val score = args.getOrNull(5)?.toDoubleOrNull() ?: run { sender.sendMessage("§cInvalid score"); return }
+                val player = Bukkit.getOfflinePlayer(playerName)
+                ArcLeaderboard.set(name, player.uniqueId, score)
+                sender.sendMessage("§aSet §e$playerName §ascore on §e$name §ato §f$score")
+            }
+            "del" -> {
+                val name = args.getOrNull(3) ?: run { sender.sendMessage("/arc network leaderboard del <board> <player>"); return }
+                val playerName = args.getOrNull(4) ?: run { sender.sendMessage("/arc network leaderboard del <board> <player>"); return }
+                val player = Bukkit.getOfflinePlayer(playerName)
+                ArcLeaderboard.remove(name, player.uniqueId)
+                sender.sendMessage("§aRemoved §e$playerName §afrom §e$name")
+            }
+            else -> sender.sendMessage("/arc network leaderboard <top|rank|set|del> <board> [player] [score]")
         }
     }
 }

@@ -6,13 +6,18 @@ import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
 import dev.arc.api.network.ArcBanEventListener
+import dev.arc.api.network.ArcGlobalVault
+import dev.arc.api.network.ArcInventoryTransfer
+import dev.arc.api.network.ArcInventoryTransferListener
 import dev.arc.api.network.ArcNetworkAudit
+import dev.arc.api.network.ArcNetworkChat
 import dev.arc.api.network.ArcNetworkConfig
 import dev.arc.api.network.ArcNetworkInbox
 import dev.arc.api.network.ArcQueueDrainer
 import dev.arc.api.network.ArcQueueEventListener
 import dev.arc.api.network.ArcRelayClient
 import dev.arc.api.network.ArcServerRegistry
+import dev.arc.api.network.ArcTabListSync
 import dev.arc.api.ops.status.ArcStatusServer
 import dev.arc.api.player.ArcClientWorldStates
 import dev.arc.api.registry.ArcRegistries
@@ -125,12 +130,21 @@ object ArcBootstrap {
             runCatching {
                 ArcNetworkInbox.start(plugin)
                 ArcNetworkAudit.pruneOld()
+                ArcGlobalVault.start(plugin)
+                ArcTabListSync.start(plugin)
                 org.bukkit.Bukkit.getPluginManager().registerEvents(ArcQueueEventListener(), plugin)
                 org.bukkit.Bukkit.getPluginManager().registerEvents(ArcBanEventListener(), plugin)
+                org.bukkit.Bukkit.getPluginManager().registerEvents(ArcNetworkChat.ChatListener(), plugin)
+                if (ArcNetworkConfig.inventoryTransfer.enabled) {
+                    org.bukkit.Bukkit.getPluginManager().registerEvents(ArcInventoryTransferListener(), plugin)
+                }
             }.onFailure { e ->
                 plugin.logger.warning("[Arc-Network] Inbox/QueueListener start failed: ${e.message}")
             }
-            Runtime.getRuntime().addShutdownHook(Thread({ ArcNetworkInbox.stop() }, "Arc-NetworkInbox-Shutdown"))
+            Runtime.getRuntime().addShutdownHook(Thread({
+                ArcNetworkInbox.stop()
+                ArcTabListSync.stop()
+            }, "Arc-NetworkInbox-Shutdown"))
         }
     }
 }

@@ -38,8 +38,9 @@ object ArcPlayerTransfer {
         if (config.transfer.requirePermission && !sender.hasPermission("${config.transfer.permissionPrefix}.$targetGroup"))
             return "§cNo permission: ${config.transfer.permissionPrefix}.$targetGroup"
 
-        // Save player data
+        // Save player data and inventory for cross-server transfer
         if (config.transfer.saveBeforeTransfer) player.saveData()
+        ArcInventoryTransfer.save(player)
 
         // Send transfer via plugin messaging
         // Velocity uses "velocity:player_info" but also accepts the legacy BungeeCord channel for Connect.

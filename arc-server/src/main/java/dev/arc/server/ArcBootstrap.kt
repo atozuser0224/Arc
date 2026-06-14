@@ -2,6 +2,9 @@ package dev.arc.server
 
 import dev.arc.api.Arc
 import dev.arc.api.control.ArcControlCommand
+import dev.arc.api.content.runtime.ArcContentRuntime
+import dev.arc.api.content.ArcContent
+import dev.arc.api.content.pack.ContentPackDirectory
 import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
@@ -26,9 +29,11 @@ import dev.arc.server.nms.NmsNpcBackend
 import dev.arc.server.nms.NmsRegistryBackend
 import dev.arc.server.nms.ReflectiveArcNms
 import dev.arc.server.scheduling.LeafParallelWorldScheduler
+import dev.arc.server.content.ArcContentBackend
 import org.bukkit.plugin.Plugin
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+import java.nio.file.Path
 
 /**
  * Wires Arc's server-side implementations into the [Arc] facade.
@@ -41,6 +46,7 @@ object ArcBootstrap {
     private val installed = AtomicBoolean()
     private val standaloneCommandInstalled = AtomicBoolean()
     private val networkInstalled = AtomicBoolean()
+    private val contentInstalled = AtomicBoolean()
     private val commandOwners = ConcurrentHashMap.newKeySet<Plugin>()
 
     /** Install the (feature-gated) NMS bridge only. */
@@ -62,6 +68,8 @@ object ArcBootstrap {
             ArcRegistries.backend = NmsRegistryBackend
             ArcNpcs.backend = NmsNpcBackend
             ArcClientWorldStates.installBackend(NmsClientWorldStateBackend)
+            ArcContentRuntime.installBackend(ArcContentBackend)
+            installContent()
             if (standaloneCommandInstalled.compareAndSet(false, true)) {
                 try {
                     ArcControlCommand.register()
@@ -74,6 +82,27 @@ object ArcBootstrap {
         } catch (error: Throwable) {
             installed.set(false)
             throw error
+        }
+    }
+
+    private fun installContent() {
+        if (!contentInstalled.compareAndSet(false, true)) return
+        val result = runCatching {
+            ContentPackDirectory().publish(Path.of("arc-content"), ArcContent.registry)
+        }.onFailure {
+            contentInstalled.set(false)
+        }.getOrElse { error ->
+            java.util.logging.Logger.getLogger("Arc").warning(
+                "[Arc-Content] Startup failed: ${error.message}",
+            )
+            return
+        }
+        if (!result.accepted) {
+            result.diagnostics.forEach { diagnostic ->
+                java.util.logging.Logger.getLogger("Arc").warning(
+                    "[Arc-Content] ${diagnostic.field ?: "pack"}: ${diagnostic.message}",
+                )
+            }
         }
     }
 

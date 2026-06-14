@@ -52,4 +52,19 @@ class ContentRegistryTest {
         assertFalse(ContentId.parse("alpha:wand") in registry.current!!.definitions)
         assertTrue(ContentId.parse("beta:altar") in registry.current!!.definitions)
     }
+
+    @Test
+    fun `owned packs preserve directory published base packs`() {
+        val registry = ContentRegistry()
+        registry.publish(listOf(contentPack("files", "1") { item("file_item") { } }))
+
+        val installed = registry.install(
+            "plugin",
+            contentPack("plugin", "1") { item("plugin_item") { } },
+        )
+
+        assertTrue(installed.accepted)
+        assertTrue(ContentId.parse("files:file_item") in registry.current!!.definitions)
+        assertTrue(ContentId.parse("plugin:plugin_item") in registry.current!!.definitions)
+    }
 }

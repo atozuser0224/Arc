@@ -12,6 +12,7 @@ public data class ContentPublishResult(
 public class ContentRegistry {
     private val currentRef = AtomicReference<CompiledContentRevision?>(null)
     private val listeners = CopyOnWriteArrayList<(CompiledContentRevision) -> Unit>()
+    private var basePacks: List<ContentPack> = emptyList()
     private val sources = linkedMapOf<String, ContentPack>()
 
     public val current: CompiledContentRevision?
@@ -19,7 +20,12 @@ public class ContentRegistry {
 
     @Synchronized
     public fun publish(packs: List<ContentPack>): ContentPublishResult {
-        val compiled = ContentCompiler.compile(packs)
+        val replacement = packs.toList()
+        val compiled = ContentCompiler.compile(replacement + sources.values)
+        if (compiled.revision == null) {
+            return ContentPublishResult(false, currentRef.get(), compiled.diagnostics)
+        }
+        basePacks = replacement
         return publishCompiled(compiled)
     }
 
@@ -28,7 +34,7 @@ public class ContentRegistry {
         require(owner.isNotBlank()) { "Content owner must not be blank" }
         val candidate = LinkedHashMap(sources)
         candidate[owner] = pack
-        val compiled = ContentCompiler.compile(candidate.values.toList())
+        val compiled = ContentCompiler.compile(basePacks + candidate.values)
         if (compiled.revision == null) {
             return ContentPublishResult(false, currentRef.get(), compiled.diagnostics)
         }
@@ -44,7 +50,7 @@ public class ContentRegistry {
         }
         val candidate = LinkedHashMap(sources)
         candidate.remove(owner)
-        val compiled = ContentCompiler.compile(candidate.values.toList())
+        val compiled = ContentCompiler.compile(basePacks + candidate.values)
         if (compiled.revision == null) {
             return ContentPublishResult(false, currentRef.get(), compiled.diagnostics)
         }

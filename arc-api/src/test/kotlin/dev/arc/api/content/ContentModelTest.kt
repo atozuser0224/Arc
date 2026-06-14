@@ -61,4 +61,10 @@ class ContentModelTest {
         assertEquals(ContentType.FURNITURE, revision.definitions[ContentId.parse("magic:chair")]?.type)
         assertEquals(ContentType.RECIPE, revision.definitions[ContentId.parse("magic:chair_recipe")]?.type)
     }
+
+    @Test
+    fun `plugin names normalize to safe content namespaces`() {
+        assertEquals("my_magic_plugin", contentNamespace("My Magic Plugin"))
+        assertEquals("plugin", contentNamespace("---"))
+    }
 }

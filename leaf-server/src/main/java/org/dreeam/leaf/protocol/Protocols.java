@@ -1,7 +1,6 @@
 package org.dreeam.leaf.protocol;
 
 import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
@@ -11,12 +10,15 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public final class Protocols {
 
     private Protocols() {
     }
 
-    private static final ObjectArrayList<Protocol> PROTOCOLS = new ObjectArrayList<>();
+    private static final List<Protocol> PROTOCOLS = new CopyOnWriteArrayList<>();
 
     static void register(Protocol protocol) {
         PROTOCOLS.add(protocol);

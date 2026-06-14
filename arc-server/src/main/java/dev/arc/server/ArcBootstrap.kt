@@ -5,6 +5,7 @@ import dev.arc.api.control.ArcControlCommand
 import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
+import dev.arc.api.network.ArcNetworkAudit
 import dev.arc.api.network.ArcNetworkConfig
 import dev.arc.api.network.ArcNetworkInbox
 import dev.arc.api.network.ArcQueueDrainer
@@ -117,6 +118,7 @@ object ArcBootstrap {
             }
             runCatching {
                 ArcNetworkInbox.start(plugin)
+                ArcNetworkAudit.pruneOld()
                 org.bukkit.Bukkit.getPluginManager().registerEvents(ArcQueueEventListener(), plugin)
             }.onFailure { e ->
                 plugin.logger.warning("[Arc-Network] Inbox/QueueListener start failed: ${e.message}")

@@ -13,7 +13,7 @@ object ArcNetworkCommands {
 
     fun complete(args: Array<out String>): List<String> = when (args.size) {
         2 -> listOf("servers", "server", "players", "route", "send", "sendall", "queue", "evacuate",
-            "broadcast", "hub", "cooldown", "maintenance", "find", "audit")
+            "broadcast", "hub", "cooldown", "maintenance", "find", "audit", "remote-cmd")
         3 -> when (args.getOrNull(1)?.lowercase()) {
             "server" -> ArcServerRegistry.onlineServerIds()
             "send" -> Bukkit.getOnlinePlayers().map { it.name }
@@ -23,6 +23,7 @@ object ArcNetworkCommands {
             "maintenance" -> listOf("server", "group", "network", "status")
             "cooldown" -> listOf("check", "clear")
             "evacuate" -> ArcServerRegistry.onlineServerIds()
+            "remote-cmd" -> ArcServerRegistry.onlineServerIds()
             "audit" -> listOf("last", "player", "action")
             else -> emptyList()
         }
@@ -115,9 +116,12 @@ object ArcNetworkCommands {
                 if (recent.isEmpty()) { sender.sendMessage("[Arc] Network audit is empty"); return true }
                 sender.sendMessage("[Arc] Network Audit (last 20):")
                 recent.forEach { e ->
-                    sender.sendMessage("  §7${e.timestamp} ${e.action}: ${e.metadata}")
+                    sender.sendMessage("  §7[${e.traceId}] §e${e.action} §7by ${e.actorName} — ${e.metadata.entries.joinToString { "${it.key}=${it.value}" }}")
                 }
             }
+
+            // Remote command
+            "remote-cmd" -> remoteCmd(sender, args)
 
             // Cooldown
             "cooldown" -> cooldown(sender, args)
@@ -218,6 +222,25 @@ object ArcNetworkCommands {
             "off" -> false
             else -> null.also { sender.sendMessage(usage) }
         }
+    }
+
+    private fun remoteCmd(sender: CommandSender, args: Array<out String>): Boolean {
+        if (!ArcNetworkConfig.remoteCommand.enabled) {
+            sender.sendMessage("[Arc] §cRemote command disabled — set arc-network.remote-command.enabled: true")
+            return true
+        }
+        val target = args.getOrNull(2) ?: run {
+            sender.sendMessage("/arc network remote-cmd <server> <command...>"); return true
+        }
+        val cmd = args.drop(3).joinToString(" ")
+        if (cmd.isEmpty()) { sender.sendMessage("/arc network remote-cmd <server> <command...>"); return true }
+        if (ArcServerRegistry.getServer(target) == null) {
+            sender.sendMessage("[Arc] §cServer '§e$target§c' not found or offline"); return true
+        }
+        ArcNetworkInbox.sendRemoteCommand(target, cmd, "${sender.name}@${ArcNetworkConfig.serverId}")
+        ArcNetworkAudit.log("remote-command.send", mapOf("target" to target, "command" to cmd, "actor" to sender.name))
+        sender.sendMessage("[Arc] §aDispatched to §e$target§a: §7$cmd")
+        return true
     }
 
     private fun cooldown(sender: CommandSender, args: Array<out String>) {

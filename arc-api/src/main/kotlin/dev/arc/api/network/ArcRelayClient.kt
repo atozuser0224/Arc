@@ -179,8 +179,28 @@ object ArcRelayClient {
 
     fun exists(key: String): Boolean {
         return jedisOp { jedis ->
-            jedis.javaClass.getMethod("exists", String::class.java).invoke(jedis, key) as? Boolean ?: false
+            // Jedis 3 returns Boolean; Jedis 4 returns Long (count of matching keys)
+            when (val r = jedis.javaClass.getMethod("exists", String::class.java).invoke(jedis, key)) {
+                is Boolean -> r
+                is Number -> r.toLong() > 0L
+                else -> false
+            }
         } ?: false
+    }
+
+    fun zremrangebyscore(key: String, min: Double, max: Double): Long {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("zremrangeByScore", String::class.java, Double::class.javaPrimitiveType, Double::class.javaPrimitiveType)
+                .invoke(jedis, key, min, max) as? Long ?: 0L
+        } ?: 0L
+    }
+
+    fun zrevrange(key: String, start: Long, stop: Long): List<String> {
+        return jedisOp { jedis ->
+            @Suppress("UNCHECKED_CAST")
+            (jedis.javaClass.getMethod("zrevrange", String::class.java, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType)
+                .invoke(jedis, key, start, stop) as? Collection<String>)?.toList() ?: emptyList()
+        } ?: emptyList()
     }
 
     // ---- Pub/Sub ----
@@ -233,7 +253,11 @@ object ArcRelayClient {
 
     fun hasCooldown(key: String): Boolean {
         return jedisOp { jedis ->
-            jedis.javaClass.getMethod("exists", String::class.java).invoke(jedis, "arc:cooldown:$key") as? Boolean ?: false
+            when (val r = jedis.javaClass.getMethod("exists", String::class.java).invoke(jedis, "arc:cooldown:$key")) {
+                is Boolean -> r
+                is Number -> r.toLong() > 0L
+                else -> false
+            }
         } ?: false
     }
 

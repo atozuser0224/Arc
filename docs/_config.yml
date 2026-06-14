@@ -1,6 +1,6 @@
 title: Arc Documentation
 description: Arc Minecraft Server Fork — Ops Suite, Developer API, Network Layer
-theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs@v0.10.0
 
 url: https://atozuser0224.github.io
 baseurl: /Arc

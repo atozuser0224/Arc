@@ -17,15 +17,25 @@ object ArcQueue {
         ArcRelayClient.setex("arc:queue:$targetServer:player:$uuid:name", 3600, player.name)
         ArcRelayClient.setex("arc:queue:player:$uuid:server", 3600, targetServer)
         ArcRelayClient.setex("arc:queue:player:$uuid:score", 3600, score.toString())
+        val position = (ArcRelayClient.zrank("arc:queue:$targetServer", uuid) ?: 0L) + 1L
+        Bukkit.getPluginManager().callEvent(
+            dev.arc.api.event.ArcNetworkQueueJoinEvent(player, targetServer, position)
+        )
     }
 
     fun removeFromQueue(player: UUID, targetServer: String) {
         val uuid = player.toString()
+        val onlinePlayer = Bukkit.getPlayer(player)
         ArcRelayClient.del("arc:queue:$targetServer:player:$uuid:name")
         ArcRelayClient.del("arc:queue:player:$uuid:server")
         ArcRelayClient.del("arc:queue:player:$uuid:score")
         ArcRelayClient.del("arc:queue:reconnect:$uuid")
         ArcRelayClient.zrem("arc:queue:$targetServer", uuid)
+        if (onlinePlayer != null) {
+            Bukkit.getPluginManager().callEvent(
+                dev.arc.api.event.ArcNetworkQueueLeaveEvent(onlinePlayer, targetServer)
+            )
+        }
     }
 
     fun getPosition(player: Player): String {

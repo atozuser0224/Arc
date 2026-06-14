@@ -28,6 +28,7 @@ object ArcNetworkInbox {
             checkReconnect()
             if (!ArcRelayClient.connected) return@Runnable
             drainBroadcast(plugin)
+            drainBans(plugin)
             if (ArcNetworkConfig.remoteCommand.enabled) drainRemoteCommands(plugin)
         }, 40L, 40L).taskId
     }
@@ -105,6 +106,26 @@ object ArcNetworkInbox {
         } catch (e: Exception) {
             "ERROR:${e.message}"
         }
+    }
+
+    private fun drainBans(plugin: Plugin) {
+        val entries = ArcRelayClient.rpopBatch("arc:inbox:ban:${ArcNetworkConfig.serverId}")
+        if (entries.isEmpty()) return
+        Bukkit.getScheduler().runTask(plugin, Runnable {
+            for (json in entries) {
+                val entry = ArcGlobalBan.deserialize(json) ?: continue
+                val uuid = runCatching { java.util.UUID.fromString(entry.uuid) }.getOrNull() ?: continue
+                // Fire network event so plugins can react
+                val event = dev.arc.api.event.ArcNetworkPlayerBanEvent(
+                    uuid, entry.playerName, entry.reason, entry.actor, entry.expiry, entry.type
+                )
+                Bukkit.getPluginManager().callEvent(event)
+                // Kick if banned (not mute, not ip-ban — those need different handling)
+                if (entry.type == "BAN") {
+                    Bukkit.getPlayer(uuid)?.kickPlayer("§cYou have been banned from this network.\n§7Reason: §f${entry.reason}")
+                }
+            }
+        })
     }
 
     private fun jsonStr(json: String, key: String): String? =

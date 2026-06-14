@@ -13,7 +13,8 @@ object ArcNetworkCommands {
 
     fun complete(args: Array<out String>): List<String> = when (args.size) {
         2 -> listOf("servers", "server", "players", "route", "send", "sendall", "queue", "evacuate",
-            "broadcast", "hub", "cooldown", "maintenance", "find", "audit", "remote-cmd")
+            "broadcast", "hub", "cooldown", "maintenance", "find", "audit", "remote-cmd",
+            "ban", "unban", "mute", "unmute", "economy", "globalconfig")
         3 -> when (args.getOrNull(1)?.lowercase()) {
             "server" -> ArcServerRegistry.onlineServerIds()
             "send" -> Bukkit.getOnlinePlayers().map { it.name }
@@ -25,6 +26,10 @@ object ArcNetworkCommands {
             "evacuate" -> ArcServerRegistry.onlineServerIds()
             "remote-cmd" -> ArcServerRegistry.onlineServerIds()
             "audit" -> listOf("last", "player", "action")
+            "ban", "mute" -> Bukkit.getOnlinePlayers().map { it.name }
+            "unban", "unmute" -> Bukkit.getOnlinePlayers().map { it.name }
+            "economy" -> listOf("balance", "give", "take", "set", "transfer")
+            "globalconfig" -> listOf("get", "set", "list", "del")
             else -> emptyList()
         }
         4 -> when (args.getOrNull(1)?.lowercase()) {
@@ -125,6 +130,26 @@ object ArcNetworkCommands {
 
             // Cooldown
             "cooldown" -> cooldown(sender, args)
+
+            // Ban / Mute
+            "ban" -> ban(sender, args)
+            "unban" -> {
+                val name = args.getOrNull(2) ?: run { sender.sendMessage("/arc network unban <player>"); return true }
+                ArcGlobalBan.unban(Bukkit.getOfflinePlayer(name).uniqueId)
+                sender.sendMessage("§aUnbanned $name")
+            }
+            "mute" -> mute(sender, args)
+            "unmute" -> {
+                val name = args.getOrNull(2) ?: run { sender.sendMessage("/arc network unmute <player>"); return true }
+                ArcGlobalBan.unmute(Bukkit.getOfflinePlayer(name).uniqueId)
+                sender.sendMessage("§aUnmuted $name")
+            }
+
+            // Economy
+            "economy" -> economy(sender, args)
+
+            // Global config
+            "globalconfig" -> globalConfig(sender, args)
 
             else -> false
         }
@@ -261,6 +286,104 @@ object ArcNetworkCommands {
                 sender.sendMessage("§aCooldown cleared for $key")
             }
             else -> sender.sendMessage("/arc network cooldown <check|clear> <player> <key>")
+        }
+    }
+
+    private fun ban(sender: CommandSender, args: Array<out String>) {
+        val name = args.getOrNull(2) ?: run { sender.sendMessage("/arc network ban <player> [duration_seconds] [reason...]"); return }
+        val player = Bukkit.getOfflinePlayer(name)
+        val duration = args.getOrNull(3)?.toLongOrNull()
+        val reason = if (duration != null) args.drop(4).joinToString(" ").ifEmpty { "Banned by network admin" }
+                     else args.drop(3).joinToString(" ").ifEmpty { "Banned by network admin" }
+        val entry = ArcGlobalBan.ban(player.uniqueId, name, reason, sender.name, duration)
+        Bukkit.getPlayer(player.uniqueId)?.kickPlayer("§cYou have been banned.\n§7Reason: §f$reason")
+        val expStr = entry.expiry?.let { "${duration}s" } ?: "permanent"
+        sender.sendMessage("§aBanned §e$name §a($expStr): §7$reason")
+    }
+
+    private fun mute(sender: CommandSender, args: Array<out String>) {
+        val name = args.getOrNull(2) ?: run { sender.sendMessage("/arc network mute <player> [duration_seconds] [reason...]"); return }
+        val player = Bukkit.getOfflinePlayer(name)
+        val duration = args.getOrNull(3)?.toLongOrNull()
+        val reason = if (duration != null) args.drop(4).joinToString(" ").ifEmpty { "Muted by network admin" }
+                     else args.drop(3).joinToString(" ").ifEmpty { "Muted by network admin" }
+        ArcGlobalBan.mute(player.uniqueId, name, reason, sender.name, duration)
+        val expStr = duration?.let { "${it}s" } ?: "permanent"
+        sender.sendMessage("§aMuted §e$name §a($expStr): §7$reason")
+    }
+
+    private fun economy(sender: CommandSender, args: Array<out String>) {
+        when (args.getOrNull(2)?.lowercase()) {
+            "balance" -> {
+                val name = args.getOrNull(3) ?: run { sender.sendMessage("/arc network economy balance <player>"); return }
+                val player = Bukkit.getOfflinePlayer(name)
+                val bal = ArcGlobalEconomy.getBalance(player.uniqueId)
+                sender.sendMessage("§e$name §7balance: §a$bal")
+            }
+            "give" -> {
+                val name = args.getOrNull(3) ?: run { sender.sendMessage("/arc network economy give <player> <amount>"); return }
+                val amount = args.getOrNull(4)?.toLongOrNull() ?: run { sender.sendMessage("§cInvalid amount"); return }
+                val player = Bukkit.getOfflinePlayer(name)
+                val newBal = ArcGlobalEconomy.deposit(player.uniqueId, amount)
+                sender.sendMessage("§aGave §e$amount §ato §e$name§a. New balance: §f$newBal")
+            }
+            "take" -> {
+                val name = args.getOrNull(3) ?: run { sender.sendMessage("/arc network economy take <player> <amount>"); return }
+                val amount = args.getOrNull(4)?.toLongOrNull() ?: run { sender.sendMessage("§cInvalid amount"); return }
+                val player = Bukkit.getOfflinePlayer(name)
+                val success = ArcGlobalEconomy.withdraw(player.uniqueId, amount)
+                if (success) sender.sendMessage("§aTook §e$amount §afrom §e$name§a. New balance: §f${ArcGlobalEconomy.getBalance(player.uniqueId)}")
+                else sender.sendMessage("§c$name has insufficient balance (${ArcGlobalEconomy.getBalance(player.uniqueId)})")
+            }
+            "set" -> {
+                val name = args.getOrNull(3) ?: run { sender.sendMessage("/arc network economy set <player> <amount>"); return }
+                val amount = args.getOrNull(4)?.toLongOrNull() ?: run { sender.sendMessage("§cInvalid amount"); return }
+                val player = Bukkit.getOfflinePlayer(name)
+                ArcGlobalEconomy.setBalance(player.uniqueId, amount)
+                sender.sendMessage("§aSet §e$name §abalance to §f$amount")
+            }
+            "transfer" -> {
+                val from = args.getOrNull(3) ?: run { sender.sendMessage("/arc network economy transfer <from> <to> <amount>"); return }
+                val to = args.getOrNull(4) ?: run { sender.sendMessage("/arc network economy transfer <from> <to> <amount>"); return }
+                val amount = args.getOrNull(5)?.toLongOrNull() ?: run { sender.sendMessage("§cInvalid amount"); return }
+                val fromPlayer = Bukkit.getOfflinePlayer(from)
+                val toPlayer = Bukkit.getOfflinePlayer(to)
+                val success = ArcGlobalEconomy.transfer(fromPlayer.uniqueId, toPlayer.uniqueId, amount)
+                if (success) sender.sendMessage("§aTransferred §e$amount §afrom §e$from §ato §e$to")
+                else sender.sendMessage("§cTransfer failed — $from has insufficient balance")
+            }
+            else -> sender.sendMessage("/arc network economy <balance|give|take|set|transfer>")
+        }
+    }
+
+    private fun globalConfig(sender: CommandSender, args: Array<out String>) {
+        when (args.getOrNull(2)?.lowercase()) {
+            "get" -> {
+                val key = args.getOrNull(3) ?: run { sender.sendMessage("/arc network globalconfig get <key>"); return }
+                val value = ArcGlobalConfig.get(key)
+                if (value == null) sender.sendMessage("§7$key §c(not set)")
+                else sender.sendMessage("§7$key §8= §e$value")
+            }
+            "set" -> {
+                val key = args.getOrNull(3) ?: run { sender.sendMessage("/arc network globalconfig set <key> <value>"); return }
+                val value = args.drop(4).joinToString(" ").ifEmpty { run { sender.sendMessage("/arc network globalconfig set <key> <value>"); return } }
+                ArcGlobalConfig.set(key, value)
+                sender.sendMessage("§aSet §7$key §8= §e$value")
+            }
+            "del" -> {
+                val key = args.getOrNull(3) ?: run { sender.sendMessage("/arc network globalconfig del <key>"); return }
+                ArcGlobalConfig.del(key)
+                sender.sendMessage("§aDeleted §7$key")
+            }
+            "list" -> {
+                val all = ArcGlobalConfig.getAll()
+                if (all.isEmpty()) { sender.sendMessage("§7Global config is empty"); return }
+                sender.sendMessage("[Arc] Global Config (${all.size} entries):")
+                all.entries.sortedBy { it.key }.forEach { (k, v) ->
+                    sender.sendMessage("  §7$k §8= §e$v")
+                }
+            }
+            else -> sender.sendMessage("/arc network globalconfig <get|set|del|list>")
         }
     }
 }

@@ -59,7 +59,11 @@ object ArcPlayerTransfer {
         dos.writeUTF(targetServer)
         player.sendPluginMessage(arcPlugin, channel, baos.toByteArray())
 
-        // Audit
+        // Fire network event before audit so handlers can add metadata
+        org.bukkit.Bukkit.getPluginManager().callEvent(
+            dev.arc.api.event.ArcNetworkPlayerTransferEvent(player, config.serverId, targetServer, sender.name)
+        )
+
         ArcNetworkAudit.log("transfer", mapOf(
             "player" to player.uniqueId.toString(),
             "playerName" to player.name,

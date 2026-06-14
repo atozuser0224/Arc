@@ -5,6 +5,7 @@ import dev.arc.api.control.ArcControlCommand
 import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
+import dev.arc.api.network.ArcBanEventListener
 import dev.arc.api.network.ArcNetworkAudit
 import dev.arc.api.network.ArcNetworkConfig
 import dev.arc.api.network.ArcNetworkInbox
@@ -12,6 +13,7 @@ import dev.arc.api.network.ArcQueueDrainer
 import dev.arc.api.network.ArcQueueEventListener
 import dev.arc.api.network.ArcRelayClient
 import dev.arc.api.network.ArcServerRegistry
+import dev.arc.api.ops.status.ArcStatusServer
 import dev.arc.api.player.ArcClientWorldStates
 import dev.arc.api.registry.ArcRegistries
 import dev.arc.server.nms.NmsClientWorldStateBackend
@@ -108,6 +110,10 @@ object ArcBootstrap {
         runCatching { ArcOps.install(plugin) }.onFailure { e ->
             plugin.logger.warning("[Arc] ArcOps install failed: ${e.message}")
         }
+        // Prometheus-compatible status endpoint (uses ArcOps.config; skipped if ArcOps failed)
+        runCatching { ArcStatusServer.start(plugin, ArcOps.config) }.onFailure { e ->
+            plugin.logger.warning("[Arc] StatusServer start failed: ${e.message}")
+        }
         // Start network subsystems that need a Plugin reference
         if (ArcNetworkConfig.enabled && ArcRelayClient.connected) {
             if (ArcNetworkConfig.queue.enabled) {
@@ -120,6 +126,7 @@ object ArcBootstrap {
                 ArcNetworkInbox.start(plugin)
                 ArcNetworkAudit.pruneOld()
                 org.bukkit.Bukkit.getPluginManager().registerEvents(ArcQueueEventListener(), plugin)
+                org.bukkit.Bukkit.getPluginManager().registerEvents(ArcBanEventListener(), plugin)
             }.onFailure { e ->
                 plugin.logger.warning("[Arc-Network] Inbox/QueueListener start failed: ${e.message}")
             }

@@ -107,6 +107,9 @@ object PluginMarketplace {
         val existing = Bukkit.getPluginManager().getPlugin(pluginName)
         if (existing != null) PluginRollbackManager.capture(existing)
 
+        // Resolve dependencies before copying
+        resolveDependencies(sender, tempJar)
+
         tempJar.copyTo(targetJar, overwrite = true)
         tempJar.delete()
 
@@ -123,6 +126,51 @@ object PluginMarketplace {
             }
         }
         AuditLog.log(sender, "marketplace.install", "$pluginName v$version")
+    }
+
+    private fun resolveDependencies(sender: CommandSender, jar: File) {
+        val deps = readPluginYmlDeps(jar)
+        if (deps.isEmpty()) return
+        val loaded = Bukkit.getPluginManager().plugins.map { it.name.lowercase() }.toSet()
+        val missing = deps.filter { it.lowercase() !in loaded }
+        if (missing.isEmpty()) return
+
+        sender.sendMessage("[Arc] §eResolving ${missing.size} missing dependencies: ${missing.joinToString()}")
+        for (dep in missing) {
+            val hits = runCatching { search(dep) }.getOrElse { emptyList() }
+            val match = hits.firstOrNull { it.title.equals(dep, ignoreCase = true) || it.slug.equals(dep, ignoreCase = true) }
+            if (match == null) {
+                sender.sendMessage("[Arc] §c  Cannot auto-install '$dep' — not found on Modrinth. Install manually.")
+                continue
+            }
+            val versionInfo = fetchLatestVersion(match.slug) ?: continue
+            val depJar = File.createTempFile("arc-dep-", ".jar")
+            if (!downloadFile(versionInfo.downloadUrl, depJar)) { depJar.delete(); continue }
+            val targetDep = File("plugins", versionInfo.filename)
+            resolveDependencies(sender, depJar) // recursive for transitive deps
+            depJar.copyTo(targetDep, overwrite = true)
+            depJar.delete()
+            val depPlugin = runCatching { Bukkit.getPluginManager().loadPlugin(targetDep) }.getOrNull()
+            if (depPlugin != null) {
+                Bukkit.getPluginManager().enablePlugin(depPlugin)
+                sender.sendMessage("[Arc] §a  Auto-installed dependency: ${depPlugin.name} v${depPlugin.description.version}")
+            } else {
+                sender.sendMessage("[Arc] §e  Dependency JAR placed: ${targetDep.name} (restart needed)")
+            }
+        }
+    }
+
+    private fun readPluginYmlDeps(jar: File): List<String> {
+        return runCatching {
+            java.util.jar.JarFile(jar).use { jf ->
+                val entry = jf.getJarEntry("plugin.yml") ?: return emptyList()
+                val text = jf.getInputStream(entry).bufferedReader().readText()
+                val deps = mutableListOf<String>()
+                "^depend:\\s*\\[([^\\]]+)\\]".toRegex(setOf(RegexOption.MULTILINE)).find(text)?.groupValues?.get(1)
+                    ?.split(",")?.map { it.trim().trim('\'', '"', ' ') }?.filter { it.isNotEmpty() }?.let { deps += it }
+                deps
+            }
+        }.getOrElse { emptyList() }
     }
 
     // ---- Modrinth API ----

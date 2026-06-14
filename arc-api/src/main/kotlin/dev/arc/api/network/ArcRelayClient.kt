@@ -271,6 +271,65 @@ object ArcRelayClient {
         jedisOp { jedis -> jedis.javaClass.getMethod("del", String::class.java).invoke(jedis, "arc:cooldown:$key") }
     }
 
+    // ---- Plain SET (no TTL) ----
+    fun set(key: String, value: String) {
+        jedisOp { jedis ->
+            jedis.javaClass.getMethod("set", String::class.java, String::class.java).invoke(jedis, key, value)
+        }
+    }
+
+    // ---- Atomic increment ----
+    fun incrBy(key: String, amount: Long): Long {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("incrBy", String::class.java, Long::class.javaPrimitiveType)
+                .invoke(jedis, key, amount) as? Long ?: 0L
+        } ?: 0L
+    }
+
+    // ---- Lua eval ----
+    fun eval(script: String, keys: List<String>, args: List<String>): Long {
+        return jedisOp { jedis ->
+            val result = jedis.javaClass.getMethod(
+                "eval", String::class.java, java.util.List::class.java, java.util.List::class.java
+            ).invoke(jedis, script, keys, args)
+            when (result) {
+                is Long -> result
+                is Number -> result.toLong()
+                else -> 0L
+            }
+        } ?: 0L
+    }
+
+    // ---- Hash ----
+    fun hget(key: String, field: String): String? {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("hget", String::class.java, String::class.java)
+                .invoke(jedis, key, field) as? String
+        }
+    }
+
+    fun hset(key: String, field: String, value: String) {
+        jedisOp { jedis ->
+            jedis.javaClass.getMethod("hset", String::class.java, String::class.java, String::class.java)
+                .invoke(jedis, key, field, value)
+        }
+    }
+
+    fun hdel(key: String, field: String) {
+        jedisOp { jedis ->
+            jedis.javaClass.getMethod("hdel", String::class.java, Array<String>::class.java)
+                .invoke(jedis, key, arrayOf(field))
+        }
+    }
+
+    fun hgetAll(key: String): Map<String, String> {
+        return jedisOp { jedis ->
+            @Suppress("UNCHECKED_CAST")
+            (jedis.javaClass.getMethod("hgetAll", String::class.java).invoke(jedis, key) as? Map<String, String>)
+                ?: emptyMap()
+        } ?: emptyMap()
+    }
+
     // ---- Internal ----
     private fun <T> jedisOp(op: (Any) -> T): T? {
         if (!connected || jedisPool == null) return null

@@ -42,14 +42,28 @@ object ArcQueueDrainer {
             val available = (serverInfo.maxPlayers - serverInfo.players).coerceAtLeast(0)
             if (available == 0) continue
 
-            val uuids = ArcRelayClient.zpopmin("arc:queue:${serverInfo.id}", available)
-            for (uuidStr in uuids) {
-                ArcRelayClient.del("arc:queue:player:$uuidStr:server")
-                ArcRelayClient.del("arc:queue:${serverInfo.id}:player:$uuidStr:name")
+            // Peek (no remove) so offline players keep their position during reconnect grace period
+            val candidates = ArcRelayClient.zrange("arc:queue:${serverInfo.id}", 0L, available + 9L)
+            var transferred = 0
+            for (uuidStr in candidates) {
+                if (transferred >= available) break
                 val uuid = runCatching { UUID.fromString(uuidStr) }.getOrNull() ?: continue
-                val player = Bukkit.getPlayer(uuid) ?: continue
+                val player = Bukkit.getPlayer(uuid)
+                if (player == null) {
+                    // Offline — skip if still in reconnect grace period, otherwise clean up
+                    if (!ArcRelayClient.exists("arc:queue:reconnect:$uuidStr")) {
+                        ArcQueue.removeFromQueue(uuid, serverInfo.id)
+                    }
+                    continue
+                }
+                // Online — remove atomically then transfer
+                ArcRelayClient.zrem("arc:queue:${serverInfo.id}", uuidStr)
+                ArcRelayClient.del("arc:queue:${serverInfo.id}:player:$uuidStr:name")
+                ArcRelayClient.del("arc:queue:player:$uuidStr:server")
+                ArcRelayClient.del("arc:queue:player:$uuidStr:score")
                 ArcPlayerTransfer.send(Bukkit.getConsoleSender(), player.name, serverInfo.id)
                 ArcNetworkAudit.log("queue.drain", mapOf("player" to player.name, "server" to serverInfo.id))
+                transferred++
             }
         }
     }

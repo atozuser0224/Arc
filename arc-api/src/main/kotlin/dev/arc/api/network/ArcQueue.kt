@@ -16,12 +16,15 @@ object ArcQueue {
         ArcRelayClient.zadd("arc:queue:$targetServer", score.toDouble(), uuid)
         ArcRelayClient.setex("arc:queue:$targetServer:player:$uuid:name", 3600, player.name)
         ArcRelayClient.setex("arc:queue:player:$uuid:server", 3600, targetServer)
+        ArcRelayClient.setex("arc:queue:player:$uuid:score", 3600, score.toString())
     }
 
     fun removeFromQueue(player: UUID, targetServer: String) {
         val uuid = player.toString()
         ArcRelayClient.del("arc:queue:$targetServer:player:$uuid:name")
         ArcRelayClient.del("arc:queue:player:$uuid:server")
+        ArcRelayClient.del("arc:queue:player:$uuid:score")
+        ArcRelayClient.del("arc:queue:reconnect:$uuid")
         ArcRelayClient.zrem("arc:queue:$targetServer", uuid)
     }
 

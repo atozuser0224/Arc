@@ -140,6 +140,49 @@ object ArcRelayClient {
         }
     }
 
+    // ---- Lists ----
+    fun lpush(key: String, value: String) {
+        jedisOp { jedis ->
+            jedis.javaClass.getMethod("lpush", String::class.java, Array<String>::class.java)
+                .invoke(jedis, key, arrayOf(value))
+        }
+    }
+
+    fun rpopBatch(key: String, max: Int = 50): List<String> {
+        return jedisOp { jedis ->
+            try {
+                // Jedis 4+: rpop(key, count)
+                @Suppress("UNCHECKED_CAST")
+                (jedis.javaClass.getMethod("rpop", String::class.java, Int::class.javaPrimitiveType)
+                    .invoke(jedis, key, max) as? List<String>) ?: emptyList()
+            } catch (_: NoSuchMethodException) {
+                // Jedis 3: rpop one at a time
+                val result = mutableListOf<String>()
+                val rpop1 = jedis.javaClass.getMethod("rpop", String::class.java)
+                for (i in 0 until max) {
+                    val msg = rpop1.invoke(jedis, key) as? String ?: break
+                    result += msg
+                }
+                result
+            }
+        } ?: emptyList()
+    }
+
+    // ---- Sorted Sets (extended) ----
+    fun zrange(key: String, start: Long, stop: Long): List<String> {
+        return jedisOp { jedis ->
+            @Suppress("UNCHECKED_CAST")
+            (jedis.javaClass.getMethod("zrange", String::class.java, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType)
+                .invoke(jedis, key, start, stop) as? Collection<String>)?.toList() ?: emptyList()
+        } ?: emptyList()
+    }
+
+    fun exists(key: String): Boolean {
+        return jedisOp { jedis ->
+            jedis.javaClass.getMethod("exists", String::class.java).invoke(jedis, key) as? Boolean ?: false
+        } ?: false
+    }
+
     // ---- Pub/Sub ----
     fun publish(channel: String, message: String) {
         jedisOp { jedis ->

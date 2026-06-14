@@ -9,21 +9,33 @@ import org.bukkit.command.CommandSender
 object ArcNetworkBroadcast {
 
     fun networkBroadcast(sender: CommandSender, message: String) {
-        val action = "broadcast.network"
-        ArcNetworkAudit.log(action, mapOf("message" to message.take(100), "actor" to sender.name))
-        ArcRelayClient.publish("arc:broadcast:network", buildBroadcastPayload(sender.name, message))
-        Bukkit.broadcastMessage("[Network] $message")
+        ArcNetworkAudit.log("broadcast.network", mapOf("message" to message.take(100), "actor" to sender.name))
+        val payload = buildBroadcastPayload(sender.name, message)
+        ArcServerRegistry.onlineServerIds()
+            .filter { it != ArcNetworkConfig.serverId }
+            .forEach { ArcRelayClient.lpush("arc:inbox:broadcast:$it", payload) }
+        Bukkit.broadcastMessage("[§bNetwork§r] $message")
     }
 
     fun groupBroadcast(sender: CommandSender, group: String, message: String) {
         ArcNetworkAudit.log("broadcast.group", mapOf("group" to group, "actor" to sender.name))
-        ArcRelayClient.publish("arc:broadcast:group:$group", buildBroadcastPayload(sender.name, message))
-        Bukkit.broadcastMessage("[$group] $message")
+        val payload = buildBroadcastPayload(sender.name, message)
+        val groupServers = ArcNetworkConfig.serverGroups[group]?.servers ?: emptyList()
+        groupServers
+            .filter { it != ArcNetworkConfig.serverId }
+            .forEach { ArcRelayClient.lpush("arc:inbox:broadcast:$it", payload) }
+        if (ArcNetworkConfig.serverId in groupServers || groupServers.isEmpty()) {
+            Bukkit.broadcastMessage("[§b$group§r] $message")
+        }
     }
 
     fun serverBroadcast(sender: CommandSender, targetServer: String, message: String) {
-        ArcRelayClient.publish("arc:broadcast:server:$targetServer", buildBroadcastPayload(sender.name, message))
-        if (targetServer == ArcNetworkConfig.serverId) Bukkit.broadcastMessage("[Server] $message")
+        val payload = buildBroadcastPayload(sender.name, message)
+        if (targetServer == ArcNetworkConfig.serverId) {
+            Bukkit.broadcastMessage("[§bServer§r] $message")
+        } else {
+            ArcRelayClient.lpush("arc:inbox:broadcast:$targetServer", payload)
+        }
     }
 
     private fun buildBroadcastPayload(sender: String, message: String): String {

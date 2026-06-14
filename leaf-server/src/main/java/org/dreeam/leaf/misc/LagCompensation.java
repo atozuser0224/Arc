@@ -82,6 +82,7 @@ public class LagCompensation {
         }
 
         private static void addToHistory(double tps) {
+            if (tps <= 0) return;
             if (tpsHistory.size() >= historyLimit) {
                 tpsHistory.removeFirst();
             }
@@ -90,7 +91,9 @@ public class LagCompensation {
         }
 
         public static long getMSPT() {
-            return currentTick - lastTick;
+            Long ct = currentTick, lt = lastTick;
+            if (ct == null || lt == null) return 0L;
+            return ct - lt;
         }
 
         public static double getAverageTPS() {
@@ -100,7 +103,7 @@ public class LagCompensation {
                 sum += value;
             }
 
-            return tpsHistory.isEmpty() ? 0.1 : sum / tpsHistory.size();
+            return tpsHistory.isEmpty() ? MAX_TPS : sum / tpsHistory.size();
         }
 
         public static double getTPS() {
@@ -122,7 +125,7 @@ public class LagCompensation {
         }
 
         public static double getMostAccurateTPS() {
-            return Math.min(getTPS(), getAverageTPS());
+            return Math.max(0.1, Math.min(getTPS(), getAverageTPS()));
         }
 
         public double getAllMissedTicks() {

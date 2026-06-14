@@ -108,7 +108,9 @@ public class SyncLongOpenHashSet extends LongOpenHashSet {
 
     @Override
     public boolean removeIf(Predicate<? super Long> filter) {
-        return super.removeIf(filter);
+        synchronized (this) {
+            return super.removeIf(filter);
+        }
     }
 
     @Override

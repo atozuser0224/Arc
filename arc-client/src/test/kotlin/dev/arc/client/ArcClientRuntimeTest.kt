@@ -8,8 +8,11 @@ import dev.arc.api.sync.SyncBlob
 import java.nio.file.Path
 import java.security.MessageDigest
 import kotlin.io.path.createDirectories
+import kotlin.io.path.exists
+import kotlin.io.path.readBytes
 import kotlin.io.path.writeBytes
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -38,10 +41,12 @@ class ArcClientRuntimeTest {
         val plan = runtime.begin("example.test", keys.public, ManifestSigner.sign(manifest, keys.private))
         assertEquals(listOf(hash), plan.missingHashes)
         runtime.accept(hash, catalog)
-        runtime.activate()
+        val pack = runtime.activate()
 
         assertTrue(runtime.active)
         assertEquals("Arc: magic", runtime.catalog?.title)
+        assertTrue(pack.resolve("pack.mcmeta").exists())
+        assertContentEquals(catalog, pack.resolve("assets/arc/catalog.json").readBytes())
 
         runtime.disconnect()
         assertFalse(runtime.active)

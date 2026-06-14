@@ -9,6 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
@@ -53,7 +56,17 @@ public final class ArcClientMod implements ClientModInitializer {
             }
             Item item = Registries.ITEM.get(fallback);
             if (item != Items.AIR) {
-                entries.add(new ItemStack(item));
+                ItemStack stack = new ItemStack(item);
+                Identifier contentId = Identifier.tryParse(entry.getId());
+                if (contentId == null) {
+                    continue;
+                }
+                stack.set(DataComponentTypes.ITEM_MODEL, contentId);
+                stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal(entry.getId()));
+                NbtCompound identity = new NbtCompound();
+                identity.putString("arc:id", entry.getId());
+                stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(identity));
+                entries.add(stack);
             }
         }
     }

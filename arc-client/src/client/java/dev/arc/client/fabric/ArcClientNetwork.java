@@ -18,12 +18,14 @@ import dev.arc.client.ClientTransferPlan;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.client.MinecraftClient;
 
 final class ArcClientNetwork {
     private static final int MAX_BLOB_BYTES = 64 * 1024 * 1024;
@@ -32,6 +34,7 @@ final class ArcClientNetwork {
     private ArcSyncSession transfers;
     private Set<String> remaining = Set.of();
     private String revision;
+    private String activePackId;
 
     ArcClientNetwork(ArcClientRuntime runtime) {
         this.runtime = runtime;
@@ -42,7 +45,7 @@ final class ArcClientNetwork {
         PayloadTypeRegistry.playS2C().register(ArcPayload.ID, ArcPayload.CODEC);
         ClientPlayNetworking.registerGlobalReceiver(
             ArcPayload.ID,
-            (payload, context) -> receive(payload.data())
+            (payload, context) -> receive(payload.data(), context.client())
         );
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             if (ClientPlayNetworking.canSend(ArcPayload.ID)) {
@@ -54,10 +57,10 @@ final class ArcClientNetwork {
                 )));
             }
         });
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> disconnect());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> disconnect(client));
     }
 
-    private void receive(byte[] bytes) {
+    private void receive(byte[] bytes, MinecraftClient client) {
         try {
             ArcSyncPacket packet = ArcSyncPacketCodec.decode(bytes);
             if (packet instanceof ServerManifestPacket manifest) {
@@ -65,12 +68,12 @@ final class ArcClientNetwork {
             } else if (packet instanceof BlobChunkPacket chunk) {
                 accept(chunk);
             } else if (packet instanceof ActivatePacket activate) {
-                activate(activate);
+                activate(activate, client);
             } else if (packet instanceof FailurePacket failure) {
                 throw new IllegalStateException("ArcSync server rejected session: " + failure.getMessage());
             }
         } catch (RuntimeException exception) {
-            disconnect();
+            disconnect(client);
             throw exception;
         }
     }
@@ -110,21 +113,39 @@ final class ArcClientNetwork {
         }
     }
 
-    private void activate(ActivatePacket packet) {
+    private void activate(ActivatePacket packet, MinecraftClient client) {
         if (!packet.getRevision().equals(revision)) {
             throw new IllegalStateException("ArcSync activation revision mismatch");
         }
         if (!remaining.isEmpty()) {
             throw new IllegalStateException("ArcSync activation arrived before all blobs");
         }
-        runtime.activate();
+        Path pack = runtime.activate(client.getResourcePackDir());
+        var manager = client.getResourcePackManager();
+        manager.scanPacks();
+        String fileName = pack.getFileName().toString();
+        activePackId = "file/" + fileName;
+        if (!manager.hasProfile(activePackId)) {
+            throw new IllegalStateException("Arc resource pack was not discovered");
+        }
+        if (!manager.getEnabledIds().contains(activePackId)) {
+            if (!manager.enable(activePackId)) {
+                throw new IllegalStateException("Arc resource pack could not be enabled");
+            }
+        }
+        client.reloadResources();
     }
 
-    private void disconnect() {
+    private void disconnect(MinecraftClient client) {
+        if (activePackId != null) {
+            client.getResourcePackManager().disable(activePackId);
+            client.reloadResources();
+        }
         runtime.disconnect();
         transfers = null;
         remaining = Set.of();
         revision = null;
+        activePackId = null;
     }
 
     private static void send(ArcSyncPacket packet) {

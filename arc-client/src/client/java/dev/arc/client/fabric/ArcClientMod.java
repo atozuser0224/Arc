@@ -46,7 +46,7 @@ public final class ArcClientMod implements ClientModInitializer {
     }
 
     private static void appendEntries(ItemGroup.Entries entries) {
-        if (runtime == null || runtime.getCatalog() == null) {
+        if (runtime == null || !runtime.active || runtime.getCatalog() == null) {
             return;
         }
         for (ClientCreativeEntry entry : runtime.getCatalog().getEntries()) {

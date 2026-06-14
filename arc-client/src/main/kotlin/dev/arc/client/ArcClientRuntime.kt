@@ -21,6 +21,7 @@ public class ArcClientRuntime(
     public val active: Boolean
         get() = session.active
 
+    @Volatile
     public var catalog: ArcCreativeCatalog? = null
         private set
 

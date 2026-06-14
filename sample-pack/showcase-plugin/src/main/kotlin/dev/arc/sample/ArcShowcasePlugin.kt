@@ -1,6 +1,9 @@
 package dev.arc.sample
 
 import dev.arc.api.command.command
+import dev.arc.api.content.ContentId
+import dev.arc.api.content.arcContent
+import dev.arc.api.content.removeArcContent
 import dev.arc.api.datapack.datapackMaker
 import dev.arc.api.effect.CustomEffectRegistry
 import dev.arc.api.effect.EffectReapplyPolicy
@@ -147,11 +150,40 @@ class ArcShowcasePlugin : JavaPlugin() {
             }
         }
 
+        // 5) Content pack — Arc client mod users see these in the Arc creative tab.
+        //    Textures go in: sample-pack/content/assets/arcshowcase/<path>.png
+        val content = arcContent {
+            item("showcase/mana_crystal") {
+                fallback = "minecraft:amethyst_shard"
+                order = 10
+            }
+            item("showcase/arc_blade") {
+                fallback = "minecraft:diamond_sword"
+                durability = 1561
+                maxStackSize = 1
+                order = 20
+            }
+            block("showcase/mana_ore") {
+                fallback = "minecraft:amethyst_block"
+                hardness = 3.0f
+                blastResistance = 3.0f
+                order = 30
+            }
+            recipe("showcase/mana_crystal_recipe") {
+                result = ContentId("arcshowcase", "showcase/mana_crystal")
+                ingredients += ContentId("minecraft", "amethyst_shard")
+            }
+        }
+        if (!content.accepted) {
+            logger.warning("ArcShowcase content pack rejected: ${content.diagnostics}")
+        }
+
         logger.info("ArcShowcase enabled — try /showcase effect|give|verify|stats")
     }
 
     override fun onDisable() {
         effects.close()
+        removeArcContent()
     }
 
     /** Local MiniMessage helper so the item lore stays readable. */

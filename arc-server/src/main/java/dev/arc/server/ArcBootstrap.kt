@@ -6,6 +6,7 @@ import dev.arc.api.nms.GatedArcNms
 import dev.arc.api.ops.ArcOps
 import dev.arc.api.npc.ArcNpcs
 import dev.arc.api.network.ArcNetworkConfig
+import dev.arc.api.network.ArcQueueDrainer
 import dev.arc.api.network.ArcRelayClient
 import dev.arc.api.network.ArcServerRegistry
 import dev.arc.api.player.ArcClientWorldStates
@@ -103,6 +104,13 @@ object ArcBootstrap {
         // server, /arc ops subcommands). Needs a plugin to own its repeating tasks.
         runCatching { ArcOps.install(plugin) }.onFailure { e ->
             plugin.logger.warning("[Arc] ArcOps install failed: ${e.message}")
+        }
+        // Start queue drainer after network and scheduler are ready
+        if (ArcNetworkConfig.enabled && ArcNetworkConfig.queue.enabled && ArcRelayClient.connected) {
+            runCatching { ArcQueueDrainer.start(plugin) }.onFailure { e ->
+                plugin.logger.warning("[Arc-Network] QueueDrainer start failed: ${e.message}")
+            }
+            Runtime.getRuntime().addShutdownHook(Thread({ ArcQueueDrainer.stop() }, "Arc-QueueDrainer-Shutdown"))
         }
     }
 }

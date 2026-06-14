@@ -20,11 +20,12 @@ object PluginCommands {
         val sub = args.getOrNull(1)?.lowercase() ?: return roots()
         return when {
             args.size == 2 -> listOf("list","info","check","enable","disable","reload",
-                "restart","dependents","reload-chain","leaks","report","outdated","rollback","confirm")
+                "restart","dependents","reload-chain","leaks","report","outdated","rollback","confirm","marketplace")
             args.size == 3 && sub in listOf("info","check","enable","disable","reload",
                 "restart","dependents","reload-chain","leaks") ->
                 Bukkit.getPluginManager().plugins.map { it.name }
             args.size == 3 && sub == "rollback" -> PluginRollbackManager.complete(args)
+            args.size == 3 && sub == "marketplace" -> PluginMarketplace.complete(args)
             args.size == 3 && sub in listOf("reload-chain") ->
                 Bukkit.getPluginManager().plugins.map { it.name }
             args.size >= 4 && sub == "reload-chain" ->
@@ -42,6 +43,7 @@ object PluginCommands {
             return handleConfirm(sender, token)
         }
         if (sub == "rollback") return PluginRollbackManager.dispatch(sender, args)
+        if (sub == "marketplace") return PluginMarketplace.dispatch(sender, args)
         return when (sub) {
             "list" -> handleList(sender)
             "info" -> handleInfo(sender, args.getOrNull(2))

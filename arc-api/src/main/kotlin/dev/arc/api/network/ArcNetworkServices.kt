@@ -119,31 +119,20 @@ object ArcEvacuation {
 object ArcGlobalPlayerLookup {
 
     fun find(playerName: String): String {
-        for (serverId in ArcServerRegistry.onlineServerIds()) {
-            // Check if player is on this server
-            val player = if (serverId == ArcNetworkConfig.serverId) {
-                Bukkit.getPlayer(playerName)
-            } else null
-
-            if (player != null) {
-                return "§a$playerName is online on §e$serverId §7(ping: ${player.ping}ms)"
-            }
-
-            // For remote servers, we rely on the heartbeat data
-            // A more complete implementation would query the remote server
+        // Check local first for exact ping data
+        val local = Bukkit.getPlayer(playerName)
+        if (local != null) {
+            return "§a$playerName is online on §e${ArcNetworkConfig.serverId} §7(ping: ${local.ping}ms)"
         }
-        return "§7$playerName is not online on any server"
+        // Redis key written every heartbeat by ArcServerRegistry
+        val serverId = ArcRelayClient.get("arc:online:player:${playerName.lowercase()}")
+            ?: return "§7$playerName is not online on any server"
+        return "§a$playerName is online on §e$serverId"
     }
 
     fun findByUuid(uuid: java.util.UUID): String? {
-        val player = Bukkit.getPlayer(uuid)
-        if (player != null) return ArcNetworkConfig.serverId
-
-        // Check other servers via relay
-        for (serverId in ArcServerRegistry.onlineServerIds()) {
-            if (serverId == ArcNetworkConfig.serverId) continue
-            // Poll remote server — simplified
-        }
-        return null
+        val local = Bukkit.getPlayer(uuid)
+        if (local != null) return ArcNetworkConfig.serverId
+        return ArcRelayClient.get("arc:online:player:${local?.name?.lowercase() ?: return null}")
     }
 }

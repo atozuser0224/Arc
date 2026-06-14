@@ -59,6 +59,12 @@ object ArcServerRegistry {
         relay?.let { r ->
             runCatching { r.del("arc:server:${ArcNetworkConfig.serverId}") }
             runCatching { r.srem("arc:servers:online", ArcNetworkConfig.serverId) }
+            // Clean up per-player tracking keys
+            runCatching {
+                org.bukkit.Bukkit.getOnlinePlayers().forEach { p ->
+                    r.del("arc:online:player:${p.name.lowercase()}")
+                }
+            }
         }
         relay = null
     }
@@ -124,6 +130,11 @@ object ArcServerRegistry {
                 r.setex("arc:server:${config.serverId}", config.heartbeat.ttlSeconds, json)
                 r.sadd("arc:servers:online", config.serverId)
                 r.zadd("arc:server:${config.serverId}:history", System.currentTimeMillis().toDouble(), info.status.name)
+                // Track each online player's current server for O(1) global lookup
+                val playerTtl = config.heartbeat.ttlSeconds * 3
+                org.bukkit.Bukkit.getOnlinePlayers().forEach { p ->
+                    r.setex("arc:online:player:${p.name.lowercase()}", playerTtl, config.serverId)
+                }
             }
         } catch (e: Exception) {
             // heartbeat failure — next cycle will retry

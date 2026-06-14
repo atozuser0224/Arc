@@ -11,3 +11,6 @@ aux_links:
 nav_sort: order
 
 color_scheme: dark
+
+exclude:
+  - superpowers/

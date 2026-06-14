@@ -30,29 +30,42 @@ Ops Suite는 Arc의 운영자 도구 모음이다. 약 100개의 `/arc` 서브�
 | `report` | 전체 플러그인 상태 요약 리포트 |
 | `outdated` | Modrinth 기준 업데이트 가능한 플러그인 목록 |
 
+**안전 등급 예시:**
+```
+/arc plugin check EssentialsX
+→ SAFE — 정적 핸들러 없음, NMS 직접 접근 없음, 리로드 안전
+   의존 플러그인: Vault, EssentialsXChat, EssentialsXSpawn
+
+/arc plugin check SomeHeavyPlugin
+→ UNSAFE — Kotlin 코루틴 스레드 풀 사용 감지 (리로드 시 스레드 누수 가능)
+   해결: 서버 재시작 또는 --force로 강제 리로드 (권장하지 않음)
+```
+
 ### 롤백
 
-플러그인을 업데이트하기 전에 현재 상태를 스냅샷으로 저장할 수 있다. 문제가 생기면 스냅샷으로 즉시 되돌린다. 서버 재시작 없이 이전 버전으로 복구할 수 있어 운영 중단 시간을 크게 줄인다.
+플러그인을 업데이트하기 전에 현재 상태를 스냅샷으로 저장할 수 있다. 문제가 생기면 스냅샷으로 즉시 되돌린다.
 
-| 커맨드 | 설명 |
-|--------|------|
-| `rollback <plugin>` | 현재 상태를 스냅샷으로 저장 |
-| `rollback <plugin> --list` | 저장된 스냅샷 목록 조회 |
-| `rollback <plugin> --restore <id>` | 특정 스냅샷으로 복구 후 핫리로드 |
+```
+/arc plugin rollback EssentialsX                  — 현재 상태 스냅샷 저장
+/arc plugin rollback EssentialsX --list           — 저장된 스냅샷 목록
+/arc plugin rollback EssentialsX --restore 3      — 스냅샷 #3으로 복구 후 핫리로드
+```
+
+서버 재시작 없이 이전 버전으로 복구할 수 있어 운영 중단 시간을 크게 줄인다.
 
 ### 마켓플레이스 `/arc plugin marketplace`
 
 Modrinth에서 플러그인을 검색하고 바로 설치한다. 설치 전 정적 분석(PluginSandboxCheck)을 통해 위험 요소를 사전에 확인한다.
 
-| 커맨드 | 설명 |
-|--------|------|
-| `search <query>` | Modrinth Paper 플러그인 검색 |
-| `install <slug>` | 다운로드 → 샌드박스 분석 → 설치 |
-| `info <slug>` | Modrinth 플러그인 상세 정보 |
+```
+/arc plugin marketplace search economy            — Modrinth Paper 플러그인 검색
+/arc plugin marketplace install vault             — 다운로드 → 의존성 자동 설치 → 샌드박스 분석 → 설치
+/arc plugin marketplace info essentialsx          — Modrinth 플러그인 상세 정보
+```
 
 **설치 흐름:**
 1. JAR 다운로드
-2. `plugin.yml`에서 의존성 목록 확인 → 미설치 의존성 자동 설치
+2. `plugin.yml`에서 의존성 목록 확인 → 미설치 의존성 자동 설치 (재귀)
 3. PluginSandboxCheck 분석
    - `SAFE` → 즉시 설치 및 활성화
    - `CAUTION` → 분석 결과 출력 후 confirm 토큰 요구
@@ -61,7 +74,18 @@ Modrinth에서 플러그인을 검색하고 바로 설치한다. 설치 전 정�
 
 ### 샌드박스 분석 `/arc sandbox check <jar>`
 
-서버에 올리기 전에 JAR 파일을 오프라인으로 분석한다. CI/CD 파이프라인이나 배포 전 검증 단계에 통합하기 좋다.
+서버에 올리기 전에 JAR 파일을 오프라인으로 분석한다.
+
+```
+/arc sandbox check /tmp/SuspiciousPlugin.jar
+
+분석 결과:
+  [WARNING] NMS 직접 접근 감지 (버전 고정 위험): net/minecraft/server/v1_18_R2/...
+  [WARNING] Shaded 라이브러리 47개 (JAR 크기: 38MB)
+  [OK] api-version: 1.21
+  [OK] 네이티브 라이브러리 없음
+  등급: CAUTION
+```
 
 **분석 항목:**
 - NMS / CraftBukkit 직접 접근 (버전 고정 위험)
@@ -80,7 +104,7 @@ Modrinth에서 플러그인을 검색하고 바로 설치한다. 설치 전 정�
 | 커맨드 | 설명 |
 |--------|------|
 | `/arc doctor` | 서버 전체 건강 리포트. TPS, 메모리, 플러그인 오류, 최근 크래시, 보안 설정을 한 번에 출력 |
-| `/arc doctor --paste` | 민감 정보를 마스킹 한 뒤 paste 서비스에 업로드. 지원 요청 시 유용 |
+| `/arc doctor --paste` | 민감 정보를 마스킹한 뒤 paste 서비스에 업로드. 지원 요청 시 유용 |
 | `/arc lagspike list` | 기록된 렉 스파이크 목록 (시각, 지속 시간, 당시 MSPT) |
 | `/arc lagspike last` | 가장 최근 렉 스파이크 상세 정보 |
 | `/arc profiler start` | 메인 스레드 프로파일러 시작 |
@@ -92,9 +116,34 @@ Modrinth에서 플러그인을 검색하고 바로 설치한다. 설치 전 정�
 | `/arc plugin-cost top` | 메인 스레드 점유 비용 상위 플러그인 목록 |
 | `/arc plugin-cost <plugin>` | 특정 플러그인의 이벤트·틱 비용 세부 내역 |
 
+**`/arc doctor` 출력 예시:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Arc Doctor — game-1 서버 상태 리포트
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TPS:     ✅ 19.8 (5분 평균: 19.5)
+MSPT:    ✅ 12.4ms
+메모리:  ✅ 4.2GB / 8GB (52%)
+플레이어: 47명 / 100명
+
+플러그인 오류:  ⚠️  SomePlugin — 최근 1시간 23개 오류
+크래시 기록:   ✅  없음
+보안:          ⚠️  오프라인 모드 활성화됨
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**`/arc plugin-cost top` 출력 예시:**
+```
+플러그인 메인 스레드 점유 비용 (최근 60초)
+  1. SomeHeavyPlugin     28.4ms/s  (18.2%)
+  2. EssentialsX          8.1ms/s  ( 5.2%)
+  3. WorldGuard           4.7ms/s  ( 3.0%)
+  ...
+```
+
 ### StallWatchdog
 
-항상 실행되는 오프스레드 감시자로, 메인 스레드가 설정된 시간(기본 5초) 이상 응답하지 않으면 스택 트레이스를 파일로 덤프한다. 서버가 응답 없이 멈췄을 때 원인을 사후 분석하는 데 필수적이다.
+항상 실행되는 오프스레드 감시자로, 메인 스레드가 설정된 시간(기본 5초) 이상 응답하지 않으면 스택 트레이스를 파일로 덤프한다.
 
 ---
 
@@ -112,7 +161,17 @@ Modrinth에서 플러그인을 검색하고 바로 설치한다. 설치 전 정�
 | `history` | 누가 언제 무엇을 바꿨는지 변경 이력 조회 |
 | `exclude <plugin> <feature>` | 특정 플러그인을 Arc 기능 영향에서 제외 |
 
-설정 경로 예시: `lag-spike-capture.mspt-threshold`, `entity-optimization.enabled`
+```
+/arc config set lag-spike-capture.mspt-threshold 50.0
+→ 변경됨: lag-spike-capture.mspt-threshold
+   이전값: 100.0 → 새 값: 50.0
+   변경자: Admin | 시각: 2026-06-14 15:32:11
+
+/arc config history
+→ [15:32:11] Admin: lag-spike-capture.mspt-threshold 100.0 → 50.0
+   [14:21:05] Operator: entity-density-guard.enabled false → true
+   [12:00:00] SYSTEM: 서버 시작, 설정 로드
+```
 
 ---
 
@@ -136,7 +195,6 @@ Modrinth에서 플러그인을 검색하고 바로 설치한다. 설치 전 정�
 | `/arc snapshot list` | 저장된 스냅샷 목록 |
 | `/arc snapshot compare` | 두 스냅샷 간 차이 비교 |
 | `/arc issue-bundle` | 진단 정보 zip 파일 생성. 지원 티켓 제출 시 첨부 |
-| `/arc paste doctor` | 민감 정보 마스킹 후 doctor 출력을 paste 업로드 |
 
 ---
 
@@ -161,4 +219,16 @@ Modrinth에서 플러그인을 검색하고 바로 설치한다. 설치 전 정�
 
 ## 위험 작업 confirm 시스템
 
-플러그인 강제 리로드, 서버 상태 변경, 롤백 등 되돌리기 어려운 작업은 실행 직전에 임시 토큰을 발급한다. 30초 안에 `/arc confirm <token>`을 입력해야 실행된다. 실수로 위험한 명령을 날리는 것을 방지한다.
+플러그인 강제 리로드, 서버 상태 변경, 롤백 등 되돌리기 어려운 작업은 실행 직전에 임시 토큰을 발급한다.
+
+```
+/arc plugin reload SomePlugin --force
+→ ⚠️ 경고: 이 플러그인은 UNSAFE 등급입니다. 강제 리로드 시 스레드 누수 가능.
+   확인하려면 30초 안에: /arc confirm a3f9bx
+   취소: 아무것도 하지 않으면 30초 후 자동 취소
+
+/arc confirm a3f9bx
+→ ✅ SomePlugin 강제 리로드 실행 중...
+```
+
+30초 안에 `/arc confirm <token>`을 입력해야 실행된다. 실수로 위험한 명령을 날리는 것을 방지한다.

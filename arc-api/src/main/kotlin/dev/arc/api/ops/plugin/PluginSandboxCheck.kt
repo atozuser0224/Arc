@@ -45,74 +45,74 @@ object PluginSandboxCheck {
     )
 
     fun analyze(jarFile: File): SandboxReport {
-        val findings = mutableListOf<Finding>()
-        val jar = JarFile(jarFile)
-        val pluginYml = jar.getJarEntry("plugin.yml") ?: jar.getJarEntry("paper-plugin.yml")
-        val desc = if (pluginYml != null) parseDescription(jar.getInputStream(pluginYml)) else null
+        return JarFile(jarFile).use { jar ->
+            val findings = mutableListOf<Finding>()
+            val pluginYml = jar.getJarEntry("plugin.yml") ?: jar.getJarEntry("paper-plugin.yml")
+            val desc = if (pluginYml != null) parseDescription(jar.getInputStream(pluginYml)) else null
 
-        if (desc == null) {
-            return SandboxReport(jarFile.name, "?", null, "?", RiskLevel.UNKNOWN,
-                listOf(Finding(FindingSeverity.DANGER, "No plugin.yml or paper-plugin.yml found")))
-        }
-
-        // 1. Check NMS/reflection usage
-        val nmsRefs = scanForPatterns(jar, listOf(
-            "net.minecraft" to "Direct NMS access",
-            "org.bukkit.craftbukkit" to "CraftBukkit internals",
-            "sun.misc.Unsafe" to "Unsafe usage",
-        ))
-        nmsRefs.forEach { (msg, found) ->
-            if (found) findings += Finding(FindingSeverity.WARN, msg)
-        }
-
-        // 2. Check for native libraries
-        if (jar.entries().asSequence().any { it.name.endsWith(".so") || it.name.endsWith(".dll") || it.name.endsWith(".dylib") }) {
-            findings += Finding(FindingSeverity.DANGER, "Contains native libraries — reload unsafe")
-        }
-
-        // 3. Check api-version
-        val apiVer = desc.apiVersion
-        if (apiVer == null) {
-            findings += Finding(FindingSeverity.WARN, "No api-version declared — may use legacy internals")
-        } else if (PluginCommands.isApiVersionOlderThan(apiVer, 1, 20)) {
-            findings += Finding(FindingSeverity.INFO, "Old api-version ($apiVer) — some features may be deprecated")
-        }
-
-        // 4. Check for thread/executor usage
-        val threadPatterns = listOf(
-            "java/util/concurrent/ThreadPoolExecutor" to "Thread pool usage",
-            "java/lang/Thread" to "Custom thread creation",
-            "kotlinx/coroutines" to "Kotlin coroutines",
-        )
-        threadPatterns.forEach { (cls, msg) ->
-            if (jar.getJarEntry(cls.replace('.', '/') + ".class") != null || hasClassReference(jar, cls)) {
-                findings += Finding(FindingSeverity.WARN, "$msg detected — may not clean up on reload")
+            if (desc == null) {
+                return@use SandboxReport(jarFile.name, "?", null, "?", RiskLevel.UNKNOWN,
+                    listOf(Finding(FindingSeverity.DANGER, "No plugin.yml or paper-plugin.yml found")))
             }
+
+            // 1. Check NMS/reflection usage
+            val nmsRefs = scanForPatterns(jar, listOf(
+                "net.minecraft" to "Direct NMS access",
+                "org.bukkit.craftbukkit" to "CraftBukkit internals",
+                "sun.misc.Unsafe" to "Unsafe usage",
+            ))
+            nmsRefs.forEach { (msg, found) ->
+                if (found) findings += Finding(FindingSeverity.WARN, msg)
+            }
+
+            // 2. Check for native libraries
+            if (jar.entries().asSequence().any { it.name.endsWith(".so") || it.name.endsWith(".dll") || it.name.endsWith(".dylib") }) {
+                findings += Finding(FindingSeverity.DANGER, "Contains native libraries — reload unsafe")
+            }
+
+            // 3. Check api-version
+            val apiVer = desc.apiVersion
+            if (apiVer == null) {
+                findings += Finding(FindingSeverity.WARN, "No api-version declared — may use legacy internals")
+            } else if (PluginCommands.isApiVersionOlderThan(apiVer, 1, 20)) {
+                findings += Finding(FindingSeverity.INFO, "Old api-version ($apiVer) — some features may be deprecated")
+            }
+
+            // 4. Check for thread/executor usage
+            val threadPatterns = listOf(
+                "java/util/concurrent/ThreadPoolExecutor" to "Thread pool usage",
+                "java/lang/Thread" to "Custom thread creation",
+                "kotlinx/coroutines" to "Kotlin coroutines",
+            )
+            threadPatterns.forEach { (cls, msg) ->
+                if (jar.getJarEntry(cls.replace('.', '/') + ".class") != null || hasClassReference(jar, cls)) {
+                    findings += Finding(FindingSeverity.WARN, "$msg detected — may not clean up on reload")
+                }
+            }
+
+            // 5. Check dependencies in jar (shaded libs)
+            val shadedLibs = jar.entries().asSequence()
+                .filter { it.name.startsWith("META-INF/maven/") || it.name.startsWith("META-INF/versions/") }
+                .count()
+            if (shadedLibs > 10) findings += Finding(FindingSeverity.INFO, "Contains shaded libraries — may increase classloader complexity")
+
+            // 6. Check for service registrations
+            if (desc.depend.any { it.equals("Vault", true) }) {
+                findings += Finding(FindingSeverity.INFO, "Depends on Vault — service provider risk on reload")
+            }
+
+            // Determine risk level
+            val hasDanger = findings.any { it.severity == FindingSeverity.DANGER }
+            val hasWarn = findings.any { it.severity == FindingSeverity.WARN }
+            val risk = when {
+                hasDanger -> RiskLevel.DANGEROUS
+                hasWarn -> RiskLevel.CAUTION
+                findings.isEmpty() -> RiskLevel.SAFE
+                else -> RiskLevel.CAUTION
+            }
+
+            SandboxReport(desc.name, desc.version, apiVer, desc.main, risk, findings)
         }
-
-        // 5. Check dependencies in jar (shaded libs)
-        val shadedLibs = jar.entries().asSequence()
-            .filter { it.name.startsWith("META-INF/maven/") || it.name.startsWith("META-INF/versions/") }
-            .count()
-        if (shadedLibs > 10) findings += Finding(FindingSeverity.INFO, "Contains shaded libraries — may increase classloader complexity")
-
-        // 6. Check for service registrations
-        if (desc.depend.any { it.equals("Vault", true) }) {
-            findings += Finding(FindingSeverity.INFO, "Depends on Vault — service provider risk on reload")
-        }
-
-        // Determine risk level
-        val hasDanger = findings.any { it.severity == FindingSeverity.DANGER }
-        val hasWarn = findings.any { it.severity == FindingSeverity.WARN }
-        val risk = when {
-            hasDanger -> RiskLevel.DANGEROUS
-            hasWarn -> RiskLevel.CAUTION
-            findings.isEmpty() -> RiskLevel.SAFE
-            else -> RiskLevel.CAUTION
-        }
-
-        jar.close()
-        return SandboxReport(desc.name, desc.version, apiVer, desc.main, risk, findings)
     }
 
     private fun scanForPatterns(jar: JarFile, patterns: List<Pair<String, String>>): List<Pair<String, Boolean>> {

@@ -38,7 +38,7 @@ object PluginRollbackManager {
         // Copy JAR
         val jarFile = pluginFile(plugin) ?: return null
         val backupJar = File(dir, "${id}_${version}.jar")
-        jarFile.copyTo(backupJar)
+        if (!runCatching { jarFile.copyTo(backupJar) }.isSuccess) return null
 
         // Save config snapshot
         val configDir = plugin.dataFolder

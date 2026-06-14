@@ -75,7 +75,7 @@ object PluginLifecycle {
         // loadPlugin() already calls onLoad() internally — do NOT call it again here
         val enabled = runCatching { Bukkit.getPluginManager().enablePlugin(fresh) }
             .onFailure { out += "[Arc] enable step failed: ${it.message}" }.isSuccess && fresh.isEnabled
-        (fresh as? ArcReloadable)?.let { runCatching { it.afterReload() } }
+        if (enabled) (fresh as? ArcReloadable)?.let { runCatching { it.afterReload() } }
         resyncCommandTree()
         out += if (enabled) "[Arc] reloaded ${fresh.name} ${fresh.description.version}" else "[Arc] ${plugin.name} failed to re-enable"
         return Result(enabled, out)

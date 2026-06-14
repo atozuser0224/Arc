@@ -32,7 +32,10 @@ object ConfirmManager {
     /** Stage [action] and return the token the sender must confirm with. */
     fun stage(sender: CommandSender, description: String, action: () -> Unit): String {
         purgeExpired()
-        val token = Integer.toHexString((Math.random() * 0xFFFFFF).toInt()).uppercase().padStart(4, '0').takeLast(4)
+        var token: String
+        do {
+            token = Integer.toHexString((Math.random() * 0xFFFFFF).toInt()).uppercase().padStart(4, '0').takeLast(4)
+        } while (pending.containsKey(token))
         pending[token] = Pending(senderId(sender), description, action, System.currentTimeMillis())
         return token
     }

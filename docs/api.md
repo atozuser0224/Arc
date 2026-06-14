@@ -5,253 +5,130 @@ nav_order: 3
 
 # Layer 3 — Developer API
 
-Bukkit을 대체하지 않고 보완하는 Kotlin-first API. `arc-api` 모듈.
+Arc Developer API는 플러그인 개발자를 위한 Kotlin-first 라이브러리다. Bukkit을 대체하지 않고 그 위에 쌓인다 — 기존 Bukkit/Paper 플러그인을 버리지 않고도 필요한 부분부터 점진적으로 Arc API로 전환할 수 있다. 코어만 있어도 동작하는 순수 라이브러리이며, 별도 서버 수정 없이 `arc-api.jar`를 의존성에 추가하는 것만으로 사용 가능하다.
 
 ---
 
-## 스케줄러·태스크
+## 왜 Bukkit API를 그대로 쓰면 안 되는가
 
-```kotlin
-// Kotlin DSL 스케줄러
-Scheduler.runLater(20L) { /* 1초 후 실행 */ }
-Scheduler.runTimer(0L, 20L) { /* 매 1초 반복 */ }
-Scheduler.runAsync { /* 비동기 */ }
+Bukkit은 2011년에 설계된 Java 인터페이스다. 그 뒤로 Minecraft는 몇 배 복잡해졌지만 API 설계 철학은 크게 바뀌지 않았다. 현대 플러그인 개발자가 Bukkit만으로 맞닥뜨리는 문제는 크게 세 가지다.
 
-// Pipeline: 순차 태스크 체인
-Pipeline.create(plugin)
-    .then { loadData() }
-    .thenSync { renderResult() }
-    .start()
+첫째는 **반복 코드**다. 인벤토리 GUI를 하나 만들려면 `InventoryHolder`, `Inventory`, `InventoryClickEvent` 핸들러, 닫기 처리, null 검사 등 수십 줄의 보일러플레이트가 생긴다. 플러그인마다 비슷한 GUI 유틸 클래스를 새로 작성하는 것이 현실이다.
 
-// ArcAsync (Ops Suite 전용)
-ArcAsync.runBlockingIO { heavyIoWork() }
-    .thenSync { result -> sender.sendMessage(result) }
-    .exceptionallySync { e -> sender.sendMessage("Error: ${e.message}") }
-```
+둘째는 **타입 안전성 부재**다. PersistentDataContainer는 키를 문자열로 직접 다루고, 타입이 맞지 않으면 런타임에 터진다. 스키마도, 마이그레이션 훅도 없다.
+
+셋째는 **비동기 처리 복잡성**이다. 무거운 I/O는 비동기로 처리해야 하지만 결과를 다시 메인 스레드로 가져오는 패턴은 중첩된 `runTask()` 호출로 코드가 지저분해진다.
+
+Arc Developer API는 이 세 문제를 정면으로 해결한다.
 
 ---
 
-## 아이템
+## 스케줄러 · 비동기 처리
 
-```kotlin
-val sword = itemBuilder(Material.DIAMOND_SWORD) {
-    name("§bFrost Blade")
-    lore("§7Deals frost damage", "§7+20% speed")
-    enchant(Enchantment.SHARPNESS, 5)
-    unbreakable()
-    customModelData(1001)
-}
+Bukkit의 `BukkitRunnable`은 태스크를 취소하거나 체인으로 연결하기 어렵다. Arc의 `Scheduler`는 Kotlin DSL로 간결하게 쓸 수 있고, `Pipeline`을 사용하면 비동기 → 동기 → 비동기의 순차 처리 흐름을 선언적으로 작성할 수 있다.
 
-// 아이템 행동 바인딩
-ItemBehavior.on(plugin, Material.BLAZE_ROD) {
-    rightClick { player, _ -> player.sendMessage("Activated!") }
-}
-
-// 서버 서명 기반 위변조 감지
-val verified = ItemAuthenticator.verify(item)
-```
+`ArcAsync`는 Arc 내부에서 사용하는 저수준 비동기 체인 API다. 무거운 파일 I/O나 HTTP 요청을 백그라운드에서 처리하고, 완료 후 콜백을 메인 스레드에서 안전하게 실행하는 패턴을 지원한다. `ArcDispatchers`는 메인 스레드 디스패처, IO 스레드풀 디스패처, 공용 풀 디스패처를 제공한다.
 
 ---
 
-## GUI
+## 아이템 빌더
 
-```kotlin
-// 인벤토리 메뉴
-val menu = Menu.create(plugin, "Shop", 3) {
-    slot(13) {
-        item = itemBuilder(Material.DIAMOND) { name("§bDiamond — $100") }
-        onClick { player, _ -> purchase(player) }
-    }
-}
-menu.open(player)
+`itemBuilder` DSL은 아이템 생성에 필요한 모든 작업을 하나의 블록 안에서 처리한다. 이름, 설명, 인챈트, 깃발, 커스텀 모델 데이터, 부서지지 않음 설정 등을 직관적으로 작성할 수 있다. Bukkit의 `ItemMeta` 캐스팅이나 null 처리를 직접 다룰 필요가 없다.
 
-// 페이지네이션
-PaginatedMenu.create(plugin, "Items", items) { item, slot ->
-    slot.item = item.toItemStack()
-}
+`ItemBehavior`는 특정 아이템 타입에 행동을 바인딩하는 API다. 클릭, 우클릭, 좌클릭, 드롭, 소비 등 여러 상호작용을 각각의 핸들러로 등록할 수 있으며, 플러그인이 비활성화될 때 자동으로 해제된다.
 
-// 채팅 입력 흐름
-ChatInput.await(player, "Enter amount:") { input ->
-    withdraw(player, input.toIntOrNull() ?: 0)
-}
-```
+`ItemAuthenticator`는 서버 서명 기반 위변조 감지 시스템이다. 외부에서 /give 등으로 주입된 아이템과 서버가 만든 아이템을 구분해야 하는 게임 서버에서 유용하다.
 
 ---
 
-## 엔티티·AI
+## GUI 시스템
 
-```kotlin
-// 스폰 DSL
-val zombie = Entities.spawn<Zombie>(location) {
-    customName("§cBoss")
-    health(200.0)
-    equipment { helmet = itemBuilder(Material.DIAMOND_HELMET) {} }
-}
+Arc의 메뉴 시스템은 인벤토리 GUI 개발에서 반복되는 모든 패턴을 추상화한다.
 
-// AI 목표 등록
-MobGoalRegistry.register(plugin, Zombie::class.java) { mob ->
-    object : Goal<Zombie>(mob) {
-        override fun canStart() = mob.target != null
-        override fun tick() { /* custom behavior */ }
-    }
-}
+`Menu`는 단일 페이지 인벤토리 GUI를 선언적으로 정의한다. 각 슬롯에 아이템과 클릭 핸들러를 직접 지정하며, 열기/닫기 이벤트 훅도 지원한다. Bukkit의 `InventoryClickEvent`를 직접 처리하는 코드 없이 기능을 구현할 수 있다.
 
-// AI 일시 중단
-MobAi.disable(zombie)
-```
+`PaginatedMenu`는 아이템 목록이 한 페이지를 넘길 때 이전/다음 버튼을 자동으로 삽입하고, 현재 페이지와 전체 페이지 수를 타이틀에 반영한다.
+
+`ChatInput`은 특정 플레이어의 다음 채팅 메시지를 가로채서 입력값으로 처리하는 API다. GUI에서 수량이나 이름을 입력받아야 할 때 별도의 이벤트 리스너를 등록하지 않고 선언적으로 처리할 수 있다.
 
 ---
 
-## 효과·입자·사운드
+## 엔티티 · AI
 
-```kotlin
-// 가상 포션 효과 (플러그인 스코프)
-CustomEffectEngine.apply(player, CustomEffect(
-    id = NamespacedKey(plugin, "frost"),
-    duration = 200,
-    amplifier = 1,
-    policy = MergePolicy.KEEP_STRONGER,
-    onTick = { p -> p.velocity = p.velocity.multiply(0.9) }
-))
+`Entities.spawn` DSL은 엔티티 스폰과 초기 설정을 하나의 블록으로 처리한다. 체력, 커스텀 이름, 장비, 아이템 드롭 여부 등을 분리된 이벤트 핸들러 없이 스폰 시점에 바로 설정할 수 있다.
 
-// 입자
-Particles.spawn(location, Particle.FLAME) {
-    count(20)
-    offset(0.3, 0.3, 0.3)
-    speed(0.05)
-}
+`MobGoalRegistry`는 특정 몹 클래스에 커스텀 AI 목표를 Bukkit API 레벨에서 등록한다. 복잡한 AI 행동을 NMS 없이 구현할 수 있으며, 플러그인 비활성화 시 자동으로 제거된다.
 
-// 사운드
-Sounds.play(player, Sound.ENTITY_ENDER_DRAGON_GROWL) {
-    volume(1.0f)
-    pitch(0.8f)
-}
-```
+`MobAi`는 특정 엔티티의 AI를 런타임에 켜고 끄는 유틸리티다. 보스 연출이나 연극 이벤트에서 몹을 잠시 고정해야 할 때 편리하다.
 
 ---
 
-## 플레이어 데이터
+## 효과 · 입자 · 사운드
 
-```kotlin
-// 타입 안전 PDC 스키마
-val COINS = PlayerStore.key<Int>(plugin, "coins")
+`CustomEffectEngine`은 Bukkit의 포션 효과 시스템을 대체하지 않고 병렬로 실행되는 커스텀 효과 엔진이다. 포션 효과로 표현할 수 없는 행동(매 틱 속도 감소, 주기적 데미지, 방어력 변화)을 플러그인 스코프에서 등록하고 관리할 수 있다. 같은 효과가 여러 소스에서 동시에 적용될 때 병합 정책(KEEP_STRONGER, ADD, REPLACE)을 지정할 수 있다.
 
-val coins = COINS.get(player) ?: 0
-COINS.set(player, coins + 100)
-
-// 크로스서버 쿨다운
-Cooldowns.set(player, "ability", 60L) // 60초
-val remaining = Cooldowns.remaining(player, "ability")
-```
+`Particles`와 `Sounds`는 Bukkit의 World/Player 파티클·사운드 API에 DSL을 씌워 공통 파라미터(개수, 오프셋, 속도, 볼륨, 피치)를 명시적으로 작성할 수 있게 한다.
 
 ---
 
-## 커맨드
+## 플레이어 데이터 · PDC
 
-```kotlin
-Commands.register(plugin, "shop") {
-    description("Open the shop")
-    permission("myplugin.shop")
+`PlayerStore`는 타입 안전 PDC 스키마 시스템이다. 키를 미리 `PlayerStore.key<T>(plugin, "name")` 형태로 선언하면, 이후 모든 읽기/쓰기에서 타입이 컴파일 시점에 검증된다. 런타임 ClassCastException이 사라지고, 어떤 키가 어떤 타입인지 코드에서 바로 읽힌다.
 
-    subcommand("buy") {
-        argument<String>("item")
-        execute { sender, args ->
-            val item = args[0]
-            buy(sender as Player, item)
-        }
-        tabComplete { _ -> listOf("sword", "bow", "armor") }
-    }
-}
-```
+`PdcSchema`는 여기서 한 단계 더 나아가 스키마 정의와 마이그레이션 훅을 지원한다. 플러그인 버전이 올라갈 때 기존 데이터 형식을 새 형식으로 변환하는 마이그레이션을 선언적으로 작성할 수 있다. 기존 Bukkit PDC로는 불가능하다.
+
+`Cooldowns`는 플레이어별 쿨다운을 초 단위로 관리하는 유틸리티다. Network 레이어가 활성화되어 있으면 Redis 기반 글로벌 쿨다운으로 자동 전환되어, 플레이어가 서버를 옮겨도 쿨다운이 유지된다.
 
 ---
 
-## 월드·청크
+## 커맨드 프레임워크
 
-```kotlin
-// 블록 영역 스냅샷
-val snapshot = WorldSnapshot.capture(location1, location2)
-WorldSnapshot.restore(snapshot, location1)
+Arc의 커맨드 등록 API는 서브커맨드, 아규먼트 타입, 탭 완성, 권한 검사를 하나의 선언적 블록으로 작성한다. Bukkit의 `plugin.yml` 등록 + `CommandExecutor` + `TabCompleter` 3개 파일로 분산되던 로직이 한 곳에 모인다.
 
-// 청크 강제 로드
-WorldChunk.forceLoad(chunk)
-
-// RayTrace
-val hit = RayTrace.cast(player.eyeLocation, player.eyeDirection, 10.0)
-```
+아규먼트 타입을 미리 지정하면 파싱과 검증이 자동으로 처리된다. 탭 완성 목록도 같은 블록 안에서 정의하므로 실제 파싱 로직과 자동완성 목록이 항상 일치한다.
 
 ---
 
-## 패킷·채널
+## 월드 · 청크 유틸리티
 
-```kotlin
-// Netty 레벨 패킷 후킹
-PacketInterceptor.on<ClientboundSetEntityDataPacket>(plugin) { packet, player ->
-    // intercept or modify
-}
+`WorldSnapshot`은 지정한 직육면체 영역의 블록 상태를 메모리에 저장하고 복원한다. 미니게임 맵 리셋이나 건축 대회 원상복구에서 서버 재시작 없이 영역을 되돌릴 수 있다.
 
-// 클라이언트 모드 패킷 채널
-ModChannel.register(plugin, "myplugin:data") { player, buf ->
-    val value = buf.readInt()
-    handleClientData(player, value)
-}
-```
+`RayTrace`는 플레이어 시선 방향이나 임의 방향으로 레이를 쏘아 충돌 블록/엔티티를 반환한다. Bukkit의 `World.rayTrace`보다 편리한 DSL을 제공한다.
+
+`WorldChunk`는 청크를 강제 로드하거나, 로드된 청크 목록을 필터링하거나, 청크 내 엔티티를 일괄 처리하는 유틸리티다.
 
 ---
 
-## PDC · 직렬화
+## 패킷 인터셉터 · 모드 채널
 
-```kotlin
-// 스키마 정의 (마이그레이션·검증 포함)
-val schema = PdcSchema.define(plugin) {
-    field("level", DataType.INTEGER, default = 1)
-    field("xp", DataType.LONG, default = 0L)
-    migrate(from = 1, to = 2) { data ->
-        data["xp"] = (data["xp"] as Long) * 100
-    }
-}
+`PacketInterceptor`는 Netty 파이프라인 수준에서 특정 패킷 타입을 가로채거나 수정할 수 있는 API다. NMS를 직접 다루지 않아도 특정 클라이언트에 전송되는 패킷을 조작할 수 있다.
 
-val level = schema.get(entity, "level") as Int
-```
+`ModChannel`은 클라이언트 모드(Fabric/Forge)와 커스텀 바이너리 프로토콜로 통신하는 플러그인 메시징 채널 API다. 등록부터 수신 처리까지 한 곳에서 작성하며, 플러그인 비활성화 시 자동 해제된다.
 
 ---
 
-## 유틸리티
+## 유틸리티 패키지
 
-```kotlin
-// 텍스트 포맷
-Format.colorize("&aHello &b{name}", "name" to player.name)
+Arc API는 플러그인 개발에서 자주 필요한 유틸리티를 160개 이상의 클래스로 제공한다.
 
-// 시간 DSL
-val duration = 2.hours + 30.minutes
-Time.format(duration) // "2h 30m"
+**텍스트 포맷**: `Format.colorize()`는 `&` 컬러 코드와 MiniMessage 형식을 모두 지원한다. 플레이스홀더 치환도 내장되어 있어 별도 라이브러리 없이 사용할 수 있다.
 
-// 영역
-val region = Cuboid(location1, location2)
-region.forEachBlock { block -> block.type = Material.AIR }
+**시간 DSL**: 초/분/시간/틱을 변환하는 Kotlin 확장 함수들. `2.hours + 30.minutes` 형태로 가독성 높은 시간 표현이 가능하다. `Time.format()`으로 사람이 읽기 좋은 문자열로 변환된다.
 
-// 스플라인 (수학)
-val path = Spline.catmullRom(points)
-val pos = path.at(t = 0.5)
-```
+**영역(Cuboid)**: 두 위치로 정의된 직육면체 영역에 대한 포함 판정, 블록 순회, 크기 계산, 중심 반환 등의 API.
+
+**스플라인**: Catmull-Rom 스플라인 경로 계산. 발사체 이동 경로, 연출 카메라 이동, 파티클 경로에 활용된다.
+
+**직렬화**: ItemStack, Location, 인벤토리 전체를 Base64 문자열로 직렬화/역직렬화. PDC 저장이나 Redis 전송에 바로 사용할 수 있다.
+
+**보스바 · 스코어보드 · 사이드바**: 각각 래퍼 API를 제공해 일반적인 정보 표시 UI를 Bukkit 원본보다 간결하게 구현한다.
 
 ---
 
-## arc-test
+## arc-test — 서버 없는 단위 테스트
 
-서버 없이 arc-api 플러그인을 단위 테스트한다.
+Bukkit 플러그인 테스트의 가장 큰 장벽은 실제 Minecraft 서버가 없으면 아무것도 실행이 안 된다는 점이다. `arc-test` 모듈은 Arc API 구현체를 서버 없이 JVM에서 직접 실행할 수 있는 테스트 환경을 제공한다.
 
-```kotlin
-class MyPluginTest {
-    @Test
-    fun `item builder creates correct item`() {
-        val console = VirtualConsole()
-        val item = itemBuilder(Material.DIAMOND_SWORD) {
-            name("Test")
-        }
-        assertEquals("Test", item.itemMeta?.displayName)
-    }
-}
-```
+제공 컴포넌트는 세 가지다. `VirtualConsole`은 가상 플레이어/콘솔 객체다. `PacketCapture`는 특정 플레이어에게 전송된 패킷 목록을 캡처해 어설션에 활용한다. `PDC assertions`는 엔티티·아이템의 PDC 상태를 검증하는 JUnit5 익스텐션이다.
 
-제공 컴포넌트: `PacketCapture`, `PDC assertions`, `VirtualConsole`.
+CI 파이프라인에서 서버를 띄우지 않고도 아이템 빌더, GUI 로직, PDC 읽기/쓰기, 커맨드 파싱 결과를 단위 테스트로 검증할 수 있다. 통합 테스트 의존도를 낮추고 피드백 루프를 빠르게 만드는 데 실질적인 도움이 된다.

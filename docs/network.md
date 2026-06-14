@@ -5,160 +5,198 @@ nav_order: 4
 
 # Layer 4 — Network
 
-멀티서버 네트워크 레이어. **Redis 없이는 비활성화**된다.  
-`arc-network.yml`에서 `enabled: false`가 기본값.
+Arc Network는 Redis 하나로 여러 Minecraft 서버를 하나의 네트워크로 묶는 레이어다. BungeeCord나 Velocity의 플러그인 메시징 채널을 활용해 기존 프록시 구성을 바꾸지 않고 추가된다. `arc-network.yml`에서 `enabled: false`가 기본값이며, Redis 정보를 입력하고 활성화하는 순간부터 모든 기능이 작동한다.
 
 ---
 
-## 아키텍처
+## 설계 원칙
 
-```
-[Server A] ──LPUSH──▶ arc:inbox:broadcast:B ──▶ [Server B] → Bukkit.broadcastMessage()
-[Server A] ──LPUSH──▶ arc:inbox:cmd:B       ──▶ [Server B] → dispatchCommand()
-[Server A] ──SETEX──▶ arc:server:A          ◀── heartbeat every 2s
-[Server A] ──SETEX──▶ arc:online:player:<name> → global player lookup O(1)
-[Server A] ──ZADD ──▶ arc:queue:B           ←── ArcQueueDrainer polls & transfers
-```
+Arc Network가 선택한 기술 결정은 모두 **운영 신뢰성**에서 출발한다.
 
-**메시지 전달**: JedisPubSub 대신 LPUSH/RPOP 인박스 패턴 사용. 리플렉션으로 Jedis를 로드하는 구조상 추상 클래스 서브클래싱이 불가하기 때문.  
-**자동 재연결**: `ArcNetworkInbox`가 30초 쿨다운으로 Redis 연결 끊김을 감지·복구한다.
+메시지 전달에 JedisPubSub 대신 **LPUSH/RPOP 인박스 패턴**을 사용한다. PubSub는 수신자가 연결되어 있어야 메시지가 전달되지만, 인박스 패턴은 수신자가 잠시 재시작 중이어도 메시지가 Redis에 남아 있다가 복구 후 처리된다. 서버 롤링 재시작 중에도 메시지 유실이 없다.
+
+Jedis를 **리플렉션으로 로드**하기 때문에 Arc를 빌드할 때 Jedis에 컴파일 의존성이 생기지 않는다. 서버 운영자가 Jedis 버전을 독립적으로 관리할 수 있고, Arc 업데이트 없이 Jedis만 교체할 수 있다.
+
+**자동 재연결**: `ArcNetworkInbox`가 30초 쿨다운으로 Redis 연결 끊김을 감지하고 복구한다. Redis 재시작이나 네트워크 순단 상황에서 Arc가 수동 개입 없이 회복된다.
 
 ---
 
-## 서버 등록
+## 서버 등록 · 상태 동기화
 
-매 2초 heartbeat:
-- `arc:server:<id>` — 서버 정보 JSON (TTL 10s)
-- `arc:servers:online` — Set
-- `arc:online:player:<name>` — 플레이어→서버 매핑 (TTL 30s)
-- `arc:server:<id>:history` — 상태 변경 ZSet
+네트워크에 참여하는 모든 서버는 2초마다 Redis에 자신의 상태를 기록한다. 상태 정보에는 서버 ID, 그룹, 태그, 현재 플레이어 수, 최대 플레이어 수, TPS, MSPT, Arc 버전이 포함된다. TTL은 10초로, 서버가 비정상 종료되어도 최대 10초 안에 오프라인 상태로 전환된다.
+
+글로벌 플레이어 위치는 플레이어 이름을 키로 서버 ID를 저장하는 Redis 항목으로 관리된다. TTL은 30초이며, 플레이어가 서버에 있는 한 주기적으로 갱신된다. `/arc network find <player>` 조회가 Redis 해시 조회 한 번으로 처리되는 이유다.
 
 ---
 
-## 네트워크 명령어 `/arc network *`
+## 플레이어 전송
 
-| 커맨드 | 설명 |
-|--------|------|
-| `servers` | 전체 서버 대시보드 (상태·플레이어·TPS·MSPT) |
-| `server <id>` | 특정 서버 상세 정보 |
-| `players` | 네트워크 전체 플레이어 목록 |
-| `send <player> <server>` | 플레이어 서버 이동 |
-| `sendall <server>` | 전체 플레이어 이동 |
-| `hub` | 허브 서버로 이동 |
-| `find <player>` | 플레이어가 있는 서버 O(1) 조회 |
-| `evacuate <server>` | 서버 대피 (4틱 간격 스태거, 메인 스레드 차단 없음) |
-| `broadcast <message>` | 네트워크 전체 방송 |
-| `queue join <server>` | 대기열 진입 |
-| `queue leave` | 대기열 이탈 |
-| `queue status` | 현재 대기 순위 |
-| `queue pause\|resume <server>` | 대기열 일시정지 |
-| `maintenance server\|group\|network on\|off` | 유지보수 모드 |
-| `maintenance status` | 유지보수 상태 조회 |
-| `remote-cmd <server> <cmd...>` | 원격 서버에서 커맨드 실행 (DEFAULT OFF) |
-| `audit` | 네트워크 감사 로그 최근 20개 (Redis 영속) |
-| `cooldown check\|clear <player>` | 글로벌 쿨다운 |
+`/arc network send <player> <server>`는 BungeeCord/Velocity 플러그인 메시징 채널을 통해 플레이어를 대상 서버로 이동시킨다. 이동 전에 인벤토리 전송이 활성화되어 있으면 현재 인벤토리·XP·체력·배고픔을 Redis에 저장하고, 대상 서버에서 접속 즉시 복원한다.
+
+`/arc network sendall <server>`는 전체 플레이어를 대상 서버로 이동시키되, 4틱(0.2초) 간격으로 분산 처리한다. 동시에 전체 플레이어가 전송되면 대상 서버에 순간 접속 폭주가 생기는데, 스태거 방식이 이를 방지한다.
+
+`/arc network evacuate <server>`는 특정 서버의 전체 플레이어를 비운다. 점검 전에 플레이어를 로비 서버로 옮기는 용도로 주로 사용된다.
 
 ---
 
-## 큐 시스템
+## 대기열 시스템
 
-플레이어가 대상 서버에 빈 자리가 생길 때 자동으로 전송된다.
+플레이어가 만석인 서버에 입장하려 할 때 대기열에 들어가는 시스템이다.
 
-**우선순위**: 낮은 score = 높은 우선순위 (ZSet).
-- 일반: `currentTimeMillis()` (FIFO)
-- `arc.queue.vip`: -60,000 (1분 앞당김)
-- `arc.queue.priority`: -300,000 (5분 앞당김)
+**우선순위 방식**: Redis Sorted Set의 score를 입장 시각(밀리초)으로 사용한다. `arc.queue.vip` 권한 보유자는 60,000ms(1분)를 앞당기고, `arc.queue.priority` 권한 보유자는 300,000ms(5분)를 앞당긴다. 같은 우선순위라면 먼저 들어온 순서로 처리된다.
 
-**드레이너**: `transferCheckIntervalSeconds`(기본 5초)마다 ONLINE 서버의 빈 슬롯을 계산해 플레이어를 자동 전송.  
-**위치 안내**: `positionMessageInterval`(기본 30초)마다 대기 플레이어에게 현재 순위 메시지.  
-**연결 끊김 보존**: `keepOnDisconnectSeconds`(기본 300초) 동안 대기 위치가 유지된다. 재접속 시 순위 안내.
+**드레이너**: 설정된 주기(기본 5초)마다 대상 서버의 빈 슬롯 수를 계산하고, 순위 높은 플레이어부터 자동으로 전송한다.
+
+**위치 보존**: 플레이어가 연결이 끊겨도 설정된 시간(기본 300초) 동안 대기 위치가 유지된다. 재접속하면 현재 순위를 안내하고 자리를 유지해준다.
+
+**순위 안내**: 설정된 간격(기본 30초)마다 현재 대기 순위와 앞에 있는 인원 수를 플레이어에게 메시지로 알린다.
+
+---
+
+## 글로벌 경제
+
+`ArcGlobalEconomy`는 Redis에 플레이어 잔액을 저장하는 네트워크 전체 공유 경제 시스템이다. 어떤 서버에서 재화를 획득하거나 소비해도 다른 서버에서 즉시 반영된다.
+
+입금은 Redis의 INCRBY 명령으로 원자적으로 처리된다. 출금과 이체는 Lua 스크립트로 원자적으로 처리된다. Lua 스크립트는 Redis 서버에서 실행되어 잔액 확인과 차감이 한 번의 트랜잭션으로 이루어지므로, 여러 서버에서 동시에 같은 플레이어의 잔액을 차감하려 해도 음수 잔액이 발생하지 않는다.
+
+명령어: `/arc network economy balance|give|take|set|transfer`
+
+---
+
+## 글로벌 밴 · 뮤트
+
+`ArcGlobalBan`은 네트워크 전체에 적용되는 밴 및 채팅 뮤트 시스템이다.
+
+밴/뮤트 정보는 UUID, IP 주소, 사유, 처리자, 만료 시각과 함께 Redis에 저장된다. 영구 밴은 TTL 없이, 기간 밴은 Redis TTL을 활용해 자동 만료된다. 만료 후 추가 정리 없이 Redis가 알아서 키를 지운다.
+
+밴이 실행되면 해당 서버뿐 아니라 모든 연결된 서버에 인박스 메시지를 전송한다. 수신 서버에서 해당 플레이어가 온라인이면 즉시 강제 퇴장시킨다. 새 서버에 접속을 시도할 때는 `AsyncPlayerPreLoginEvent`에서 접속을 차단한다.
+
+밴 실행 시 Discord Webhook이 설정되어 있으면 Discord 알림이 자동으로 전송된다.
+
+명령어: `/arc network ban|unban|mute|unmute <player> [기간(초)] [사유]`
+
+---
+
+## 글로벌 Vault (공유 인벤토리)
+
+`ArcGlobalVault`는 플레이어가 어느 서버에서든 같은 아이템 창고에 접근할 수 있는 공유 인벤토리 시스템이다.
+
+아이템 복제 방지가 핵심 과제다. 두 서버에서 동시에 같은 Vault를 열면 아이템이 복제될 수 있다. Arc는 분산 잠금(Redis SET NX EX)을 사용해 Vault를 열 때 잠금을 획득하고, 닫을 때 해제한다. 이미 다른 서버에서 열려 있으면 "지금 사용 중" 메시지를 표시하고 열지 않는다.
+
+Vault 내용은 Arc의 Base64 직렬화로 Redis에 저장된다. 그룹별 Vault를 지원해, VIP 플레이어는 일반 Vault와 별도의 VIP 전용 창고를 가질 수 있다.
+
+관리자는 `/arc network vault <player>`로 특정 플레이어의 Vault를 열어 직접 확인하거나 수정할 수 있다.
+
+---
+
+## 인벤토리 전송
+
+서버 이동 시 인벤토리 내용이 유실되는 문제를 해결하는 기능이다. `arc-network.yml`에서 `inventory-transfer.enabled: true`로 활성화한다. 기본값은 OFF다.
+
+플레이어가 서버를 이동하기 직전에 현재 상태(인벤토리 전체, 갑옷, 추가 칸, XP, 체력, 배고픔 수치)를 Redis에 저장한다. 도착 서버에서 접속 이벤트 시 Redis를 확인하고 자동으로 복원한다. 저장 데이터는 5분 TTL이 적용되어 이동 실패 시 자동 소멸한다.
+
+단, 아이템 클래스가 서버 간에 완전히 동일해야 올바르게 역직렬화된다. 두 서버의 Minecraft 버전이나 플러그인 구성이 크게 다르면 활성화하지 않는 것을 권장한다.
+
+---
+
+## 크로스서버 채팅
+
+`ArcNetworkChat`은 모든 서버의 플레이어가 같은 채팅 채널을 공유하게 하는 기능이다. 한 서버에서 채팅하면 다른 모든 서버에도 동시에 표시된다.
+
+채팅 메시지는 플레이어 이름, 내용, 출처 서버명, 타임스탬프를 담은 JSON으로 직렬화되어 인박스로 전달된다. 수신 서버에서는 설정된 포맷으로 표시한다.
+
+뮤트된 플레이어의 메시지는 채팅 리스너에서 전송 전에 차단된다. 서버를 옮겨도 뮤트가 유지되는 이유다.
+
+`/arc network chat on|off`로 이 서버의 크로스서버 채팅 참여 여부를 즉시 전환할 수 있다.
+
+---
+
+## 탭 리스트 동기화
+
+`ArcTabListSync`는 5초마다 모든 서버의 플레이어 수를 집계해 탭 리스트 상단/하단에 표시한다. 플레이어는 접속한 서버 안에서 다른 서버에 몇 명이 있는지 탭 키만 눌러 확인할 수 있다.
+
+NMS 없이 Bukkit의 `setPlayerListHeaderFooter()` API만 사용해 버전 호환성이 높다. 표시 형식(헤더/풋터 내용)은 향후 설정으로 커스터마이즈할 수 있다.
+
+---
+
+## Discord Webhook
+
+Discord 채널에 중요 이벤트를 자동으로 알리는 기능이다. Webhook URL과 알림 대상 이벤트 목록을 글로벌 설정(`/arc network globalconfig set discord.webhook.url <url>`)에서 런타임으로 설정하며, 서버 재시작이 필요 없다.
+
+지원 이벤트: 밴/언밴, 네트워크 전체 방송, 서버 다운, 서버 복구. 이벤트마다 내장된 Embed 포맷으로 전송된다. JDK 내장 HttpClient를 사용해 별도 HTTP 라이브러리 의존성이 없다.
+
+---
+
+## 글로벌 리더보드
+
+`ArcLeaderboard`는 Redis Sorted Set 기반 네트워크 전체 순위 시스템이다. 리더보드 이름을 지정해 여러 항목(점수, 킬, 획득 재화 등)을 독립적으로 관리할 수 있다.
+
+점수 갱신은 set(절대값 지정)과 increment(증감) 두 방식을 지원한다. 순위 조회는 상위 N명 목록과 특정 플레이어의 현재 순위 두 가지를 제공한다. `coins` 이름의 리더보드는 글로벌 경제 잔액과 동기화하는 편의 메서드가 내장되어 있다.
+
+명령어: `/arc network leaderboard top|rank|set|del`
+
+---
+
+## 글로벌 설정 저장소
+
+`ArcGlobalConfig`는 Redis 해시에 설정값을 저장하는 런타임 네트워크 공유 설정 저장소다. 모든 서버가 같은 설정을 읽으므로, 한 서버에서 값을 바꾸면 전체 서버에 즉시 반영된다.
+
+파일 기반 설정과 달리 재시작이 필요 없고, 변경 후 `/arc reload`도 불필요하다. Discord Webhook URL, 이벤트 필터, 기능 토글 등 동적으로 바뀌는 운영 값을 저장하기에 적합하다.
+
+명령어: `/arc network globalconfig get|set|del|list`
+
+---
+
+## 플러그인 원격 배포
+
+`ArcPluginDeploy`는 JAR 파일을 다른 서버에 전송하고 원격으로 설치·활성화하는 기능이다. CI/CD 파이프라인에서 빌드된 플러그인을 서버 접속 없이 자동 배포할 때 유용하다.
+
+보안상 `arc-network.yml`에서 `plugin-deploy.enabled: true`로 명시적으로 활성화해야 한다. 기본값은 OFF다. 배포 전 PluginSandboxCheck(샌드박스 분석)가 실행되어 위험 JAR의 자동 배포를 방지한다. DANGEROUS 판정을 받은 JAR는 자동 배포가 차단된다.
+
+명령어: `/arc network deploy <파일명.jar> [서버ID|all]`
 
 ---
 
 ## 원격 커맨드
 
-`arc-network.yml`에서 `remote-command.enabled: true` 설정 필요.
+관리자가 다른 서버에서 커맨드를 실행할 수 있는 기능이다. 기본값은 OFF이며, 활성화 시 허용 목록(allowlist)과 차단 목록(blocklist)으로 실행 가능한 커맨드를 제한한다.
 
-```yaml
-arc-network:
-  remote-command:
-    enabled: true
-    require-confirm: true
-    rate-limit: 3          # 분당 최대 실행 수 per requester
-    allowlist:
-      - say
-      - save-all
-    blocklist:
-      - op
-      - deop
-      - stop
-      - reload
-```
-
-발신: `/arc network remote-cmd <target-server> say Hello from lobby!`  
-수신: `ArcNetworkInbox`가 `arc:inbox:cmd:<serverId>` 폴링 → allowlist 검증 → `dispatchCommand()`.
+`require-confirm: true`가 기본값이어서, 커맨드 실행 전 confirm 토큰을 입력해야 한다. 분당 실행 횟수 제한(rate-limit)이 적용된다. 모든 원격 커맨드 실행은 감사 로그에 기록된다.
 
 ---
 
-## 감사 로그
+## 네트워크 감사 로그
 
-모든 네트워크 작업(전송·방송·커맨드·대피 등)이 자동 기록된다.
+모든 네트워크 작업(플레이어 전송, 방송, 원격 커맨드, 대피, 밴, 플러그인 배포)이 자동으로 기록된다.
 
-- **인메모리**: 최근 500개 (현재 세션)
-- **Redis**: `arc:audit:net` ZSet, timestamp score → 재시작 후에도 조회 가능
-- **보존 기간**: `audit.retention-days` (기본 90일), 서버 시작 시 자동 정리
+현재 세션 최근 500개는 메모리에 유지되어 빠르게 조회할 수 있다. Redis에도 영속 저장되어 서버 재시작 후에도 과거 이력을 조회할 수 있다. 보존 기간(기본 90일)이 지난 항목은 서버 시작 시 자동으로 정리된다.
 
-```
-/arc network audit          → 최근 20개 조회
-/arc network audit player <name>
-/arc network audit action <action>
-```
+민감 정보 마스킹이 기본 활성화되어 있어, IP 주소 같은 개인정보가 감사 로그에 그대로 남지 않는다.
+
+명령어: `/arc network audit`, `/arc network audit player <이름>`, `/arc network audit action <액션>`
 
 ---
 
-## 위험도별 기본값
+## 유지보수 모드
+
+`/arc network maintenance server|group|network on|off`로 유지보수 모드를 켤 수 있다. 서버 단위, 그룹 단위, 전체 네트워크 단위로 범위를 선택한다.
+
+유지보수 모드에서는 지정된 화이트리스트에 없는 플레이어의 신규 접속이 차단된다. 이미 접속한 플레이어는 영향 없다. `/arc maintenance allow <player>`로 특정 플레이어의 접속을 임시 허용할 수 있다.
+
+---
+
+## 기능별 기본값
+
+운영 실수를 막기 위해 되돌리기 어렵거나 위험한 기능은 기본적으로 비활성화된다.
 
 | 기능 | 기본값 | 이유 |
 |------|--------|------|
-| 서버 등록·전송·대기열 | ON | 역방향 복구 가능 |
-| Global Vault | OFF | 아이템 복제 위험 |
-| Inventory Transfer | OFF | 데이터 손실 위험 |
-| Remote Command | OFF | 임의 명령 실행 위험 |
-| Plugin Deploy | OFF | 서버 자체 변조 위험 |
-
----
-
-## 설정 파일 (`arc-network.yml`)
-
-```yaml
-arc-network:
-  enabled: false
-  server:
-    id: server-1
-    group: default
-    tags: []
-
-  relay:
-    redis:
-      host: 127.0.0.1
-      port: 6379
-      password: ""
-      pool-size: 8
-
-  heartbeat:
-    interval-seconds: 2
-    ttl-seconds: 10
-
-  queue:
-    enabled: true
-    transfer-check-interval-seconds: 5
-    position-message-interval: 30
-    keep-on-disconnect-seconds: 300
-    vip-permission: arc.queue.vip
-    priority-permission: arc.queue.priority
-
-  audit:
-    enabled: true
-    retention-days: 90
-    sensitive-data-masking: true
-```
+| 서버 등록 · 전송 · 대기열 | 활성 | 역방향 복구 가능 |
+| 글로벌 경제 | 활성 | 읽기/쓰기 모두 안전 |
+| 글로벌 밴/뮤트 | 활성 | 즉시 되돌릴 수 있음 |
+| 크로스서버 채팅 | 활성 | 단방향, 파괴적이지 않음 |
+| 탭 리스트 동기화 | 활성 | UI 표시만, 상태 변경 없음 |
+| 글로벌 Vault | 비활성 | 아이템 복제 위험 |
+| 인벤토리 전송 | 비활성 | 데이터 손실 위험 |
+| 원격 커맨드 | 비활성 | 임의 명령 실행 위험 |
+| 플러그인 배포 | 비활성 | 서버 코드 변조 위험 |

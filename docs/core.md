@@ -5,143 +5,117 @@ nav_order: 5
 
 # Layer 1 — Fork Core
 
-항상 활성화되는 기반 레이어. Leaf(Paper/Purpur) 위에서 실행되며 별도 설정 없이 동작한다.
+Fork Core는 Arc의 기반 레이어다. Leaf(Paper/Purpur 계열)를 베이스로 하며, 설정 없이 서버를 시작하는 순간부터 자동으로 작동한다. 성능 유지, NMS 안전 접근, 서버 상태 감시가 주된 역할이다.
 
 ---
 
 ## 성능 거버너
 
-### 적응형 뷰 거버너 (AdaptiveGovernor)
+### 적응형 뷰 거버너 (Adaptive Governor)
 
-서버 부하를 감시해 TPS가 떨어지면 자동으로 뷰·시뮬레이션 거리를 단계적으로 줄이고, 부하가 회복되면 원래 값으로 복원한다.
+서버 부하를 실시간으로 감시하고, TPS가 떨어지기 시작하면 자동으로 뷰 거리와 시뮬레이션 거리를 단계적으로 줄인다. 부하가 회복되면 원래 값으로 즉시 복원한다.
 
-```kotlin
-val governor = plugin.adaptiveGovernor().apply {
-    minViewDistance = 3
-    minSimulationDistance = 3
-    checkPeriodTicks = 100L
-}
-governor.start()
-```
+**왜 뷰/시뮬레이션 거리인가?** 이 두 값은 서버 틱 비용에서 가장 큰 비중을 차지한다. 청크 틱, 엔티티 틱, 패킷 전송량이 모두 이 값에 비례한다. 다른 최적화보다 효과 대비 플레이어 경험 영향이 적다.
 
-- 월드별 원본 값을 저장 → 과부하 시 한 단계씩 감소 → 회복 시 즉시 전체 복원
-- 진동 방지를 위해 내려갈 때만 단계적, 올라갈 때는 한 번에 복원
-- 기본 비활성 (`arc-ops.yml` → `entity-optimization.enabled: false`)
+**작동 방식:**
+- 월드별 원본 값을 기억한 뒤 부하 시 한 단계씩 줄인다.
+- 성급한 조정을 막기 위해 내려갈 때는 점진적, 회복 시에는 한 번에 전체 복원한다.
+- `minViewDistance`, `minSimulationDistance`로 하한을 설정할 수 있어 최소 플레이 환경이 보장된다.
+- 기본 비활성 상태이며, `arc-ops.yml`에서 활성화한다.
 
-### 엔티티 밀도 가드 (EntityThrottler)
+### 엔티티 밀도 가드 (Entity Density Guard)
 
-청크당 몹 수가 임계값을 초과하면 새 스폰을 억제한다.
+특정 청크에 몹이 너무 많이 몰리면 추가 스폰을 억제한다. TPS가 임계값 이상일 때는 작동하지 않아, 서버가 정상 상태일 때는 일반 스폰 행동을 유지한다.
 
-- `max-mobs-per-chunk` (기본 24): 초과 시 스폰 억제
-- `activation-tps` (기본 18.0): TPS가 이 값 이하일 때만 작동
-- 기본 비활성
+- 청크당 최대 몹 수(기본 24마리)를 초과하면 스폰 억제.
+- TPS 18.0 이하일 때만 활성화되어 불필요한 간섭을 최소화.
+- 월드별로 적용 대상을 지정할 수 있다.
+- 기본 비활성.
 
-### 틱 버짓 스프레더 (TickBudget)
+### 틱 버짓 스프레더 (Tick Budget)
 
-메인 스레드 틱 예산을 여러 작업에 나눠준다. 한 작업이 틱 예산을 독점하지 않도록 한다.
+메인 스레드의 틱 처리 시간을 여러 작업에 균등하게 배분한다. 단일 작업이 한 틱을 독점해 렉 스파이크가 발생하는 현상을 방지한다.
 
 ---
 
 ## NMS 브리지
 
-### NmsRef / ReflectiveArcNms
+Minecraft 내부 코드(NMS)에 접근해야 하는 기능들은 버전이 바뀔 때마다 호환성 문제를 일으킨다. Arc의 NMS 브리지는 리플렉션 기반 추상화 레이어로, NMS에 직접 의존하지 않고도 저수준 서버 기능을 사용할 수 있게 한다.
 
-리플렉션 기반 NMS 접근 래퍼. NMS 클래스를 컴파일 타임 의존성 없이 런타임에 접근한다.
-
-```kotlin
-// 내부 사용 예
-val server = NmsRef.craftServer()
-val nmsWorld = NmsRef.craftWorldHandle(world)
-```
-
-- `NmsClientWorldStateBackend`: 클라이언트 월드 상태(날씨·시간) 변경
-- `NmsNpcBackend`: NPC 엔티티 NMS 레벨 조작
-- `NmsRegistryBackend`: Minecraft 레지스트리 접근
-- `NmsThreadGuard`: 메인 스레드 외 NMS 접근 감지
-
-### 패킷 직접 전송
-
-```kotlin
-player.sendPacket(packet)  // NMS 패킷을 플레이어에게 직접 전송
-```
+**제공 기능:**
+- **NmsRef** — NMS 클래스와 메서드에 대한 안전한 리플렉션 래퍼. 내부적으로 캐싱되어 반복 호출 비용이 낮다.
+- **패킷 직접 전송** — 특정 플레이어에게 NMS 수준 패킷을 직접 전송. 기존 Bukkit API로는 불가능한 클라이언트 동작을 구현할 수 있다.
+- **NmsClientWorldStateBackend** — 날씨·시간 등 클라이언트 월드 상태를 플레이어별로 독립적으로 제어.
+- **NmsNpcBackend** — NPC 엔티티의 스킨, 이름, 이동 등을 NMS 수준에서 조작.
+- **NmsRegistryBackend** — Minecraft 레지스트리(아이템, 엔티티, 인챈트 등)에 직접 접근.
+- **NmsThreadGuard** — 메인 스레드 외부에서 NMS 접근이 발생하면 경고. 서버 충돌의 주요 원인 중 하나를 사전에 차단.
 
 ---
 
 ## 커스텀 이벤트
 
-모두 Bukkit EventBus를 통해 일반 `@EventHandler`로 수신.
+Arc는 Bukkit의 기본 이벤트 시스템으로는 감지할 수 없는 서버 수준 이벤트를 추가한다. 모두 표준 `@EventHandler`로 수신하면 된다.
 
-| 이벤트 | 발생 시점 |
-|--------|-----------|
-| `ServerLoadLevelChangeEvent` | 서버 부하 단계 변경 (NORMAL/ELEVATED/HIGH/CRITICAL) |
-| `ServerLagSpikeEvent` | MSPT가 임계값(기본 100ms) 초과 |
-| `PlayerChangeChunkEvent` | 플레이어가 청크 경계 이동 |
-| `PlayerDoubleSneakEvent` | 플레이어 빠른 두 번 웅크리기 |
-| `MenuOpenEvent` / `MenuCloseEvent` | Arc GUI 메뉴 열기/닫기 |
-| `ArcInitializeEvent` | Arc 초기화 완료 |
-
-```kotlin
-@EventHandler
-fun onLagSpike(event: ServerLagSpikeEvent) {
-    logger.warning("Lag spike: ${event.mspt}ms")
-}
-```
+| 이벤트 | 발생 시점 | 활용 사례 |
+|--------|-----------|-----------|
+| `ServerLoadLevelChangeEvent` | 서버 부하 단계 변경 (NORMAL/ELEVATED/HIGH/CRITICAL) | 부하 단계별 서버 행동 조절 |
+| `ServerLagSpikeEvent` | MSPT가 설정 임계값 초과 | 렉 발생 시점 로깅·알림 |
+| `PlayerChangeChunkEvent` | 플레이어가 청크 경계를 이동 | 청크 기반 지역 시스템 |
+| `PlayerDoubleSneakEvent` | 빠른 두 번 웅크리기 | 능력 발동, 날개 토글 등 |
+| `MenuOpenEvent` / `MenuCloseEvent` | Arc GUI 메뉴 열기·닫기 | 인벤토리 UI 상태 추적 |
+| `ArcInitializeEvent` | Arc 초기화 완료 | 다른 플러그인이 Arc 준비 완료를 기다릴 때 |
+| `ArcNetworkPlayerTransferEvent` | 플레이어가 다른 서버로 이동 | 이동 전 데이터 저장 훅 |
+| `ArcNetworkPlayerBanEvent` | 네트워크 밴이 이 서버로 수신됨 | 밴 이벤트 로깅, 알림 |
+| `ArcNetworkQueueJoinEvent` | 플레이어가 서버 대기열에 진입 | 대기 화면 표시 |
+| `ArcNetworkQueueLeaveEvent` | 플레이어가 대기열을 떠남 | 대기 UI 제거 |
 
 ---
 
 ## 서버 부하 모니터링
 
-```kotlin
-val load = ServerLoad.current()   // NORMAL / ELEVATED / HIGH / CRITICAL
-val mspt = ServerLoad.mspt()      // 최근 평균 밀리초/틱
-val tps  = ServerLoad.tps(1)      // 1분 평균 TPS
-```
+서버의 현재 상태를 `ServerLoad` API로 실시간 조회할 수 있다.
 
-`MetricsHistory`는 최근 N개 MSPT 샘플을 순환 버퍼에 보관해 통계를 제공한다.
+**부하 단계:**
+- `NORMAL` — TPS 19.5 이상, 정상 운영
+- `ELEVATED` — TPS 소폭 하락, 주의 필요
+- `HIGH` — TPS 18 미만, 적응형 거버너 작동
+- `CRITICAL` — TPS 15 미만, 긴급 조치 필요
+
+`MetricsHistory`는 최근 수백 개의 MSPT 샘플을 순환 버퍼에 유지해, `/arc memory`나 Prometheus 엔드포인트에서 추세 분석이 가능하다.
 
 ---
 
 ## StallWatchdog
 
-오프스레드 감시자. 메인 스레드가 `threshold-ms`(기본 5000ms) 이상 응답하지 않으면 스택트레이스를 파일로 덤프한다.
+메인 스레드가 응답하지 않는 상황을 감지하는 별도 스레드 감시자다. 플러그인이 메인 스레드를 차단하거나 무한 루프에 빠졌을 때를 탐지한다.
 
-- `stall-watchdog.full-thread-dump: true` → JVM 전체 스레드 덤프
-- 항상 실행 (비활성 불가)
+- 설정된 시간(기본 5초) 이상 메인 스레드가 응답하지 않으면 스택 트레이스를 파일로 기록한다.
+- `full-thread-dump: true`로 설정하면 JVM 전체 스레드 상태를 덤프해 원인 분석이 더 수월하다.
+- 항상 실행되며 비활성화할 수 없다. 진단 데이터 확보를 위해 의도적으로 설계된 것이다.
 
 ---
 
 ## 메모리 가드
 
-JVM 힙 사용률을 감시해 임계값 초과 시 경고·조치한다.
+JVM 힙 사용률을 주기적으로 확인하고, 임계값 도달 시 경고 및 조치를 취한다.
 
-```yaml
-memory-guard:
-  enabled: true
-  warn-fraction: 0.85       # 85% 도달 시 경고
-  critical-fraction: 0.95   # 95% 도달 시 조치
-  allow-forced-gc: false    # System.gc() 강제 호출 허용
-```
+- 힙의 85%(기본값) 도달 시 로그에 경고를 남긴다.
+- 95% 도달 시 서버 측에서 강제 GC 실행을 시도할 수 있다 (`allow-forced-gc: true` 필요).
+- 연속 조치를 막기 위해 쿨다운(기본 30초)이 적용된다.
+- `/arc memory` 명령어로 현재 힙 상태와 GC 통계를 즉시 확인할 수 있다.
 
 ---
 
 ## 충돌 분석
 
-서버 시작 시 이전 크래시 보고서를 자동 분석한다 (`crash.analyze-on-boot: true`). `/arc doctor`에 요약을 포함시킨다.
+서버 시작 시 이전 크래시 보고서를 자동으로 분석한다. 분석 결과는 `/arc doctor` 출력에 포함되어, 어떤 플러그인이나 코드 경로가 충돌을 일으켰는지 빠르게 파악할 수 있다.
 
 ---
 
-## 코루틴 · 비동기 레이어
+## 코루틴 · 비동기 처리
 
-`dev.arc.api.coroutine` 패키지. ServiceLoader SPI로 백엔드를 교환 가능하다.
+Arc는 `dev.arc.api.coroutine` 패키지를 통해 Kotlin 코루틴 기반의 비동기 처리를 지원한다.
 
-```kotlin
-// 틱 주기 반복
-plugin.launchEveryTicks(20L) { /* 매 1초 */ }
-
-// ArcAsync (Ops Suite 전용)
-ArcAsync.runBlockingIO { heavyWork() }
-    .thenSync { result -> /* 메인 스레드에서 */ }
-    .exceptionallySync { e -> /* 에러 처리 */ }
-```
-
-디스패처: `ArcDispatchers.main` (Bukkit 메인), `ArcDispatchers.io` (IO 풀), `ArcDispatchers.default` (공용).
+- **ArcAsync** — 무거운 I/O 작업을 비동기로 처리하고, 결과를 메인 스레드로 안전하게 돌려받는 체인 API.
+- **ArcDispatchers** — 메인 스레드, IO 스레드 풀, 공용 풀 디스패처 제공.
+- ServiceLoader SPI 기반이라 다른 구현체로 교체 가능하다.

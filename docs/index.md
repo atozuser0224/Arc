@@ -1,35 +1,67 @@
 ---
-title: Arc Documentation
-layout: home
+title: Arc 소개
 nav_order: 1
 ---
 
-# Arc — Minecraft Server Fork
+# Arc — Minecraft 서버 포크
 
-Arc는 [Leaf](https://github.com/Winds-Studio/Leaf)(Paper/Purpur) 기반 Minecraft 1.21.4 서버 포크다.  
-세 가지 가치를 동시에 제공한다: **운영자용 관리 도구(Ops Suite)**, **플러그인 개발자용 Kotlin-first API(Developer API)**, **멀티서버 네트워크 레이어(Network)**.
+Arc는 [Leaf](https://github.com/Winds-Studio/Leaf)(Paper/Purpur 기반) 위에 구축된 Minecraft 1.21.4 서버 포크다. 단순한 성능 패치 모음이 아니라, **운영 자동화 · 플러그인 개발 생산성 · 멀티서버 네트워크 관리**를 하나의 포크에 통합하는 것을 목표로 한다.
+
+---
+
+## Arc를 선택하는 이유
+
+일반적인 Paper 기반 서버 운영에는 여러 독립 플러그인이 필요하다. 서버 상태 모니터링 도구, 플러그인 핫리로드 도구, 멀티서버 전송 플러그인, 각종 네트워크 관리 플러그인이 따로 존재하고, 서로 충돌하거나 버전 호환성 문제를 일으키는 일이 잦다.
+
+Arc는 이 모든 기능을 **서버 코어 자체에 내장**한다. 외부 플러그인 없이 서버를 켜는 순간부터 진단 도구, 성능 조절, 멀티서버 연동이 작동한다. 플러그인 간 충돌도, 별도 버전 관리도 없다.
+
+### 기존 포크와의 차이
+
+| 항목 | Paper / Purpur | Leaf | **Arc** |
+|------|---------------|------|---------|
+| 성능 최적화 | ✅ | ✅✅ | ✅✅ (Leaf 계승) |
+| 서버 관리 도구 | ❌ | ❌ | ✅ Ops Suite 내장 |
+| 플러그인 개발 API | Bukkit | Bukkit | ✅ Kotlin-first API |
+| 멀티서버 네트워크 | ❌ | ❌ | ✅ 내장 네트워크 레이어 |
+| 핫리로드 / 롤백 | ❌ | ❌ | ✅ |
+| 글로벌 밴 / 경제 | ❌ | ❌ | ✅ |
+
+---
 
 ## 레이어 구조
 
-| 레이어 | 설명 | 기본 상태 |
+Arc는 4개의 독립적인 레이어로 구성된다. 각 레이어는 독립적으로 활용할 수 있으며, 필요한 기능만 활성화할 수 있다.
+
+| 레이어 | 역할 | 기본 상태 |
 |--------|------|-----------|
-| [Fork Core](./core.md) | 성능 거버너·NMS 브리지·커스텀 이벤트 | 항상 활성 |
-| [Ops Suite](./ops.md) | `/arc` 관리 명령어 전체 (~80개) | `arc-ops.yml` 제어 |
-| [Developer API](./api.md) | Kotlin-first plugin API (160+ 파일) | 라이브러리로 사용 |
-| [Network](./network.md) | 멀티서버 레이어 (Redis 필요) | `arc-network.yml` 제어 |
+| [Fork Core](./core.md) | 성능 거버너, NMS 브리지, 커스텀 이벤트, 서버 모니터링 | 항상 활성 |
+| [Ops Suite](./ops.md) | `/arc` 관리 명령어 약 100개, 진단·롤백·마켓플레이스 | `arc-ops.yml`로 제어 |
+| [Developer API](./api.md) | Kotlin-first 플러그인 API, 160+ 유틸리티 클래스 | 라이브러리로 사용 |
+| [Network](./network.md) | 멀티서버 관리, 글로벌 경제·밴·채팅·볼트, Redis 필요 | `arc-network.yml`로 제어 |
+
+---
+
+## 누가 사용하면 좋은가
+
+**서버 운영자** — 플러그인 핫리로드, 실시간 성능 진단, 서버 간 플레이어 이동·관리, 글로벌 밴 등을 하나의 명령어 체계(`/arc`)로 처리할 수 있다.
+
+**플러그인 개발자** — Bukkit API의 반복 코드를 줄여주는 Kotlin DSL, 타입 안전한 PDC, 서버 없는 단위 테스트(`arc-test`) 환경을 제공한다.
+
+**네트워크 관리자** — Redis 하나로 전 서버 플레이어 전송, 대기열, 경제, 밴, 채팅, 리더보드를 통합 관리한다. BungeeCord/Velocity의 플러그인 메시징 채널을 그대로 활용해 기존 프록시 구성을 바꿀 필요 없다.
+
+---
 
 ## 빠른 시작
 
-```bash
-# 1. plugins/ 폴더에 Arc JAR 배치
-# 2. 서버 시작 — arc-ops.yml / arc-network.yml 자동 생성
-# 3. /arc doctor  — 서버 상태 전체 진단
-```
+1. `plugins/` 폴더에 Arc JAR 파일을 넣는다.
+2. 서버를 시작한다. `arc-ops.yml`과 `arc-network.yml`이 자동 생성된다.
+3. `/arc doctor`로 서버 전체 상태를 진단한다.
+4. 멀티서버가 필요하다면 `arc-network.yml`에서 `enabled: true`로 설정하고 Redis 정보를 입력한다.
 
-## 링크
+---
 
-- [GitHub](https://github.com/atozuser0224/Arc)
-- [Ops Suite 레퍼런스](./ops.md)
-- [Network 레퍼런스](./network.md)
-- [Developer API 레퍼런스](./api.md)
+## GitHub
+
+- [소스 코드](https://github.com/atozuser0224/Arc)
+- [이슈 / 버그 리포트](https://github.com/atozuser0224/Arc/issues)
 - [설정 레퍼런스](./configuration.md)

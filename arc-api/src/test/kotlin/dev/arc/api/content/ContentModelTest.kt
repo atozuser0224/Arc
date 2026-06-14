@@ -42,4 +42,23 @@ class ContentModelTest {
         assertTrue(result.diagnostics.any { it.contentId?.toString() == "arc:negative_hardness" })
         assertTrue(result.diagnostics.all { it.severity == DiagnosticSeverity.ERROR })
     }
+
+    @Test
+    fun `furniture and recipes share the same compiled content model`() {
+        val pack = contentPack("magic", "1.0.0") {
+            furniture("chair") {
+                fallback = "minecraft:oak_stairs"
+                seats = 1
+            }
+            recipe("chair_recipe") {
+                result = ContentId.parse("magic:chair")
+                ingredients += ContentId.parse("minecraft:oak_planks")
+            }
+        }
+
+        val revision = requireNotNull(ContentCompiler.compile(listOf(pack)).revision)
+
+        assertEquals(ContentType.FURNITURE, revision.definitions[ContentId.parse("magic:chair")]?.type)
+        assertEquals(ContentType.RECIPE, revision.definitions[ContentId.parse("magic:chair_recipe")]?.type)
+    }
 }

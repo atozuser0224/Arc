@@ -82,6 +82,19 @@ public object ContentCompiler {
                     diagnostics += error(pack, definition, "blastResistance", "must not be negative")
                 }
             }
+            is FurnitureDefinition -> {
+                if (definition.seats !in 0..16) {
+                    diagnostics += error(pack, definition, "seats", "must be in 0..16")
+                }
+                if (definition.width !in 1..16 || definition.depth !in 1..16) {
+                    diagnostics += error(pack, definition, "footprint", "width and depth must be in 1..16")
+                }
+            }
+            is RecipeDefinition -> {
+                if (definition.ingredients.isEmpty()) {
+                    diagnostics += error(pack, definition, "ingredients", "must not be empty")
+                }
+            }
         }
     }
 
@@ -115,6 +128,13 @@ public object ContentCompiler {
                         .append('|').append(definition.durability)
                     is BlockDefinition -> append('|').append(definition.hardness)
                         .append('|').append(definition.blastResistance)
+                    is FurnitureDefinition -> append('|').append(definition.seats)
+                        .append('|').append(definition.width)
+                        .append('|').append(definition.depth)
+                    is RecipeDefinition -> {
+                        append('|').append(definition.result)
+                        definition.ingredients.sorted().forEach { append('|').append(it) }
+                    }
                 }
                 append('\n')
             }

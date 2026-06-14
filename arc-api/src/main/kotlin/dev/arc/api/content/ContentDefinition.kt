@@ -3,6 +3,8 @@ package dev.arc.api.content
 public enum class ContentType {
     ITEM,
     BLOCK,
+    FURNITURE,
+    RECIPE,
 }
 
 public sealed interface ContentDefinition {
@@ -33,4 +35,27 @@ public data class BlockDefinition(
     override val order: Int,
 ) : ContentDefinition {
     override val type: ContentType = ContentType.BLOCK
+}
+
+public data class FurnitureDefinition(
+    override val id: ContentId,
+    override val fallback: ContentId,
+    public val seats: Int,
+    public val width: Int,
+    public val depth: Int,
+    override val required: Boolean,
+    override val order: Int,
+) : ContentDefinition {
+    override val type: ContentType = ContentType.FURNITURE
+}
+
+public data class RecipeDefinition(
+    override val id: ContentId,
+    public val result: ContentId,
+    public val ingredients: List<ContentId>,
+    override val required: Boolean,
+    override val order: Int,
+) : ContentDefinition {
+    override val type: ContentType = ContentType.RECIPE
+    override val fallback: ContentId = result
 }

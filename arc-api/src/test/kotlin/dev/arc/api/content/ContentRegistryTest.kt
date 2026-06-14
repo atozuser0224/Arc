@@ -37,4 +37,19 @@ class ContentRegistryTest {
 
         assertTrue(hashes.size == 1)
     }
+
+    @Test
+    fun `owned packs merge and unregister independently`() {
+        val registry = ContentRegistry()
+
+        assertTrue(registry.install("plugin-a", contentPack("alpha", "1") { item("wand") { } }).accepted)
+        assertTrue(registry.install("plugin-b", contentPack("beta", "1") { block("altar") { } }).accepted)
+        assertTrue(registry.current!!.definitions.keys.map { it.toString() }.containsAll(
+            listOf("alpha:wand", "beta:altar"),
+        ))
+
+        assertTrue(registry.uninstall("plugin-a").accepted)
+        assertFalse(ContentId.parse("alpha:wand") in registry.current!!.definitions)
+        assertTrue(ContentId.parse("beta:altar") in registry.current!!.definitions)
+    }
 }

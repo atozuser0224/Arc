@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: arc <wagwag0224@gmail.com>
+Date: Sun, 15 Jun 2026 04:30:00 +0900
+Subject: [PATCH] feat(sync): bridge ArcSync custom payloads
+
+
+diff --git a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+index 2b3915b14c4b5109c88df488fc55ec2b652a9000..7f09524528a7d7640f34ab1ca6995f2352fe994a 100644
+--- a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
++++ b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+@@ -107,6 +107,7 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+ 
+     public void onDisconnect(DisconnectionDetails info, @Nullable net.kyori.adventure.text.Component quitMessage) {
+         // Paper end - Fix kick event leave message not being sent
++        dev.arc.server.content.ArcSyncNetwork.disconnect(this.player.getUUID()); // Arc - clear ArcSync session
+         if (this.isSingleplayerOwner()) {
+             LOGGER.info("Stopping singleplayer server as player logged out");
+             this.server.halt(false);
+@@ -148,6 +149,7 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+ 
+     private static final net.minecraft.resources.ResourceLocation CUSTOM_REGISTER = net.minecraft.resources.ResourceLocation.withDefaultNamespace("register"); // CraftBukkit
+     private static final net.minecraft.resources.ResourceLocation CUSTOM_UNREGISTER = net.minecraft.resources.ResourceLocation.withDefaultNamespace("unregister"); // CraftBukkit
++    private static final net.minecraft.resources.ResourceLocation ARC_SYNC = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("arc", "sync"); // Arc
+ 
+     @Override
+     public void handleCustomPayload(ServerboundCustomPayloadPacket packet) {
+@@ -169,6 +171,17 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+         final net.minecraft.resources.ResourceLocation identifier = packet.payload().type().id();
+         final byte[] data = discardedPayload.data();
+         try {
++            if (ARC_SYNC.equals(identifier)) {
++                dev.arc.server.content.ArcSyncNetwork.handle(
++                    this.player.getUUID(),
++                    data,
++                    response -> this.send(new net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket(
++                        new net.minecraft.network.protocol.common.custom.DiscardedPayload(ARC_SYNC, response)
++                    ))
++                );
++                return;
++            }
++
+             final boolean registerChannel = ServerCommonPacketListenerImpl.CUSTOM_REGISTER.equals(identifier);
+             if (registerChannel || ServerCommonPacketListenerImpl.CUSTOM_UNREGISTER.equals(identifier)) {
+                 // Strings separated by zeros instead of length prefixes

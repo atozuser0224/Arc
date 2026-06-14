@@ -23,6 +23,7 @@ public final class ArcClientMod implements ClientModInitializer {
         runtime = new ArcClientRuntime(
             net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("arc")
         );
+        new ArcClientNetwork(runtime).register();
         Registry.register(
             Registries.ITEM_GROUP,
             CONTENT_GROUP_ID,
@@ -32,7 +33,6 @@ public final class ArcClientMod implements ClientModInitializer {
                 .entries((context, entries) -> appendEntries(entries))
                 .build()
         );
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> runtime.disconnect());
     }
 
     public static ArcClientRuntime runtime() {

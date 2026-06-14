@@ -6,6 +6,7 @@ import dev.arc.api.content.CompiledContentRevision
 import dev.arc.api.content.ContentType
 import dev.arc.api.content.asset.ContentAsset
 import java.security.KeyPair
+import java.security.PublicKey
 import java.util.concurrent.atomic.AtomicReference
 
 public class ArcSyncService(
@@ -25,6 +26,9 @@ public class ArcSyncService(
 
     public val current: SignedManifest?
         get() = snapshotRef.get()?.signed
+
+    public val publicKey: PublicKey
+        get() = keys.public
 
     public fun publish(
         revision: CompiledContentRevision,

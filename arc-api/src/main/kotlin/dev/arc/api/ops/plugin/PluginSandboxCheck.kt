@@ -155,8 +155,11 @@ object PluginSandboxCheck {
         if (jarName == null) { sender.sendMessage("[Arc] specify a jar file name in plugins/"); return true }
         val jarFile = File("plugins", jarName)
         if (!jarFile.isFile) { sender.sendMessage("[Arc] file not found: plugins/$jarName"); return true }
-        val report = analyze(jarFile)
-        report.render().lineSequence().forEach { sender.sendMessage(it) }
+        sender.sendMessage("[Arc] Scanning $jarName…")
+        // JAR scan is I/O-bound; run off the main thread to avoid tick stall
+        dev.arc.api.ops.async.ArcAsync.runBlockingIO { analyze(jarFile) }
+            .thenSync { report -> report.render().lineSequence().forEach { sender.sendMessage(it) } }
+            .exceptionallySync { e -> sender.sendMessage("[Arc] §cScan failed: ${e.message}") }
         return true
     }
 }

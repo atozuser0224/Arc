@@ -15,26 +15,26 @@ object ArcQueue {
         val score = calculatePriority(player)
         ArcRelayClient.zadd("arc:queue:$targetServer", score.toDouble(), uuid)
         ArcRelayClient.setex("arc:queue:$targetServer:player:$uuid:name", 3600, player.name)
+        ArcRelayClient.setex("arc:queue:player:$uuid:server", 3600, targetServer)
     }
 
     fun removeFromQueue(player: UUID, targetServer: String) {
-        ArcRelayClient.del("arc:queue:$targetServer:player:${player}:name")
-        ArcRelayClient.zrem("arc:queue:$targetServer", player.toString())
+        val uuid = player.toString()
+        ArcRelayClient.del("arc:queue:$targetServer:player:$uuid:name")
+        ArcRelayClient.del("arc:queue:player:$uuid:server")
+        ArcRelayClient.zrem("arc:queue:$targetServer", uuid)
     }
 
     fun getPosition(player: Player): String {
-        val config = ArcNetworkConfig
-        for (serverId in ArcServerRegistry.onlineServerIds()) {
-            if (isQueued(player, serverId)) {
-                val rank = ArcRelayClient.zrank("arc:queue:$serverId", player.uniqueId.toString())
-                return if (rank == null) {
-                    "§eYou are queued for §f$serverId"
-                } else {
-                    "§eYou are queued for §f$serverId §e(position ${rank + 1})"
-                }
-            }
+        val uuid = player.uniqueId.toString()
+        val serverId = ArcRelayClient.get("arc:queue:player:$uuid:server")
+            ?: return "§7You are not in any queue. Use /arc queue join <server>"
+        val rank = ArcRelayClient.zrank("arc:queue:$serverId", uuid)
+        return if (rank == null) {
+            "§eYou are queued for §f$serverId"
+        } else {
+            "§eYou are queued for §f$serverId §e(position ${rank + 1})"
         }
-        return "§7You are not in any queue. Use /arc queue join <server>"
     }
 
     fun isQueued(player: Player, server: String): Boolean {

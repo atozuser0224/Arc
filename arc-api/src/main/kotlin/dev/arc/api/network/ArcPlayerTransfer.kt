@@ -42,17 +42,22 @@ object ArcPlayerTransfer {
         if (config.transfer.saveBeforeTransfer) player.saveData()
 
         // Send transfer via plugin messaging
+        // Velocity uses "velocity:player_info" but also accepts the legacy BungeeCord channel for Connect.
+        // For Velocity with modern forwarding, the standard approach is still BungeeCord channel "Connect"
+        // (Velocity forwards it). We use the Arc plugin itself as carrier to avoid polluting other plugins.
+        val arcPlugin = Bukkit.getPluginManager().getPlugin("Arc")
+            ?: Bukkit.getPluginManager().plugins.firstOrNull { it.isEnabled }
+            ?: return "§cArc plugin not found — cannot send transfer message"
+        val messenger = Bukkit.getMessenger()
+        val channel = "BungeeCord"
+        if (!messenger.isOutgoingChannelRegistered(arcPlugin, channel)) {
+            messenger.registerOutgoingPluginChannel(arcPlugin, channel)
+        }
         val baos = java.io.ByteArrayOutputStream()
         val dos = java.io.DataOutputStream(baos)
         dos.writeUTF("Connect")
         dos.writeUTF(targetServer)
-        val carrier = Bukkit.getPluginManager().plugins.firstOrNull { it.isEnabled }
-            ?: return "§cPlayer transfer requires at least one enabled plugin for the proxy message channel"
-        val messenger = Bukkit.getMessenger()
-        if (!messenger.isOutgoingChannelRegistered(carrier, "BungeeCord")) {
-            messenger.registerOutgoingPluginChannel(carrier, "BungeeCord")
-        }
-        player.sendPluginMessage(carrier, "BungeeCord", baos.toByteArray())
+        player.sendPluginMessage(arcPlugin, channel, baos.toByteArray())
 
         // Audit
         ArcNetworkAudit.log("transfer", mapOf(
@@ -101,7 +106,7 @@ object ArcPlayerTransfer {
 
     fun queue(player: Player, targetServer: String): String {
         val targetInfo = ArcServerRegistry.getServer(targetServer)
-        if (targetInfo?.status == ArcServerRegistry.ServerStatus.FULL || targetInfo?.status == ArcServerRegistry.ServerStatus.ONLINE) {
+        if (targetInfo?.status == ArcServerRegistry.ServerStatus.FULL) {
             ArcQueue.addToQueue(player, targetServer)
             return ArcQueue.getPosition(player)
         }

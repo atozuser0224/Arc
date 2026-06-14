@@ -154,9 +154,10 @@ object ArcRelayClient {
         val token = UUID.randomUUID().toString()
         return jedisOp { jedis ->
             val setParamsClass = Class.forName("redis.clients.jedis.params.SetParams")
-            val setParams = setParamsClass.getMethod("setParams").invoke(null)
-            setParamsClass.getMethod("nx").invoke(setParams)
-            setParamsClass.getMethod("ex", Long::class.javaPrimitiveType).invoke(setParams, ttlSeconds)
+            // SetParams uses a builder — each call returns a new instance; chain them
+            var setParams = setParamsClass.getMethod("setParams").invoke(null)
+            setParams = setParamsClass.getMethod("nx").invoke(setParams)
+            setParams = setParamsClass.getMethod("ex", Long::class.javaPrimitiveType).invoke(setParams, ttlSeconds)
             val result = jedis.javaClass.getMethod("set", String::class.java, String::class.java, setParamsClass)
                 .invoke(jedis, fullKey, token, setParams) as? String
             if (result == "OK") token else null
@@ -178,9 +179,9 @@ object ArcRelayClient {
     fun setCooldown(key: String, ttlSeconds: Long): Boolean {
         return jedisOp { jedis ->
             val setParamsClass = Class.forName("redis.clients.jedis.params.SetParams")
-            val setParams = setParamsClass.getMethod("setParams").invoke(null)
-            setParamsClass.getMethod("nx").invoke(setParams)
-            setParamsClass.getMethod("ex", Long::class.javaPrimitiveType).invoke(setParams, ttlSeconds)
+            var setParams = setParamsClass.getMethod("setParams").invoke(null)
+            setParams = setParamsClass.getMethod("nx").invoke(setParams)
+            setParams = setParamsClass.getMethod("ex", Long::class.javaPrimitiveType).invoke(setParams, ttlSeconds)
             val result = jedis.javaClass.getMethod("set", String::class.java, String::class.java, setParamsClass)
                 .invoke(jedis, "arc:cooldown:$key", "1", setParams) as? String
             result == "OK"

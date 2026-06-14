@@ -134,8 +134,18 @@ object PluginRollbackManager {
             "--restore" -> {
                 val id = args.getOrNull(4) ?: run { sender.sendMessage("[Arc] specify a rollback id"); return true }
                 val ok = restore(pluginName, id)
-                sender.sendMessage(if (ok) "[Arc] §aRestored $pluginName to $id. Restart server to apply."
-                else "[Arc] §cRollback not found or corrupted: $id")
+                if (!ok) {
+                    sender.sendMessage("[Arc] §cRollback not found or corrupted: $id")
+                    return true
+                }
+                sender.sendMessage("[Arc] §aJAR restored to $id. Attempting hot-reload…")
+                val plugin = Bukkit.getPluginManager().getPlugin(pluginName)
+                if (plugin != null) {
+                    val result = PluginLifecycle.restart(plugin)
+                    sender.sendMessage(result.render())
+                } else {
+                    sender.sendMessage("[Arc] §7Plugin not currently loaded — restart server to apply.")
+                }
             }
             else -> {
                 val plugin = Bukkit.getPluginManager().getPlugin(pluginName)

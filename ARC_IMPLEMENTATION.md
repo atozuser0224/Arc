@@ -1,443 +1,224 @@
-# Arc Server Software — Implementation Documentation
+# Arc 1.21.4 — Feature Map
 
-## Project Overview
-
-Arc is a Leaf-based (Paper/Purpur fork) Minecraft server software that provides:
-
-1. **Paper/Leaf plugin compatibility** — never breaks Bukkit/Paper API semantics
-2. **Plugin Lifecycle Manager** — per-plugin enable/disable/reload with safety ratings
-3. **Arc Developer API** — additional APIs without replacing JavaPlugin
-4. **Operations suite** — diagnostics, monitoring, and admin tools
-5. **Multi-server network** — Redis-based cross-server player transfer, item mail, and management
-
-## 2026-06-13: Kotlin Custom Effect Registry
-
-Arc now includes a plugin-scoped virtual effect registry in
-`dev.arc.api.effect`:
-
-- `plugin.customEffects { effect("id") { ... } }` Kotlin DSL;
-- immutable `NamespacedKey` definitions and duplicate-key validation;
-- `KEEP_STRONGER`, `REPLACE`, `EXTEND`, and `IGNORE` reapplication policies;
-- application, interval tick, expiration, and reason-aware removal callbacks;
-- optional Bukkit potion effects for vanilla-client HUD visibility;
-- shared visual ownership reconciliation between custom effects;
-- explicit lookup, active snapshots, unregister, clear, and idempotent shutdown;
-- callback exception isolation with effect and player diagnostics;
-- a Bukkit-independent deterministic state engine.
-
-Focused tests cover application, all reapplication policies, tick ordering,
-expiration, explicit and bulk removal, immutable snapshots, invalid inputs, and
-duration-to-tick ceiling conversion.
-
-Known limitation: Bukkit does not expose potion-effect ownership. If another
-plugin applies the same visual potion type, Arc cannot reliably restore that
-unrelated effect after the final Arc custom effect is removed.
-
-### Supporting API fixes
-
-- `ModChannel` no longer leaks `FriendlyByteBuf`, Netty, or NMS types through
-  `arc-api`. The new `ModPacketBuffer` provides network-order primitives,
-  Minecraft-compatible VarInt strings and byte arrays, UUIDs, bounds checks,
-  and read/write mode validation.
-- `WorldDataStore.keys()` now uses the Paper 1.21 `NamespacedKey` string
-  property instead of the Adventure `Key` factory method.
-- `ModPacketBuffer` has focused round-trip and malformed-input tests.
-
-## 2026-06-13: Safe Datapack Kotlin DSL
-
-The prototype datapack writer was replaced with a tested two-layer API:
-
-- `DatapackContent`: Bukkit-independent resource model and deployment engine;
-- `DatapackMaker`: Bukkit world-container, enable, and reload adapter;
-- validated `ResourceId` and pack-relative path handling;
-- Gson-backed biome, loot table, and tag generation;
-- raw recipe, advancement, and predicate JSON resources;
-- `.mcfunction` builder with one-command-per-line validation;
-- Minecraft 1.21.4 singular resource and tag directory normalization;
-- duplicate resource rejection and UTF-8 output;
-- `.arc-manifest` cleanup that removes stale Arc files while preserving
-  unrelated files in the same pack.
-
-Focused tests cover path and ID rejection, JSON parsing and escaping, resource
-directory layout, function output, invalid loot ranges, duplicate resources,
-pack metadata, stale cleanup, and preservation of manually managed files.
-
-## 2026-06-13: General PDC Schema DSL
-
-Arc now provides immutable, reusable typed fields for every Bukkit
-`PersistentDataHolder`:
-
-- `pdcSchema("namespace") { int(...); string(...); custom(...) }`;
-- plugin-derived namespaces through `plugin.pdcSchema`;
-- built-in primitive, boolean, string, and array field factories;
-- optional lazy defaults and value validation;
-- duplicate and unsafe field-name rejection;
-- typed get/set/remove/contains, `getOrPut`, mutation, and overflow-checked
-  integer/long increment operations;
-- schema lookup and definition introspection.
-
-The existing primitive PDC helpers and `NbtMap` remain source compatible.
-Focused tests verify type tokens, lazy defaults, validation, duplicate
-rejection, namespace safety, and schema lookup.
-
-## 2026-06-13: Player PDC Schema DSL
-
-Typed player persistent fields now support policy-driven declarations:
-
-- `plugin.playerDataSchema { int(...); string(...); boolean(...) }`;
-- immutable `PlayerStore` definitions;
-- optional default suppliers through `getOrDefault`;
-- validation on writes, defaults, migrations, and mutation results;
-- lazy migration from one or more legacy keys;
-- current-key precedence without deleting untouched legacy data;
-- typed get/set/contains/delete operators, `getOrPut`, `mutate`, and overflow
-  checked integer `increment`;
-- duplicate schema field rejection and definition introspection.
-
-Dynamic-proxy tests exercise the actual Bukkit Player/PDC extension functions
-without starting a Minecraft server.
-
-## Architecture Principle
-
-```
-READ-ONLY DIAGNOSTICS → DEFAULT ON
-BEHAVIOR-CHANGING OPTIMIZATIONS → DEFAULT OFF
-DANGEROUS OPERATIONS → CONFIRM REQUIRED
-ALL FEATURES → CONFIG CONTROLLABLE
-```
+Arc는 Leaf(Paper/Purpur) 기반 Minecraft 서버 포크로, 세 가지 가치를 동시에 제공한다: 운영자용 관리 도구(Ops Suite), 플러그인 개발자용 Kotlin-first API(Developer API), 멀티서버 네트워크 레이어(Network). 이 문서는 세 레이어를 기준으로 현재 구현된 기능 전체를 정리한다.
 
 ---
 
-## Implemented Features (Single Server)
+## 아키텍처 원칙
 
-### 1. Plugin Lifecycle Manager
-**Files**: `ops/plugin/PluginLifecycle.kt`, `PluginCommands.kt`, `ReloadSafetyAnalyzer.kt`, `DependencyGraph.kt`, `ConfirmManager.kt`
+```
+READ-ONLY DIAGNOSTICS  → DEFAULT ON
+BEHAVIOR-CHANGING      → DEFAULT OFF
+DANGEROUS OPERATIONS   → CONFIRM REQUIRED
+ALL FEATURES           → CONFIG CONTROLLABLE
+```
 
-| Command | Function |
-|---------|----------|
-| `/arc plugin list` | All plugins with status |
-| `/arc plugin info <name>` | Full plugin report |
-| `/arc plugin check <name>` | Reload safety rating (SAFE/WARNING/UNSAFE/UNKNOWN) |
-| `/arc plugin enable <name>` | Enable a plugin |
-| `/arc plugin disable <name>` | Disable a plugin (with dependent check) |
-| `/arc plugin reload <name>` | Disable → LeakCheck → Enable |
-| `/arc plugin restart <name>` | Disable + Enable |
-| `/arc plugin dependents <name>` | Show dependency tree |
-| `/arc plugin reload-chain <name> --dry-run\|--apply` | Chain reload with dependents |
-| `/arc plugin leaks <name>` | Classloader leak detection |
-| `/arc plugins report` | Safety report for all plugins |
-| `/arc plugins outdated` | Compatibility check (api-version) |
-
-### 2. Plugin Sandbox Check
-**File**: `ops/plugin/PluginSandboxCheck.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc sandbox check <jar>` | Analyze JAR before loading — NMS usage, threads, native libs, api-version |
-
-### 3. Plugin Rollback Manager
-**File**: `ops/plugin/PluginRollbackManager.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc plugin rollback <name> --list` | List available rollbacks |
-| `/arc plugin rollback <name> --restore <id>` | Restore previous JAR |
-
-### 4. Reload Policy
-**File**: `ops/plugin/ReloadPolicy.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc reload-policy list` | Show per-plugin reload policies |
-| `/arc reload-policy set <p> <allow\|warn\|block>` | Set policy |
-
-### 5. Plugin Overrides
-**File**: `ops/config/PluginOverrides.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc plugin-overrides list` | Show all exclusions |
-| `/arc plugin-overrides exclude <feature> <plugin>` | Exclude plugin from feature |
-| `/arc plugin-overrides include <feature> <plugin>` | Re-include |
-
-### 6. Diagnostics
-**Files**: `ops/doctor/ServerDoctor.kt`, `LagSpikeMonitor.kt`, `PluginCostTracker.kt`, `MainThreadProfiler.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc doctor [--world <w>] [--paste]` | Full server health report |
-| `/arc lagspike [list\|last]` | Lag spike history |
-| `/arc plugin-cost [top\|<plugin>]` | Per-plugin cost profiling |
-| `/arc profiler [start\|stop\|report]` | Main thread profiler |
-| `/arc memory` | Heap usage |
-| `/arc ping` | Player ping list |
-| `/arc startup-profile [detail <p>]` | Boot time analysis |
-
-### 7. Config Management
-**Files**: `ops/config/ConfigCommands.kt`, `ConfigChangeHistory.kt`, `ConfigValidator.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc config check` | Validate all configs |
-| `/arc config explain <path>` | Show meaning, default, performance impact |
-| `/arc config get <path>` | Read current value |
-| `/arc config set <path> <value>` | Change value (with backup) |
-| `/arc config reset <path>` | Reset to default |
-| `/arc config reload` | Reload config from disk |
-| `/arc config diff` | Show changes since last backup |
-| `/arc config search <keyword>` | Find config entries |
-| `/arc config-history list\|diff\|search` | Who changed what |
-
-### 8. Server Tools
-**Files**: `commands/CommandSearch.kt`, `permissions/PermissionSearch.kt`, `worlds/WorldCommands.kt`, `logs/LogCommands.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc command search <kw>` | Find commands |
-| `/arc command info <name>` | Command details (owner, permission, aliases) |
-| `/arc permission search <kw>` | Find permissions |
-| `/arc permission plugin <p>` | Plugin's permission nodes |
-| `/arc permission player <p> <node>` | Check player permission |
-| `/arc world report [world]` | World status, entities, chunks |
-| `/arc world gamerules <world>` | Game rules |
-| `/arc chunks report\|tickets\|backlog` | Chunk diagnostics |
-| `/arc logs summary\|errors\|plugin <p>` | Log inspection |
-
-### 9. Security & Maintenance
-**Files**: `security/SecurityAudit.kt`, `proxy/ProxySetupChecker.kt`, `safe/SafeModeCommands.kt`, `audit/AuditLog.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc security-audit` | Offline-mode, RCON, OP count checks |
-| `/arc proxy-check` | Velocity/BungeeCord config validation |
-| `/arc safe-mode enable\|disable` | Safe mode toggle |
-| `/arc maintenance on\|off\|allow\|status` | Maintenance mode |
-| `/arc audit [last\|since\|search]` | Who ran dangerous commands |
-
-### 10. Data Tools
-**Files**: `paste/PasteCommands.kt`, `snapshot/SnapshotCommands.kt`, `bundle/IssueBundle.kt`
-
-| Command | Function |
-|---------|----------|
-| `/arc paste doctor\|config\|logs\|plugin` | Upload to paste service (masked) |
-| `/arc snapshot create\|list\|compare` | Server state snapshots |
-| `/arc issue-bundle` | Diagnostic zip for bug reports |
+세 레이어는 독립적이다. Developer API만 써도 되고, Ops Suite 없이 Network만 구성해도 된다.
 
 ---
 
-## Implemented Features (Network)
+## Layer 1 — Fork Core (항상 활성)
 
-### Network Architecture
+서버가 뜨는 순간부터 작동하는 최하위 레이어. 플러그인 없이 포크 자체가 제공한다.
 
-```
-Arc Core (each server) → Redis (Arc Relay) → Arc Proxy Module (Velocity)
-                         ↓
-                    PostgreSQL (Arc Storage)
-```
+**성능 거버너** (`perf/`): `AdaptiveGovernor`가 MSPT를 기준으로 시뮬/뷰 거리를 자동 조정한다. `TickBudget`은 tick당 작업량을 제한하고, `EntityThrottler`는 비중요 엔티티의 AI 빈도를 낮춘다. `ServerLoad`는 `PerfBackend` SPI를 통해 arc-server의 순간 MSPT와 Bukkit의 평균 MSPT를 둘 다 사용할 수 있도록 추상화한다.
 
-**Files**:
-- `network/ArcNetworkConfig.kt` — Configuration loader (`arc-network.yml`)
-- `network/ArcRelayClient.kt` — Redis abstraction (pub/sub, locks, cooldowns)
-- `network/ArcServerRegistry.kt` — Server heartbeat + registration
-- `network/ArcPlayerTransfer.kt` — Cross-server player movement
-- `network/ArcQueue.kt` — Server queue (Redis sorted sets)
-- `network/ArcItemSerializer.kt` — Item serialization for transfer
-- `network/ArcGlobalCooldown.kt` — Cross-server cooldowns
-- `network/ArcNetworkAudit.kt` — Network operation audit trail
-- `network/ArcNetworkServices.kt` — Broadcast, Maintenance, Evacuation, Player Lookup
-- `ops/network/ArcNetworkCommands.kt` — `/arc network *` command routing
+**NMS 브리지** (`nms/NmsRef.kt`): 리플렉션 래퍼. 플러그인이 NMS 필드를 안전하게 읽고 쓰도록 타입 안전한 접근자를 제공한다.
 
-### Network Commands
-
-| Command | Function |
-|---------|----------|
-| `/arc network servers` | All server status dashboard |
-| `/arc network server <id>` | Single server details |
-| `/arc network players` | All online players across network |
-| `/arc network send <player> <server>` | Transfer player |
-| `/arc network sendall <from> <to>` | Transfer all players |
-| `/arc network hub` | Go to hub server |
-| `/arc network queue join\|leave\|status` | Queue management |
-| `/arc network maintenance server\|group\|network on\|off` | Maintenance mode |
-| `/arc network evacuate <server>` | Move all local players before shutdown |
-| `/arc network broadcast <msg>` | Network-wide message |
-| `/arc network find <player>` | Find player across network |
-| `/arc network audit [last]` | Network audit log |
-| `/arc network cooldown check\|clear` | Global cooldown management |
-
-### Item Mail State Machine
-
-```
-send() → PENDING → claim() → CLAIMING → CLAIMED
-                     cancel() → CANCELLED
-                     timeout → EXPIRED
-                     error → FAILED
-```
-
-**Duplication prevention**: Distributed lock (`arc:lock:mail:<id>`) ensures only one server claims a mail item.
+**커스텀 이벤트** (`event/`): `ServerLoadLevelChangeEvent`, `ServerLagSpikeEvent` — Paper가 제공하지 않는 서버 상태 이벤트.
 
 ---
 
-## Configuration Reference
+## Layer 2 — Ops Suite (`/arc` 명령어)
 
-### arc-ops.yml (Operations Suite)
-```yaml
-lag-spike-capture:
-  enabled: true
-  mspt-threshold: 100
-  capture-duration-ticks: 40
+서버 운영자가 쓰는 진단·관리 도구 전체. `arc-ops.yml`로 켜고 끈다.
 
-plugin-cost.enabled: true
-entity-optimization.enabled: false   # DEFAULT OFF
-memory-guard.enabled: true
-stall-watchdog.enabled: true
-crash.analyze-on-boot: true
-```
+### 플러그인 관리
 
-### arc-network.yml (Multi-Server)
-```yaml
-arc-network:
-  enabled: false                     # DEFAULT OFF
-  server:
-    id: "survival-1"
-    group: "survival"
-  relay:
-    type: redis
-    redis:
-      host: "127.0.0.1"
-      port: 6379
-  server-groups:
-    survival:
-      servers: [survival-1, survival-2]
-      queue-enabled: true
-  global-vault.enabled: false        # DEFAULT OFF
-  inventory-transfer.enabled: false  # DEFAULT OFF — HIGH RISK
-  remote-command.enabled: false      # DEFAULT OFF — HIGH RISK
-  audit.enabled: true
-```
+`/arc plugin *` 서브커맨드 전체는 단일 명령어 체계로 묶인다. 안전 등급(SAFE/WARNING/UNSAFE/UNKNOWN)을 평가한 뒤 위험 작업은 반드시 confirm 토큰을 요구한다.
 
----
+| 기능 | 커맨드 |
+|------|--------|
+| 목록·정보·호환성 확인 | `list`, `info`, `check`, `outdated` |
+| 활성화/비활성화 | `enable`, `disable` (의존 플러그인 자동 감지) |
+| 재로드 | `reload`, `restart`, `reload-chain --dry-run\|--apply` |
+| 누수 감지 | `leaks` (classloader 스레드·listener 잔류 확인) |
+| JAR 분석 | `/arc sandbox check <jar>` — 로드 전 NMS·네이티브 라이브러리·스레드 패턴 정적 분석 |
+| 롤백 | `rollback --list\|--restore <id>` — 이전 버전 복구 후 자동 hot-reload |
+| 정책 | `reload-policy set <plugin> allow\|warn\|block` |
+| 비용 프로파일링 | `/arc plugin-cost top\|<plugin>` |
 
-## Development Priorities
+### 서버 진단
 
-| Phase | Features | Risk | Default |
-|-------|----------|------|---------|
-| 1 | Plugin Manager, Doctor, Config UX | Low | ON |
-| 2 | Plugin Inspection, Sandbox | Low | ON |
-| 3 | Disable/Enable, Safe Mode | Medium | ON |
-| 4 | Reload, Reload-chain, Confirm | **High** | Confirm req. |
-| 5 | Developer API (ArcContext, Scheduler, Commands) | Medium | ON |
-| 6 | Diagnostics (Lag Spike, Cost Profiler) | Low | ON |
-| 7 | Monitoring, Maintenance, Logs/Paste/Snapshot | Low | ON |
-| 8 | Optimization (Entity AI, Chunk, Packet) | **High** | **OFF** |
+| 기능 | 커맨드 |
+|------|--------|
+| 전체 건강 리포트 | `/arc doctor [--paste]` |
+| 렉 스파이크 기록 | `/arc lagspike list\|last` |
+| 메인 스레드 프로파일러 | `/arc profiler start\|stop\|report` |
+| 메모리 | `/arc memory` |
+| 부팅 시간 분석 | `/arc startup-profile [detail <plugin>]` |
+| 스톨 감시 | 자동 (StallWatchdog) |
 
-### Network Priorities
+### 설정 관리
 
-| Phase | Features | Default |
-|-------|----------|---------|
-| 1 | Server Registry, Heartbeat, Groups | ON |
-| 2 | Transfer, Queue, Broadcast, Audit | ON |
-| 3 | Evacuation, Player Lookup | ON |
-| 4 | Item Mail, Serialization, Lock, Cooldown | Mail ON |
-| 5 | Global Vault, Abuse Prevention | **OFF** |
-| 6 | Config Sync, Remote Command, Inventory Transfer | **OFF** |
+`/arc config *`: 실행 중 설정 읽기·쓰기·비교·검색, 변경 이력 추적(누가 언제 무엇을 바꿨는지), 플러그인별 기능 제외 목록 관리.
+
+### 서버 도구
+
+| 기능 | 커맨드 |
+|------|--------|
+| 커맨드·퍼미션 검색 | `/arc command search`, `/arc permission search\|plugin\|player` |
+| 월드 상태 | `/arc world report\|gamerules` |
+| 청크 진단 | `/arc chunks report\|tickets\|backlog` |
+| 로그 검사 | `/arc logs summary\|errors\|plugin` |
+| 스냅샷 | `/arc snapshot create\|list\|compare` |
+| 이슈 번들 | `/arc issue-bundle` (진단 zip 생성) |
+| Paste 업로드 | `/arc paste doctor\|config\|logs` (민감 정보 마스킹 후 업로드) |
+
+### 보안·유지보수
+
+| 기능 | 커맨드 |
+|------|--------|
+| 보안 감사 | `/arc security-audit` — 오프라인 모드·RCON·OP 수 확인 |
+| 프록시 검증 | `/arc proxy-check` — Velocity/BungeeCord 설정 검사 |
+| 세이프 모드 | `/arc safe-mode enable\|disable` — 다음 부팅 시 최소 플러그인만 로드 |
+| 점검 모드 | `/arc maintenance on\|off\|allow\|status` — 재시작 후에도 상태 유지됨 |
+| 감사 로그 | `/arc audit last\|since\|search` |
+| 엔티티 최적화 | `EntityAiOptimizer`, `EntityDensityGuard` — DEFAULT OFF |
+| 청크 프리젠 | `/arc pregen` — DEFAULT OFF |
+| 상태 HTTP 서버 | `StatusHttpServer` — DEFAULT OFF |
 
 ---
 
-## Risk Matrix
+## Layer 3 — Developer API (`arc-api`)
 
-| Feature | Compatibility Risk | Data Loss Risk | Default |
-|---------|-------------------|---------------|---------|
-| Plugin reload | High | None | Confirm req. |
-| Reload-chain | High | None | Confirm req. |
-| Distance-based AI | Medium | None | OFF |
-| Chunk queue rewrite | High | High | OFF |
-| Inventory Transfer | High | **Critical** | OFF |
-| Remote Command | High | High | OFF |
-| Plugin Deploy | Highest | High | OFF |
+플러그인 개발자가 쓰는 Kotlin-first API. Bukkit을 대체하지 않고 보완한다.
 
----
+### 스케줄러·태스크
 
-## File Index
+`Scheduler`: 메인/비동기 디스패처, 지연·반복 DSL. `Pipeline`: 순차 태스크 체인. 코루틴 SPI(`arc-api/coroutine`)와 연동된다.
 
-### Single-Server (arc-api)
-```
-src/main/kotlin/dev/arc/api/
-├── Arc.kt                              # Central hub
-├── lifecycle/ArcReloadable.kt          # Reload-safe contract
-├── control/ArcConfig.kt                # arc-config.yml loader
-├── control/ArcControlCommand.kt        # /arc command registration
-├── control/ArcFeatures.kt             # Feature flags
-├── control/ArcSettings.kt             # Live tunables
-├── command/Commands.kt                # Command DSL
-│
-├── ops/
-│   ├── ArcOps.kt                      # Operations suite bootstrap
-│   ├── ArcOpsCommand.kt               # All subcommand routing
-│   ├── OpsConfig.kt                   # arc-ops.yml
-│   │
-│   ├── plugin/
-│   │   ├── PluginCommands.kt          # /arc plugin *
-│   │   ├── PluginLifecycle.kt         # enable/disable/reload/reloadChain
-│   │   ├── PluginInspector.kt         # Read-only inspection
-│   │   ├── ReloadSafetyAnalyzer.kt    # SAFE/WARNING/UNSAFE/UNKNOWN
-│   │   ├── DependencyGraph.kt         # chainPlan computation
-│   │   ├── ConfirmManager.kt          # Token-based confirm
-│   │   ├── PluginSandboxCheck.kt      # JAR analysis
-│   │   ├── PluginRollbackManager.kt   # Version rollback
-│   │   └── ReloadPolicy.kt           # Per-plugin policy
-│   │
-│   ├── config/
-│   │   ├── ConfigCommands.kt          # get/set/reset/reload/diff/search
-│   │   ├── ConfigChangeHistory.kt     # Who changed what
-│   │   └── PluginOverrides.kt         # Feature exclusions
-│   │
-│   ├── configcheck/ConfigValidator.kt # Config validation
-│   ├── doctor/ServerDoctor.kt         # Health report
-│   ├── lagspike/LagSpikeMonitor.kt    # MSPT threshold capture
-│   ├── plugincost/PluginCostTracker.kt # Per-plugin profiling
-│   ├── profiler/MainThreadProfiler.kt # Stack sampling
-│   ├── audit/AuditLog.kt              # Dangerous command log
-│   ├── safe/SafeModeCommands.kt       # Safe mode + maintenance
-│   ├── security/SecurityAudit.kt      # Security checks
-│   ├── proxy/ProxySetupChecker.kt     # Velocity/Bungee validation
-│   ├── startup/StartupProfile.kt      # Boot time analysis
-│   ├── bundle/IssueBundle.kt          # Diagnostic zip
-│   │
-│   ├── commands/CommandSearch.kt      # /arc command search
-│   ├── permissions/PermissionSearch.kt # /arc permission *
-│   ├── worlds/WorldCommands.kt        # /arc world *
-│   ├── logs/LogCommands.kt            # /arc logs *
-│   ├── paste/PasteCommands.kt         # /arc paste *
-│   ├── snapshot/SnapshotCommands.kt   # /arc snapshot *
-│   │
-│   └── network/ArcNetworkCommands.kt  # /arc network *
-│
-└── network/
-    ├── ArcNetworkConfig.kt            # arc-network.yml
-    ├── ArcRelayClient.kt              # Redis abstraction
-    ├── ArcServerRegistry.kt           # Heartbeat + registration
-    ├── ArcPlayerTransfer.kt           # send/sendAll/hub
-    ├── ArcQueue.kt                    # Queue system
-    ├── ArcItemSerializer.kt           # Serialization format
-    ├── ArcGlobalCooldown.kt           # Cross-server cooldowns
-    ├── ArcNetworkAudit.kt             # Audit trail
-    └── ArcNetworkServices.kt          # Broadcast/Maintenance/Evac/Lookup
-```
+### GUI·인터페이스
 
-### Server Integration (arc-server)
-```
-src/main/
-├── java/dev/arc/server/
-│   ├── ArcBootstrap.kt               # NMS + ArcOps install
-│   ├── nms/ReflectiveArcNms.kt       # NMS bridge
-│   └── scheduling/LeafParallelWorldScheduler.kt
-└── kotlin/dev/arc/server/
-    └── packet/NettyPacketBridge.kt
-```
+`Menu` / `PaginatedMenu`: 인벤토리 기반 GUI 빌더, 클릭 핸들러 포함. `Merchants`: 커스텀 상인 GUI. `ChatInput` / `Form`: 채팅 입력 흐름.
+
+### 아이템
+
+`ItemBuilder`: Kotlin DSL 아이템 생성. `ItemBehavior`: 아이템에 행동 바인딩. `ItemAuthenticator`: 서버 서명 기반 아이템 위·변조 감지. `DataComponents`: 1.21 데이터 컴포넌트 접근자. `Enchants`: 커스텀 인챈트 등록.
+
+### 엔티티·디스플레이
+
+`Entities`: 스폰·조회 DSL. `EntityEffects`: 시각 효과 적용. `Equipment`: 장비 관리. `Displays`: Display 엔티티 빌더. `Holograms` / `Hologram`: 텍스트 홀로그램. `Npc`: 스킨 적용 NPC. `Fireworks`: 불꽃놀이 빌더.
+
+### AI
+
+`MobGoalRegistry` / `GoalDsl`: 바닐라 AI 목표를 코드로 추가·제거. `MobAi`: 엔티티 AI 일시 중단·재개.
+
+### 효과·입자·사운드
+
+`CustomEffect` / `CustomEffectEngine`: 플러그인 스코프 가상 포션 효과 (KEEP_STRONGER/REPLACE/EXTEND/IGNORE 정책). `Effects`: 바닐라 포션 DSL. `Particles` / `ParticleEffects`: 입자 DSL. `Sounds`: 사운드 DSL.
+
+### 플레이어
+
+`Cooldowns` / `ServerCooldown`: 단일/크로스서버 쿨다운. `PlayerPersistentData` / `PlayerData` / `PlayerStore`: 타입 안전 PDC 스키마 (마이그레이션·검증 포함). `PlayerControl`: 이동·능력 조작. `ClientWorldState`: 클라이언트에게만 보이는 월드 상태.
+
+### 월드
+
+`WorldOps`: 복잡한 월드 작업 DSL. `WorldChunk`: 청크 강제 로드·언로드. `WorldSnapshot`: 블록 영역 스냅샷. `Explosions`, `Gamerules`, `WorldBorders`, `Structures`, `LootTables`, `RayTrace` — 각 기능별 DSL.
+
+### 커맨드
+
+`Commands`: Kotlin DSL 커맨드 등록. 탭 완성, 퍼미션, 서브커맨드 중첩 지원.
+
+### 채팅
+
+`Chat`: 채팅 파이프라인 진입점. `ChatPipeline`: 필터·변환 체인.
+
+### UI 요소
+
+`Titles`, `Tablist`, `BossBars`, `Sidebar`, `Teams` — 각각 단순한 Kotlin DSL로 제공.
+
+### 퍼미션·레시피
+
+`PermissionRegistry`: 코드에서 퍼미션 노드 선언. `Recipes`: 커스텀 제작법 등록.
+
+### PDC·직렬화
+
+`PdcSchema` / `PersistentData`: 타입 토큰 기반 PDC, 중복 키 거부, 검증, 마이그레이션. `Serialization`: 공통 직렬화 어댑터.
+
+### 레지스트리·어트리뷰트
+
+`Registries` / `RegistryDsl` / `DynamicRegistry`: 1.21 RegistryAccess 래퍼. `Attributes` / `CustomAttributes`: 커스텀 어트리뷰트 등록.
+
+### 데이터팩
+
+`DatapackContent` / `DatapackMaker`: 코드로 데이터팩 생성·배포. 바이옴, 루트 테이블, 태그, mcfunction 지원.
+
+### 패킷·채널
+
+`PacketBridge` / `PacketInterceptor`: Netty 레벨 패킷 후킹. `ModChannel` / `ModPacketBuffer`: NMS 타입 노출 없는 클라이언트 모드 패킷 채널.
+
+### 프로필·스킨
+
+`Profiles`, `Skins`: Mojang API 연동 없이 텍스처 적용.
+
+### 유틸리티
+
+`Format` (텍스트 포맷), `Time` (시간 DSL), `Spline` (수학), `Countdown` (카운트다운), `Cuboid` / `RegionEffects` (영역), `Combat` / `DamageSources` (전투), `Movement` (이동), `Stats` (통계).
+
+### arc-test
+
+서버 없이 arc-api 플러그인을 테스트하는 프레임워크. `PacketCapture`, `PDC assertions`, `VirtualConsole` 포함.
 
 ---
 
-**Total files implemented: 42**
-**Total commands: ~80**
-**Lines of code: ~8,000+**
+## Layer 4 — Network (선택, Redis 필요)
+
+`arc-network.yml`에서 `enabled: false`가 기본값이다. Redis 없이는 아무것도 활성화되지 않는다.
+
+### 핵심 컴포넌트
+
+`ArcRelayClient`: Redis 추상화 (KV·Set·ZSet·Pub/Sub·분산 락·쿨다운). `ArcServerRegistry`: 2초 heartbeat로 서버 상태를 Redis에 등록. `ArcPlayerTransfer`: 서버 간 플레이어 이동 (그룹 권한·full 체크 포함). `ArcQueue`: Redis ZSet 기반 대기열 (VIP/Priority 오프셋). `ArcNetworkAudit`: 모든 네트워크 작업 감사 기록.
+
+### 네트워크 커맨드 (`/arc network *`)
+
+서버 대시보드, 플레이어 조회, 전송, 대기열 관리, 유지보수 모드, 강제 대피(evacuate), 네트워크 broadcast, 글로벌 쿨다운.
+
+### 위험도별 기본값
+
+| 기능 | 기본값 | 이유 |
+|------|--------|------|
+| 서버 등록·전송·대기열 | ON | 역방향 복구 가능 |
+| Global Vault | OFF | 아이템 복제 위험 |
+| Inventory Transfer | OFF | 높은 데이터 손실 위험 |
+| Remote Command | OFF | 임의 명령 실행 위험 |
+| Plugin Deploy | OFF | 서버 자체 변조 위험 |
+
+---
+
+## 이 프로젝트에서 제거하거나 분리를 권장하는 기능
+
+Arc의 정체성은 *서버 포크*다. 아래 기능들은 현재 arc-api에 있지만, 별도 라이브러리 플러그인으로 분리하는 것이 더 자연스럽다.
+
+**`http/Http.kt`**: HTTP 클라이언트 추상화. 서버 포크 레벨에서 제공할 이유가 없다. 플러그인이 직접 의존성을 가져오는 것이 더 명확하다.
+
+**`db/Database.kt` / `data/Sql.kt`**: 데이터베이스 풀·쿼리 추상화. 동일한 이유. 플러그인 인프라 레이어가 필요하다면 별도 `arc-db` 모듈이 적절하다.
+
+**`ArcItemMail`**: 아이템 우편함. 네트워크 레이어 안에 있지만 게임 기능에 가깝다. 별도 플러그인이나 arc-network의 optional extension으로 분리를 권장.
+
+**이미 제거된 것들** (`584b76ff` 커밋에서 삭제됨): `NativeAntiCheat`, `SchematicPlacer`, `VirtualEntity`, `AnimationScheduler`, `GlowRegistry`, `FakeAdvancementProgress`, `FakeAdvancementTree`, `FakeWorldState`, `GameRuleOverride`, `ChunkGenerationModifier`, `LiveMapRenderer`, `NoiseAccessor`, `StructureBuilder` — 이 판단은 맞다. 해당 기능들은 구현 완성도 대비 유지보수 부담이 크고, 포크보다 플러그인에 더 어울린다.
+
+---
+
+## 현재 파일 수 (실제 기준)
+
+| 모듈 | 파일 수 |
+|------|---------|
+| arc-api (Developer API + Ops + Network) | ~160 |
+| arc-server (NMS 구현체) | 6 |
+| arc-test | ~10 |
+| leaf-api / leaf-server (업스트림) | 상속 |
+
+**총 구현 커맨드**: ~80개  
+**Minecraft**: 1.21.4  
+**Base**: Leaf MC → Paper → Bukkit

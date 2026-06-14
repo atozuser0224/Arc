@@ -27,7 +27,8 @@ object ArcNetworkBroadcast {
     }
 
     private fun buildBroadcastPayload(sender: String, message: String): String {
-        return """{"sender":"$sender","message":"${message.replace("\"", "\\\"")}","timestamp":${System.currentTimeMillis()}}"""
+        fun String.esc() = replace("\\", "\\\\").replace("\"", "\\\"")
+        return """{"sender":"${sender.esc()}","message":"${message.esc()}","timestamp":${System.currentTimeMillis()}}"""
     }
 }
 
@@ -87,22 +88,28 @@ object ArcEvacuation {
             return "§7No players to evacuate"
         }
 
-        var moved = 0
+        val plugin = Bukkit.getPluginManager().getPlugin("Arc")
+            ?: return "§cArc plugin not found"
+        val total = players.size
+        val moved = IntArray(1)
         val failed = mutableListOf<String>()
 
-        for (p in players) {
-            val result = ArcPlayerTransfer.send(sender, p.name, toServer)
-            if (result.startsWith("§a")) moved++ else failed += p.name
-            Thread.sleep(200) // 200ms delay between transfers
+        players.forEachIndexed { i, p ->
+            Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+                val result = ArcPlayerTransfer.send(sender, p.name, toServer)
+                if (result.startsWith("§a")) moved[0]++ else failed += p.name
+                if (i == total - 1) {
+                    ArcNetworkAudit.log("evacuation", mapOf(
+                        "from" to fromServer, "to" to toServer,
+                        "moved" to moved[0].toString(), "failed" to failed.joinToString(),
+                        "actor" to sender.name,
+                    ))
+                    sender.sendMessage("§aEvacuation: ${moved[0]}/$total moved to $toServer. ${if (failed.isNotEmpty()) "§cFailed: ${failed.joinToString()}" else ""}")
+                }
+            }, (i * 4L)) // stagger transfers by 4 ticks (200ms) without blocking main thread
         }
 
-        ArcNetworkAudit.log("evacuation", mapOf(
-            "from" to fromServer, "to" to toServer,
-            "moved" to moved.toString(), "failed" to failed.joinToString(),
-            "actor" to sender.name,
-        ))
-
-        return "§aEvacuation: $moved/${players.size} moved to $toServer. ${if (failed.isNotEmpty()) "§cFailed: ${failed.joinToString()}" else ""}"
+        return "§eStarting evacuation of $total player(s) to $toServer…"
     }
 }
 

@@ -133,24 +133,15 @@ object ArcServerRegistry {
     private val startTime = System.currentTimeMillis()
 
     private fun getRecentTps(): DoubleArray {
-        return try {
-            val server = org.bukkit.Bukkit.getServer()
-            val field = server.javaClass.getDeclaredField("recentTps")
-            field.isAccessible = true
-            field.get(server) as? DoubleArray ?: doubleArrayOf(20.0, 20.0, 20.0)
-        } catch (e: Exception) {
-            doubleArrayOf(20.0, 20.0, 20.0)
-        }
+        val tps = org.bukkit.Bukkit.getTPS()
+        return doubleArrayOf(
+            tps.getOrElse(0) { 20.0 },
+            tps.getOrElse(1) { 20.0 },
+            tps.getOrElse(2) { 20.0 },
+        )
     }
 
-    private fun getAverageMspt(): Double {
-        return try {
-            val server = org.bukkit.Bukkit.getServer()
-            val field = server.javaClass.getDeclaredField("averageTickTime")
-            field.isAccessible = true
-            (field.get(server) as? Double ?: 0.0) * 1.0E-6 // nanos to millis
-        } catch (e: Exception) { 0.0 }
-    }
+    private fun getAverageMspt(): Double = org.bukkit.Bukkit.getAverageTickTime()
 
     private fun getCpuLoad(): Double {
         return try {
@@ -164,7 +155,8 @@ object ArcServerRegistry {
     }
 
     private fun serializeServerInfo(info: ServerInfo): String {
-        return """{"id":"${info.id}","group":"${info.group}","status":"${info.status.name}","players":${info.players},"maxPlayers":${info.maxPlayers},"tps":[${info.tps.joinToString()}],"mspt":${info.mspt},"minecraftVersion":"${info.minecraftVersion}","arcVersion":"${info.arcVersion}","javaVersion":"${info.javaVersion}","cpuLoad":${info.cpuLoad},"memoryUsedMb":${info.memoryUsedMb},"memoryMaxMb":${info.memoryMaxMb},"gcCount":${info.gcCount},"uptimeMinutes":${info.uptimeMinutes},"tags":[${info.tags.joinToString { "\"$it\"" }}],"lastHeartbeat":${info.lastHeartbeat}}"""
+        fun String.esc() = replace("\\", "\\\\").replace("\"", "\\\"")
+        return """{"id":"${info.id.esc()}","group":"${info.group.esc()}","status":"${info.status.name}","players":${info.players},"maxPlayers":${info.maxPlayers},"tps":[${info.tps.joinToString()}],"mspt":${info.mspt},"minecraftVersion":"${info.minecraftVersion.esc()}","arcVersion":"${info.arcVersion.esc()}","javaVersion":"${info.javaVersion.esc()}","cpuLoad":${info.cpuLoad},"memoryUsedMb":${info.memoryUsedMb},"memoryMaxMb":${info.memoryMaxMb},"gcCount":${info.gcCount},"uptimeMinutes":${info.uptimeMinutes},"tags":[${info.tags.joinToString { "\"${it.esc()}\"" }}],"lastHeartbeat":${info.lastHeartbeat}}"""
     }
 
     private fun parseServerInfo(json: String): ServerInfo? {

@@ -52,9 +52,8 @@ object ArcStatusServer {
         val sb = StringBuilder()
         val rt = Runtime.getRuntime()
 
-        sb.metric("arc_tps", "gauge", "Ticks per second (1 min avg)", ServerLoad.tps(1).toString())
-        sb.metric("arc_tps_5m", "gauge", "Ticks per second (5 min avg)", ServerLoad.tps(5).toString())
-        sb.metric("arc_mspt", "gauge", "Milliseconds per tick", ServerLoad.mspt().toString())
+        sb.metric("arc_tps", "gauge", "Live ticks per second", ServerLoad.tps.toString())
+        sb.metric("arc_mspt", "gauge", "Live milliseconds per tick", ServerLoad.mspt.toString())
         sb.metric("arc_players_online", "gauge", "Online player count", Bukkit.getOnlinePlayers().size.toString())
         sb.metric("arc_players_max", "gauge", "Server player cap", Bukkit.getMaxPlayers().toString())
 

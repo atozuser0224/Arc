@@ -1,5 +1,6 @@
 package dev.arc.api.network
 
+import dev.arc.api.gui.menu
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player

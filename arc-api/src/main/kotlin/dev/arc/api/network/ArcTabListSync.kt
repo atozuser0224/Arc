@@ -36,7 +36,7 @@ object ArcTabListSync {
                     })
                 }
             }
-            val footer = "§7This server: §f$localPlayers §7online  •  TPS §f${"%.1f".format(dev.arc.api.perf.ServerLoad.tps(1))}"
+            val footer = "§7This server: §f$localPlayers §7online  •  TPS §f${"%.1f".format(dev.arc.api.perf.ServerLoad.tps)}"
 
             Bukkit.getScheduler().runTask(plugin, Runnable {
                 Bukkit.getOnlinePlayers().forEach { it.setPlayerListHeaderFooter(header, footer) }

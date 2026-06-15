@@ -24,4 +24,16 @@ open class ArcPluginExtension(project: Project) {
     fun depend(vararg names: String) { _depend += names }
     fun softDepend(vararg names: String) { _softDepend += names }
     fun loadBefore(vararg names: String) { _loadBefore += names }
+
+    /**
+     * Path to your local test server's plugins/ directory.
+     * Used by the `deployToServer` Gradle task.
+     *
+     * ```kotlin
+     * arcPlugin {
+     *     serverDir = "/srv/my-server/plugins"
+     * }
+     * ```
+     */
+    var serverDir: String = ""
 }

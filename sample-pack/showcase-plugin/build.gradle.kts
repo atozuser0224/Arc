@@ -14,6 +14,7 @@ arcPlugin {
     description = "A guided tour of the Arc developer API (effects, PDC, datapacks, item auth, events, command DSL)."
     // 종속 플러그인 선언 예시 — plugin.yml 건드릴 필요 없음
     // softDepend("Vault", "PlaceholderAPI")
+    // serverDir = "/path/to/server/plugins"  // enables ./gradlew deployToServer
 }
 
 repositories {
@@ -22,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    // paper-api is added automatically by arc-gradle based on arcPlugin { apiVersion }
     compileOnly(files("../../arc-api/build/libs/arc-api-1.21.4-R0.1-SNAPSHOT.jar"))
     compileOnly(files("../../leaf-api/build/libs/leaf-api-1.21.4-R0.1-SNAPSHOT.jar"))
     compileOnly(kotlin("stdlib"))

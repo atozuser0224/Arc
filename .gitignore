@@ -17,6 +17,7 @@
 !gradle/wrapper/gradle-wrapper.jar
 .gradle
 build
+.kotlin
 
 # Leaf
 build-data/dev-imports.txt

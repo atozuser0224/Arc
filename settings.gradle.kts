@@ -14,7 +14,7 @@ plugins {
 
 rootProject.name = "arc"
 
-for (name in listOf("leaf-api", "leaf-server", "arc-protocol", "arc-api", "arc-server", "arc-test", "arc-client")) {
+for (name in listOf("leaf-api", "leaf-server", "arc-protocol", "arc-api", "arc-server", "arc-test", "arc-client", "arc-gradle")) {
     val projName = name.lowercase(Locale.ENGLISH)
     include(projName)
     findProject(":$projName")!!.projectDir = file(name)

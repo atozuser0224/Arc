@@ -28,7 +28,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.plugin.java.JavaPlugin
+import dev.arc.api.plugin.ArcPlugin
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -37,8 +37,12 @@ import kotlin.time.Duration.Companion.seconds
  * by the server at boot (CraftServer -> ArcBootstrap.install()), so a plugin
  * only needs to call the arc-api extension functions — no bootstrap, no
  * Listener classes, and (for the showcase commands) no plugin.yml command block.
+ *
+ * Extends [ArcPlugin] for typed service dependency delegates:
+ *   val economy: Economy by service()
+ *   val papi: PlaceholderAPI? by optionalService()
  */
-class ArcShowcasePlugin : JavaPlugin() {
+class ArcShowcasePlugin : ArcPlugin() {
 
     // --- Player PDC schema: typed, validated, migration-aware persistent fields ---
     private lateinit var commandsRun: PlayerStore<Int, Int>

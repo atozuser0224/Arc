@@ -8,6 +8,8 @@ import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.util.function.Consumer
+import java.util.function.Function
 
 /**
  * Context passed to every execute/complete handler.
@@ -48,6 +50,12 @@ public class SubCommandBuilder(public val name: String) {
 
     /** Return tab-complete suggestions. [ctx.args] holds arguments after the subcommand label. */
     public fun complete(block: (CommandContext) -> List<String>) { onComplete = block }
+
+    // ── Java-friendly overloads ────────────────────────────────────────────
+    /** Java: `sub.execute(ctx -> { ... });` */
+    public fun execute(consumer: Consumer<CommandContext>) { onExecute = { consumer.accept(it) } }
+    /** Java: `sub.complete(ctx -> List.of("a", "b"));` */
+    public fun complete(fn: Function<CommandContext, List<String>>) { onComplete = { fn.apply(it) } }
 }
 
 /** Builder for the root command. */
@@ -75,6 +83,16 @@ public class CommandBuilder(public val name: String) {
     /** Register a subcommand branch. */
     public fun sub(name: String, block: SubCommandBuilder.() -> Unit) {
         subs[name.lowercase()] = SubCommandBuilder(name).apply(block)
+    }
+
+    // ── Java-friendly overloads ────────────────────────────────────────────
+    /** Java: `cmd.execute(ctx -> { ... });` */
+    public fun execute(consumer: Consumer<CommandContext>) { onExecute = { consumer.accept(it) } }
+    /** Java: `cmd.complete(ctx -> List.of("a", "b"));` */
+    public fun complete(fn: Function<CommandContext, List<String>>) { onComplete = { fn.apply(it) } }
+    /** Java: `cmd.sub("name", sub -> { sub.execute(ctx -> ...); });` */
+    public fun sub(name: String, block: Consumer<SubCommandBuilder>) {
+        subs[name.lowercase()] = SubCommandBuilder(name).also { block.accept(it) }
     }
 
     internal fun completeFor(

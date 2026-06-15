@@ -34,7 +34,7 @@ final class ArcClientNetwork {
     private ArcSyncSession transfers;
     private Set<String> remaining = Set.of();
     private String revision;
-    private String activePackId;
+    private volatile String activePackId;
 
     ArcClientNetwork(ArcClientRuntime runtime) {
         this.runtime = runtime;
@@ -120,20 +120,28 @@ final class ArcClientNetwork {
         if (!remaining.isEmpty()) {
             throw new IllegalStateException("ArcSync activation arrived before all blobs");
         }
-        Path pack = runtime.activate(client.getResourcePackDir());
-        var manager = client.getResourcePackManager();
-        manager.scanPacks();
-        String fileName = pack.getFileName().toString();
-        activePackId = "file/" + fileName;
-        if (!manager.hasProfile(activePackId)) {
-            throw new IllegalStateException("Arc resource pack was not discovered");
-        }
-        if (!manager.getEnabledIds().contains(activePackId)) {
-            if (!manager.enable(activePackId)) {
-                throw new IllegalStateException("Arc resource pack could not be enabled");
+        client.execute(() -> {
+            if (!runtime.active) return;
+            try {
+                Path pack = runtime.activate(client.getResourcePackDir());
+                var manager = client.getResourcePackManager();
+                manager.scanPacks();
+                String fileName = pack.getFileName().toString();
+                activePackId = "file/" + fileName;
+                if (!manager.hasProfile(activePackId)) {
+                    throw new IllegalStateException("Arc resource pack was not discovered");
+                }
+                if (!manager.getEnabledIds().contains(activePackId)) {
+                    if (!manager.enable(activePackId)) {
+                        throw new IllegalStateException("Arc resource pack could not be enabled");
+                    }
+                }
+                client.reloadResources();
+            } catch (RuntimeException exception) {
+                disconnect(client);
+                throw exception;
             }
-        }
-        client.reloadResources();
+        });
     }
 
     private void disconnect(MinecraftClient client) {

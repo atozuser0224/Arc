@@ -1,14 +1,20 @@
 package dev.arc.sample
 
 import dev.arc.api.command.command
+import dev.arc.api.content.ContentId
+import dev.arc.api.content.arcContent
+import dev.arc.api.content.removeArcContent
 import dev.arc.api.datapack.datapackMaker
 import dev.arc.api.effect.CustomEffectRegistry
 import dev.arc.api.effect.EffectReapplyPolicy
 import dev.arc.api.effect.customEffects
 import dev.arc.api.event.listen
+import dev.arc.api.item.ItemBuilder
 import dev.arc.api.item.ItemVerification
-import dev.arc.api.item.itemAuthenticator
+import dev.arc.api.item.defineItem
 import dev.arc.api.item.item
+import dev.arc.api.item.itemAuthenticator
+import dev.arc.api.item.withBehavior
 import dev.arc.api.player.PlayerStore
 import dev.arc.api.player.getOrDefault
 import dev.arc.api.player.increment
@@ -16,8 +22,12 @@ import dev.arc.api.player.playerDataSchema
 import dev.arc.api.player.send
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.entity.Player
+import org.bukkit.NamespacedKey
+import org.bukkit.entity.LivingEntity
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import kotlin.time.Duration.Companion.seconds
 
@@ -103,8 +113,11 @@ class ArcShowcasePlugin : JavaPlugin() {
         }
 
         // 4) Command DSL — runtime registration straight onto the command map.
+        val manaCrystalKey = NamespacedKey(this, "mana_crystal")
+        val arcBladeKey = NamespacedKey(this, "arc_blade")
+
         command("showcase") {
-            complete { listOf("effect", "give", "verify", "stats") }
+            complete { listOf("effect", "give", "verify", "stats", "content") }
             execute { ctx ->
                 val sender = ctx.sender
                 if (ctx.isPlayer) ctx.player.increment(commandsRun, 1)
@@ -140,18 +153,129 @@ class ArcShowcasePlugin : JavaPlugin() {
                             sender.sendMessage("stats are per-player")
                         }
                     }
+                    "content" -> {
+                        val player = ctx.player
+                        when (ctx.arg(1)) {
+                            "give" -> when (ctx.arg(2)) {
+                                "mana_crystal" -> {
+                                    val crystal = contentItem(
+                                        "arcshowcase:showcase/mana_crystal",
+                                        Material.AMETHYST_SHARD,
+                                    ) {
+                                        name("<aqua>Mana Crystal</aqua>".mmComponent())
+                                        lore("<gray>Right-click to surge with mana.".mmComponent())
+                                    }.withBehavior(manaCrystalKey, this@ArcShowcasePlugin)
+                                    player.inventory.addItem(crystal)
+                                    player.send("<green>Given <aqua>Mana Crystal<green>.")
+                                }
+                                "arc_blade" -> {
+                                    val blade = contentItem(
+                                        "arcshowcase:showcase/arc_blade",
+                                        Material.DIAMOND_SWORD,
+                                    ) {
+                                        name("<gradient:#00aaff:#aa00ff>Arc Blade</gradient>".mmComponent())
+                                        lore("<gray>Right-click to release a pulse.".mmComponent())
+                                        unbreakable()
+                                    }.withBehavior(arcBladeKey, this@ArcShowcasePlugin)
+                                    player.inventory.addItem(blade)
+                                    player.send("<green>Given <gradient:#00aaff:#aa00ff>Arc Blade<green>.")
+                                }
+                                else -> player.send(
+                                    "<yellow>/showcase content give <mana_crystal|arc_blade>",
+                                )
+                            }
+                            else -> player.send(
+                                "<yellow>/showcase content give <mana_crystal|arc_blade>",
+                            )
+                        }
+                    }
                     else -> sender.send(
-                        "<yellow>/showcase <effect|give|verify|stats> <gray>— Arc API demo",
+                        "<yellow>/showcase <effect|give|verify|stats|content> <gray>— Arc API demo",
                     )
                 }
             }
         }
 
-        logger.info("ArcShowcase enabled — try /showcase effect|give|verify|stats")
+        // 5) Content pack — Arc client mod users see these in the Arc creative tab.
+        //    Textures go in: sample-pack/content/assets/arcshowcase/<path>.png
+        val content = arcContent {
+            item("showcase/mana_crystal") {
+                fallback = "minecraft:amethyst_shard"
+                order = 10
+            }
+            item("showcase/arc_blade") {
+                fallback = "minecraft:diamond_sword"
+                durability = 1561
+                maxStackSize = 1
+                order = 20
+            }
+            block("showcase/mana_ore") {
+                fallback = "minecraft:amethyst_block"
+                hardness = 3.0f
+                blastResistance = 3.0f
+                order = 30
+            }
+            recipe("showcase/mana_crystal_recipe") {
+                result = ContentId("arcshowcase", "showcase/mana_crystal")
+                ingredients += ContentId("minecraft", "amethyst_shard")
+            }
+        }
+        if (!content.accepted) {
+            logger.warning("ArcShowcase content pack rejected: ${content.diagnostics}")
+        }
+
+        // 6) Item behaviors — content items with Arc-powered right-click actions.
+        defineItem(manaCrystalKey) {
+            onRightClick { e ->
+                effects.apply(e.player, effects["mana_surge"], duration = 20.seconds, amplifier = 0)
+                e.player.send("<aqua>Mana crystal charges your surge.")
+            }
+        }
+        defineItem(arcBladeKey) {
+            onRightClick { e ->
+                val player = e.player
+                val origin = player.location
+                player.world.getNearbyEntities(origin, 5.0, 5.0, 5.0)
+                    .filter { it != player }
+                    .forEach { entity ->
+                        val dir = entity.location.toVector()
+                            .subtract(origin.toVector())
+                            .normalize().multiply(1.8).setY(0.35)
+                        entity.velocity = dir
+                        (entity as? LivingEntity)?.damage(4.0, player)
+                    }
+                player.send("<gradient:#aa00ff:#ff00aa>Arc Blade releases a pulse!")
+                player.world.strikeLightningEffect(origin)
+            }
+        }
+
+        // Amethyst blocks have a 30% chance to drop a mana crystal (showcase drop table).
+        listen<BlockBreakEvent> { e ->
+            if (e.block.type != Material.AMETHYST_BLOCK) return@listen
+            if (Math.random() > 0.3) return@listen
+            val crystal = contentItem("arcshowcase:showcase/mana_crystal", Material.AMETHYST_SHARD)
+                .withBehavior(manaCrystalKey, this)
+            e.block.world.dropItemNaturally(e.block.location.add(0.5, 0.0, 0.5), crystal)
+        }
+
+        logger.info("ArcShowcase enabled — try /showcase effect|give|verify|stats|content")
     }
 
     override fun onDisable() {
         effects.close()
+        removeArcContent()
+    }
+
+    private fun contentItem(
+        arcId: String,
+        material: Material,
+        build: ItemBuilder.() -> Unit = {},
+    ): ItemStack {
+        val stack = item(material, build = build)
+        val meta = stack.itemMeta!!
+        meta.persistentDataContainer.set(NamespacedKey("arc", "id"), PersistentDataType.STRING, arcId)
+        stack.itemMeta = meta
+        return stack
     }
 
     /** Local MiniMessage helper so the item lore stays readable. */

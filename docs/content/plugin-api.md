@@ -251,3 +251,56 @@ Arc 클라이언트가 없는 플레이어도 동일한 `ItemStack`을 받는다
 - **런타임 vanilla ID 등록 불가**: fallback은 기존 vanilla 아이템만 지정할 수 있다. 새 숫자 ID를 서버 레지스트리에 추가하는 것은 지원하지 않는다.
 - **namespace 충돌 시 전체 거부**: 동일 namespace가 충돌하면 나중에 등록하는 플러그인이 완전히 거부된다. 플러그인 배포 시 namespace 고유성을 사전에 확인해야 한다.
 - **클라이언트 에셋은 별도 포함 필요**: 텍스처, 모델 파일은 Plugin API가 자동으로 생성하지 않는다. File Pack의 `assets/` 디렉토리에 직접 배치하거나, 플러그인 JAR 안에서 추출해 `arc-content/`에 복사하는 로직을 별도로 구현해야 한다.
+
+---
+
+## Java에서 사용하기
+
+Kotlin DSL을 Java에서 직접 호출할 수 없다. `ArcContentDsl` 브릿지 클래스를 사용한다.
+
+```java
+import dev.arc.api.content.ArcContentDsl;
+import dev.arc.api.content.ContentId;
+
+public class MyPlugin extends JavaPlugin {
+
+    @Override
+    public void onEnable() {
+        ContentPublishResult result = ArcContentDsl.register(this, pack -> {
+            pack.item("showcase/ruby", item -> {
+                item.setFallback("minecraft:redstone");
+                item.setMaxStackSize(64);
+                item.setOrder(10);
+            });
+            pack.block("showcase/ruby_ore", block -> {
+                block.setFallback("minecraft:redstone_ore");
+                block.setHardness(3.0f);
+                block.setBlastResistance(3.0f);
+                block.setOrder(20);
+            });
+            pack.recipe("showcase/ruby_recipe", recipe -> {
+                recipe.setResult(new ContentId("showcase", "showcase/ruby"));
+                recipe.getIngredients().add(new ContentId("minecraft", "redstone"));
+            });
+        });
+
+        if (!result.getAccepted()) {
+            result.getDiagnostics().forEach(d ->
+                getLogger().warning(d.getMessage())
+            );
+            return;
+        }
+
+        getLogger().info("콘텐츠 등록 완료. Revision: " + result.getRevision().getId());
+    }
+
+    @Override
+    public void onDisable() {
+        ArcContentDsl.unregister(this);
+    }
+}
+```
+
+`ArcContentDsl.register`의 두 번째 인자인 `Consumer<ContentPackBuilder>`는 Kotlin DSL과 동일한 빌더를 받는다. namespace는 플러그인 이름에서 자동 파생되며, 명시적으로 지정하려면 `ArcContentDsl.register(this, "my_namespace", pack -> { ... })`를 사용한다.
+
+다른 API(이벤트·아이템·커맨드·커스텀 효과)의 Java 사용법은 [Java 호환 레이어](../api/java-interop/) 문서를 참고한다.

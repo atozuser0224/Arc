@@ -1,5 +1,7 @@
 package dev.arc.api.content
 
+import java.util.function.Consumer
+
 public data class ContentPack(
     public val id: ContentId,
     public val version: String,
@@ -35,6 +37,20 @@ public class ContentPackBuilder internal constructor(
         val builder = RecipeBuilder(ContentId(namespace, path)).apply(block)
         definitions += builder.build()
     }
+
+    // ── Java-friendly Consumer overloads ──────────────────────────────────
+    /** Java: `pack.item("path", b -> { b.setFallback("minecraft:paper"); b.setOrder(1); });` */
+    public fun item(path: String, block: Consumer<ItemBuilder>): Unit =
+        item(path) { block.accept(this) }
+    /** Java: `pack.block("path", b -> { b.setHardness(3.0f); });` */
+    public fun block(path: String, block: Consumer<BlockBuilder>): Unit =
+        block(path) { block.accept(this) }
+    /** Java: `pack.furniture("path", f -> { f.setSeats(2); });` */
+    public fun furniture(path: String, block: Consumer<FurnitureBuilder>): Unit =
+        furniture(path) { block.accept(this) }
+    /** Java: `pack.recipe("path", r -> { r.setResult(id); r.getIngredients().add(ing); });` */
+    public fun recipe(path: String, block: Consumer<RecipeBuilder>): Unit =
+        recipe(path) { block.accept(this) }
 
     internal fun build(): ContentPack =
         ContentPack(ContentId(namespace, "pack"), version, definitions.toList())

@@ -78,3 +78,7 @@ Paper 서버에 `arc-api.jar`를 `plugins/` 폴더에 넣거나, shaded jar로 �
 ### [arc-test — 서버 없는 테스트](api/testing/)
 
 실제 서버 없이 JVM에서 Arc API 로직을 테스트합니다. CI 피드백 루프를 수 분에서 수 초로 단축합니다. 아이템 로직, GUI 행동, PDC 읽기/쓰기, 커맨드 파싱, 패킷 전송 등을 단위 테스트로 검증할 수 있습니다.
+
+### [Java 호환 레이어](api/java-interop/)
+
+arc-api의 핵심 함수(`inline reified listen<T>`, Kotlin DSL 빌더)를 Java에서 직접 호출하기 위한 브릿지 클래스 모음입니다. `ArcEvents`, `ArcItems`, `ArcCommands`, `ArcContentDsl`, `ArcCustomEffects` 다섯 가지 static 진입점을 제공하며, 기존 Java 플러그인을 코드베이스 변경 없이 Arc로 이전하거나 혼용할 수 있습니다.

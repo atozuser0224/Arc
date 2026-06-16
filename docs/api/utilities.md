@@ -6,7 +6,7 @@ nav_order: 8
 
 # 유틸리티 패키지
 
-Arc API는 플러그인 개발에서 반복적으로 필요한 유틸리티를 제공합니다. 텍스트 포맷, 시간 DSL, 영역(Cuboid), 스플라인 경로(Spline), 아이템 직렬화(ItemSerializer)를 통해 자주 작성하는 헬퍼 코드를 줄입니다.
+Arc API는 플러그인을 만들다 보면 늘 다시 짜게 되는 유틸리티를 모아 제공한다. 텍스트 포맷과 시간 DSL, 영역(Cuboid), 스플라인 경로(Spline), 아이템 직렬화(ItemSerializer)로 매번 손수 쓰던 헬퍼 코드를 줄여 준다.
 
 ---
 
@@ -14,7 +14,7 @@ Arc API는 플러그인 개발에서 반복적으로 필요한 유틸리티를 �
 
 ### & 컬러 코드 + 플레이스홀더
 
-`Format.colorize()`는 `&` 코드로 작성된 색상 코드를 Minecraft 색상으로 변환하고, 플레이스홀더를 치환합니다.
+`Format.colorize()`는 `&` 코드로 쓴 색상 코드를 Minecraft 색상으로 바꾸고, 플레이스홀더도 함께 치환한다.
 
 ```kotlin
 // 단순 색상 코드 변환
@@ -33,7 +33,7 @@ Bukkit.broadcastMessage(announcement)
 
 ### MiniMessage 지원
 
-Adventure API의 MiniMessage 형식도 지원합니다.
+Adventure API의 MiniMessage 형식도 쓸 수 있다.
 
 ```kotlin
 // MiniMessage 형식
@@ -67,7 +67,7 @@ broadcastTitle("&c&l보스 등장!", "&7어둠의 군주가 나타났습니다."
 
 ## 시간 DSL
 
-Kotlin 확장 프로퍼티로 시간 단위를 자연스럽게 표현합니다.
+Kotlin 확장 프로퍼티로 시간 단위를 자연스럽게 적는다.
 
 ### Duration 생성
 
@@ -86,7 +86,7 @@ val remaining = sessionTimeout - 45.minutes  // 1시간 45분
 
 ### 시간 포맷
 
-`Time.format()`은 Duration을 한국어로 포맷합니다.
+`Time.format()`은 Duration을 한국어 문구로 바꿔 준다.
 
 ```kotlin
 Time.format(2.hours + 30.minutes)  // "2시간 30분"
@@ -106,7 +106,7 @@ if (remaining > 0) {
 
 ### 틱 변환
 
-Bukkit 스케줄러는 틱 단위를 사용합니다. `Time.toTicks()`로 Duration을 틱으로 변환합니다.
+Bukkit 스케줄러는 틱 단위로 움직인다. `Time.toTicks()`로 Duration을 틱으로 바꾸면 된다.
 
 ```kotlin
 val ticks: Long = Time.toTicks(30.seconds)  // 600L
@@ -123,7 +123,7 @@ plugin.runRepeat(0L, Time.toTicks(1.minutes)) {
 
 ## 영역 (Cuboid)
 
-`Cuboid`는 두 모서리 위치로 정의되는 직육면체 영역입니다. 위치 포함 여부 확인, 블록 순회, 경계 정보 제공 등을 지원합니다.
+`Cuboid`는 두 모서리 위치로 잡는 직육면체 영역이다. 특정 위치가 안에 들어오는지 확인하거나, 블록을 순회하거나, 경계 정보를 가져올 수 있다.
 
 ### 기본 사용법
 
@@ -196,11 +196,11 @@ plugin.runRepeat(0L, 10L) {  // 0.5초마다 체크
 
 ## 스플라인 경로 (Spline)
 
-`Spline`은 제어점을 부드럽게 연결하는 곡선 경로를 생성합니다. 발사체 이동, 파티클 효과 경로, 카메라 이동 경로에 활용합니다.
+`Spline`은 제어점을 부드럽게 잇는 곡선 경로를 만든다. 발사체 이동이나 파티클 효과 경로, 카메라 이동 경로에 쓰면 좋다.
 
 ### 카트뮬-롬 스플라인
 
-카트뮬-롬(Catmull-Rom) 스플라인은 모든 제어점을 통과하는 부드러운 곡선입니다.
+카트뮬-롬(Catmull-Rom) 스플라인은 제어점을 모두 지나는 부드러운 곡선이다.
 
 ```kotlin
 // 4개 이상의 제어점이 필요
@@ -286,7 +286,7 @@ fun guidedMissile(plugin: JavaPlugin, from: Location, target: LivingEntity) {
 
 ## 직렬화 (ItemSerializer)
 
-`ItemSerializer`는 `ItemStack`을 Base64 문자열로 직렬화/역직렬화합니다. Redis, 데이터베이스, 파일, 서버 간 전송에 활용합니다.
+`ItemSerializer`는 `ItemStack`을 Base64 문자열로 직렬화하고 다시 되돌린다. Redis나 데이터베이스, 파일, 서버 간 전송에 쓰면 된다.
 
 ### 기본 사용법
 
@@ -352,10 +352,133 @@ fun onPlayerJoin(event: PlayerJoinEvent) {
 
 ### 성능 고려사항
 
-- Base64 인코딩은 CPU 비용이 거의 없습니다.
-- 직렬화된 문자열 크기: 인챈트 없는 단순 아이템은 약 100~300B, 인챈트·PDC가 많은 아이템은 1~5KB.
-- 인벤토리 전체(36슬롯)는 약 10~50KB.
-- 매 틱마다 직렬화하는 방식은 피하고, 이벤트(quit, death, transfer) 시점에만 저장하세요.
+- Base64 인코딩은 CPU 비용이 거의 들지 않는다.
+- 직렬화된 문자열 크기: 인챈트가 없는 단순 아이템은 약 100~300B, 인챈트와 PDC가 많은 아이템은 1~5KB다.
+- 인벤토리 전체(36슬롯)는 약 10~50KB다.
+- 매 틱 직렬화하는 방식은 피하고, quit·death·transfer 같은 이벤트 시점에만 저장하자.
+
+---
+
+## 어트리뷰트 모디파이어 (AttributeModifier 헬퍼)
+
+Paper 1.21+의 `AttributeModifier` API는 `NamespacedKey` 기반으로 바뀌었다. 같은 키로 모디파이어를 두 번 추가하면 중복이 쌓여 속성 값이 예상보다 커지는 문제가 생기기 쉽다. Arc의 헬퍼는 이 중복을 자동으로 제거한다.
+
+### 기본 사용법
+
+```kotlin
+// 플레이어 이동 속도를 +20% 증가 (키 기반 누적 방지)
+val key = NamespacedKey(plugin, "speed_boost")
+player.applyModifier(Attribute.MOVEMENT_SPEED, key, 0.2, AttributeModifier.Operation.ADD_SCALAR)
+
+// 같은 키로 다시 호출하면 기존 모디파이어를 먼저 제거 후 새 값 적용
+player.applyModifier(Attribute.MOVEMENT_SPEED, key, 0.4, AttributeModifier.Operation.ADD_SCALAR)
+
+// 특정 키 모디파이어 제거
+player.removeModifier(Attribute.MOVEMENT_SPEED, key)
+
+// 해당 키 모디파이어가 있는지 확인
+val hasBoost: Boolean = player.hasModifier(Attribute.MOVEMENT_SPEED, key)
+
+// 해당 키의 현재 값 조회
+val amount: Double? = player.modifierValue(Attribute.MOVEMENT_SPEED, key)
+```
+
+### applyModifier — 누적 없는 적용
+
+`@JvmOverloads`가 붙어 있어 Java에서도 `operation` 인수를 생략할 수 있다.
+
+```kotlin
+// operation 생략 시 기본값: ADD_NUMBER
+player.applyModifier(Attribute.MAX_HEALTH, NamespacedKey(plugin, "bonus_hp"), 4.0)
+
+// operation 명시
+player.applyModifier(
+    attribute = Attribute.MOVEMENT_SPEED,
+    key = NamespacedKey(plugin, "sprint_bonus"),
+    amount = 0.1,
+    operation = AttributeModifier.Operation.ADD_NUMBER  // 기본값
+)
+```
+
+### Java
+
+```java
+NamespacedKey key = new NamespacedKey(plugin, "attack_boost");
+
+// 공격력 +2.0 추가 (ADD_NUMBER)
+AttributeUtil.applyModifier(player, Attribute.ATTACK_DAMAGE, key, 2.0);
+
+// 제거
+AttributeUtil.removeModifier(player, Attribute.ATTACK_DAMAGE, key);
+
+// 확인
+boolean has = AttributeUtil.hasModifier(player, Attribute.ATTACK_DAMAGE, key);
+
+// 값 조회 (없으면 null)
+Double value = AttributeUtil.modifierValue(player, Attribute.ATTACK_DAMAGE, key);
+```
+
+### 전체 예시 — 장비 세트 보너스
+
+```kotlin
+class SetBonusPlugin : JavaPlugin() {
+
+    private val SET_SPEED_KEY = NamespacedKey(this, "set_speed")
+    private val SET_HP_KEY = NamespacedKey(this, "set_hp")
+
+    override fun onEnable() {
+        listen<PlayerItemHeldEvent> { e -> updateSetBonus(e.player) }
+        listen<PlayerArmorChangeEvent> { e -> updateSetBonus(e.player) }
+        listen<PlayerJoinEvent> { e -> updateSetBonus(e.player) }
+    }
+
+    private fun updateSetBonus(player: Player) {
+        val armorCount = listOf(
+            player.inventory.helmet,
+            player.inventory.chestplate,
+            player.inventory.leggings,
+            player.inventory.boots
+        ).count { it?.type?.name?.startsWith("NETHERITE") == true }
+
+        when {
+            armorCount >= 4 -> {
+                // 풀셋: 이동 속도 +15%, 최대 체력 +4
+                player.applyModifier(Attribute.MOVEMENT_SPEED, SET_SPEED_KEY, 0.15, AttributeModifier.Operation.ADD_SCALAR)
+                player.applyModifier(Attribute.MAX_HEALTH, SET_HP_KEY, 4.0)
+                player.sendActionBar(Component.text("§d네더라이트 풀셋 보너스 활성"))
+            }
+            armorCount >= 2 -> {
+                // 절반 세트: 이동 속도 +7%만
+                player.applyModifier(Attribute.MOVEMENT_SPEED, SET_SPEED_KEY, 0.07, AttributeModifier.Operation.ADD_SCALAR)
+                player.removeModifier(Attribute.MAX_HEALTH, SET_HP_KEY)
+            }
+            else -> {
+                player.removeModifier(Attribute.MOVEMENT_SPEED, SET_SPEED_KEY)
+                player.removeModifier(Attribute.MAX_HEALTH, SET_HP_KEY)
+            }
+        }
+    }
+}
+```
+
+### Operation 종류
+
+| 값 | 계산 방식 | 예시 |
+|----|----------|------|
+| `ADD_NUMBER` | `기본값 + amount` | 체력 +4 (절댓값 추가) |
+| `ADD_SCALAR` | `기본값 × (1 + amount)` | 속도 +20% (비율 추가) |
+| `MULTIPLY_SCALAR_1` | `기본값 × amount` | 속도 × 1.5 (절대 배율) |
+
+### 이점과 주의사항
+
+**이점**
+- 같은 키로 여러 번 호출해도 중복 누적 없이 최신 값 하나만 유지
+- `hasModifier` · `modifierValue`로 현재 상태를 명확하게 조회 가능
+- Java `@JvmOverloads`로 `operation` 기본값 생략 가능
+
+**주의사항**
+- `AttributeModifier`는 플레이어 재접속 후 일부 속성이 초기화될 수 있다. 영구 보너스는 `PlayerJoinEvent`에서 다시 적용해야 한다.
+- `ADD_SCALAR`는 기본값 기준 배율이라 여러 개를 쌓으면 합산된다. 장비 세트 보너스처럼 하나만 유지해야 하는 경우에는 이 헬퍼의 누적 방지가 특히 중요하다.
 
 ---
 

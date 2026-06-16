@@ -6,13 +6,13 @@ nav_order: 7
 
 # 월드 · 청크 유틸리티
 
-Arc API는 월드 조작에서 자주 필요한 세 가지 유틸리티를 제공합니다. 블록 영역 스냅샷/복원(`WorldSnapshot`), 레이트레이스(`RayTrace`), 청크 강제 로드(`WorldChunk`)입니다.
+Arc API는 월드를 다룰 때 자주 쓰는 세 가지 유틸리티를 제공한다. 블록 영역을 스냅샷으로 떠 두고 복원하는 `WorldSnapshot`, 레이트레이스를 쏘는 `RayTrace`, 청크를 강제로 로드하는 `WorldChunk`다.
 
 ---
 
 ## WorldSnapshot — 블록 영역 스냅샷
 
-`WorldSnapshot`은 직육면체 영역의 모든 블록 데이터를 메모리에 저장하고, 나중에 원래 상태로 복원합니다. 미니게임 맵을 게임 후 초기화할 때 서버 재시작 없이 즉시 복원할 수 있습니다.
+`WorldSnapshot`은 직육면체 영역의 블록 데이터를 통째로 메모리에 담아 두었다가 나중에 원래 상태로 되돌린다. 미니게임이 끝나고 맵을 초기화할 때, 서버를 재시작하지 않고도 곧바로 복원할 수 있다.
 
 ### 기본 사용법
 
@@ -77,7 +77,7 @@ class ArenaBedwars(val plugin: JavaPlugin, val world: World) {
 
 ### 스냅샷 영속화
 
-플러그인 재시작 후에도 스냅샷을 유지하려면 직렬화하여 파일에 저장합니다.
+플러그인을 재시작해도 스냅샷을 살려 두려면 직렬화해 파일로 저장한다.
 
 ```kotlin
 // 파일에 저장
@@ -90,7 +90,7 @@ val loaded = WorldSnapshot.load(file, world)
 
 ### 성능 고려사항
 
-스냅샷의 메모리 사용량은 영역 내 블록 수에 비례합니다. 각 블록은 블록 타입, 블록 데이터(BlockData), 타일 엔티티 데이터(NBT)를 포함합니다.
+스냅샷이 쓰는 메모리는 영역 안의 블록 수에 비례한다. 블록마다 블록 타입과 블록 데이터(BlockData), 타일 엔티티 데이터(NBT)를 담기 때문이다.
 
 | 영역 크기 | 대략적인 블록 수 | 예상 메모리 |
 |----------|--------------|------------|
@@ -99,15 +99,15 @@ val loaded = WorldSnapshot.load(file, world)
 | 200×100×200 | 4,000,000 | ~160MB |
 
 {: .warning }
-너무 큰 영역을 스냅샷으로 저장하면 GC 압박이 발생할 수 있습니다. 미니게임 맵은 100×100 이하로 설계하는 것을 권장합니다.
+영역이 너무 크면 스냅샷이 GC를 압박할 수 있다. 미니게임 맵은 100×100 이하로 잡길 권한다.
 
-복원 작업은 블록 수에 비례하는 시간이 걸립니다. 큰 맵의 경우 청크 단위로 비동기 복원하는 방식을 검토하세요.
+복원에 걸리는 시간도 블록 수에 비례한다. 맵이 크다면 청크 단위로 나눠 비동기로 복원하는 방식을 검토해 보자.
 
 ---
 
 ## RayTrace — 레이트레이스
 
-`RayTrace.cast()`는 특정 위치에서 방향을 따라 레이를 발사하여 첫 번째로 충돌하는 블록 또는 엔티티를 반환합니다.
+`RayTrace.cast()`는 특정 위치에서 방향을 따라 레이를 쏘아, 가장 먼저 부딪히는 블록이나 엔티티를 돌려준다.
 
 ### 기본 사용법
 
@@ -208,7 +208,7 @@ fun placeSignAt(player: Player, text: String) {
 
 ## WorldChunk 유틸리티
 
-`WorldChunk.forceLoad()`는 지정된 청크를 강제로 로드합니다. 청크 기반 시스템(몬스터 스포너, 경작 시스템 등)에서 청크가 로드되지 않아 엔티티가 실행되지 않는 문제를 해결합니다.
+`WorldChunk.forceLoad()`는 지정한 청크를 강제로 로드한다. 몬스터 스포너나 경작 시스템처럼 청크에 기대는 시스템에서, 청크가 로드되지 않아 엔티티가 돌지 않는 문제를 해결해 준다.
 
 ### 기본 사용법
 
@@ -240,11 +240,95 @@ fun forceLoadArea(center: Location, radius: Int) {
 **사용 시나리오**:
 
 - 자동 팜(automatic farm): 플레이어가 없어도 작물이 자라야 할 때.
-- 이벤트 아레나: 게임 시작 전 맵 청크를 미리 로드하여 지연 없이 시작.
-- 경매장 시스템: 특정 위치의 엔티티(아이템 프레임 등)를 강제 로드.
+- 이벤트 아레나: 게임 시작 전 맵 청크를 미리 로드해 지연 없이 시작하고 싶을 때.
+- 경매장 시스템: 특정 위치의 엔티티(아이템 프레임 등)를 강제로 로드해 둘 때.
 
 {: .warning }
-`forceLoad()`된 청크는 플레이어가 없어도 계속 로드 상태를 유지합니다. 서버 TPS에 영향을 미칩니다. 반드시 필요한 청크만 강제 로드하고, 필요 없어지면 `WorldChunk.unforceLoad(chunk)`로 해제하세요.
+`forceLoad()`한 청크는 플레이어가 없어도 계속 로드된 채로 남아 서버 TPS를 갉아먹는다. 꼭 필요한 청크만 강제 로드하고, 쓸 일이 없어지면 `WorldChunk.unforceLoad(chunk)`로 풀어 주자.
+
+---
+
+## getBlockIfLoaded — 청크를 강제 로드하지 않는 블록 접근
+
+`World.getBlock(x, y, z)`는 해당 청크가 로드되지 않았으면 청크를 강제 로드한다. 이 동작은 의도치 않은 청크 로딩을 유발해 서버 성능에 영향을 줄 수 있다. `getBlockIfLoaded()`는 청크가 이미 로드된 경우에만 블록을 반환하고, 로드되지 않았으면 `null`을 돌려준다.
+
+### 기본 사용법
+
+```kotlin
+// 청크가 로드돼 있으면 Block, 아니면 null
+val block: Block? = world.getBlockIfLoaded(x, y, z)
+if (block != null) {
+    // 안전하게 접근
+    if (block.type == Material.CHEST) {
+        doSomething(block)
+    }
+}
+
+// Location 확장 프로퍼티
+val block: Block? = location.blockIfLoaded
+```
+
+### Bukkit 방식과 비교
+
+```kotlin
+// ❌ Bukkit — 청크가 로드되지 않아도 강제 로드 후 반환
+val block = world.getBlockAt(x, y, z)
+
+// ✅ Arc — 청크가 로드된 경우에만 반환
+val block = world.getBlockIfLoaded(x, y, z) ?: return
+```
+
+### 전형적인 사용 시나리오
+
+**대규모 영역 스캔 (이미 로드된 청크만)**:
+
+```kotlin
+// 넓은 범위를 순회하되, 로드되지 않은 청크는 건너뜀
+for (x in -200..200) {
+    for (z in -200..200) {
+        val block = world.getBlockIfLoaded(x, 64, z) ?: continue
+        if (block.type == Material.DIAMOND_ORE) {
+            logger.info("다이아몬드 발견: $x, 64, $z")
+        }
+    }
+}
+```
+
+**이벤트 핸들러에서 인접 블록 확인**:
+
+```kotlin
+listen<BlockBreakEvent> { e ->
+    // 인접 블록이 로드돼 있으면 확인, 아니면 무시
+    val above = e.block.location.add(0.0, 1.0, 0.0).blockIfLoaded ?: return@listen
+    if (above.type == Material.TORCH) above.type = Material.AIR
+}
+```
+
+**반복 태스크에서 안전한 블록 접근**:
+
+```kotlin
+plugin.runRepeat(period = 20L) {
+    monitoredLocations.forEach { loc ->
+        val block = loc.blockIfLoaded ?: return@forEach  // 청크 언로드 시 스킵
+        if (block.type != Material.DIAMOND_BLOCK) {
+            alert("감시 블록이 변경됐습니다: $loc")
+        }
+    }
+}
+```
+
+### API 레퍼런스
+
+| 메서드 | 설명 |
+|--------|------|
+| `World.getBlockIfLoaded(x, y, z)` | 청크가 로드된 경우 `Block` 반환, 아니면 `null` |
+| `Location.blockIfLoaded` | `getBlockIfLoaded(blockX, blockY, blockZ)` 단축 프로퍼티 |
+
+### 이점
+
+- 의도치 않은 청크 로딩을 막아 서버 TPS를 보호함
+- 청크 로드 여부를 `world.isChunkLoaded()`로 직접 확인하는 코드보다 간결
+- `null` 반환으로 처리 여부를 강제해 로드되지 않은 청크에 접근하는 실수를 방지
 
 ---
 
@@ -253,31 +337,31 @@ fun forceLoadArea(center: Location, radius: Int) {
 ### WorldSnapshot
 
 **장점**:
-- 서버 재시작 없이 맵 초기화 가능.
-- 파일로 직렬화하여 서버 재시작 후에도 재사용 가능.
-- 타일 엔티티(상자, 표시판 등)도 함께 복원.
+- 서버를 재시작하지 않고 맵을 초기화한다.
+- 파일로 직렬화해 두면 서버를 재시작한 뒤에도 다시 쓸 수 있다.
+- 타일 엔티티(상자, 표시판 등)까지 함께 복원한다.
 
 **단점**:
-- 메모리 사용량이 영역 크기에 비례. 대규모 맵은 수백 MB를 소비할 수 있음.
-- 복원 시 영역 내 엔티티(플레이어 제외)는 자동으로 제거되지 않음 — 직접 처리 필요.
-- 복원 작업 자체가 서버에 순간적인 부하를 줌.
+- 메모리를 영역 크기만큼 잡아먹는다. 큰 맵은 수백 MB까지 쓸 수 있다.
+- 복원할 때 영역 안 엔티티(플레이어 제외)는 자동으로 지워지지 않으니 직접 처리해야 한다.
+- 복원 작업 자체가 서버에 순간적인 부하를 준다.
 
 ### RayTrace
 
 **장점**:
-- Bukkit `player.getTargetBlock()`보다 세밀한 제어 (엔티티 충돌, 유체 옵션).
-- 충돌 지점(`hitPosition`)의 정확한 벡터 위치 반환.
-- 발사 엔티티 무시 등 옵션 지원.
+- Bukkit `player.getTargetBlock()`보다 세밀하게 제어한다(엔티티 충돌, 유체 옵션).
+- 충돌 지점(`hitPosition`)의 정확한 벡터 위치를 돌려준다.
+- 발사 엔티티 무시 같은 옵션을 지원한다.
 
 **단점**:
-- 매 틱마다 호출하면 성능에 영향. `PlayerMoveEvent`나 `runRepeat`에서 호출 시 최소화 권장.
-- NMS 수준의 복잡한 레이트레이스(투명 블록 통과, 멀티블록 히트 등)는 직접 구현 필요.
+- 매 틱 호출하면 성능에 부담을 준다. `PlayerMoveEvent`나 `runRepeat`에서 부를 때는 호출을 최대한 줄이자.
+- 투명 블록 통과, 멀티블록 히트 같은 NMS 수준의 복잡한 레이트레이스는 직접 구현해야 한다.
 
 ### WorldChunk
 
 **장점**:
-- 플레이어 없이도 청크 유지.
-- 간단한 API.
+- 플레이어가 없어도 청크를 유지한다.
+- API가 간단하다.
 
 **단점**:
-- TPS 영향. 과도한 강제 로드는 서버 성능 저하.
+- TPS에 영향을 준다. 너무 많이 강제 로드하면 서버 성능이 떨어진다.
